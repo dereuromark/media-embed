@@ -42,7 +42,17 @@ run:
 php composer.phar install
 ```
 
-## API
+## API Overview
+
+### Parsing
+You can either use `parseUrl()` (default lookup) or `parseId()` (reverse lookup) of `MediaEmbed`.
+The latter is useful if you only store the "type" and "id" in the dabatase instead of the
+complete URL.
+Both methods will return an `MediaObject` object, which will contain the parsed input.
+
+### Output
+You can then display the HTML code with `getEmbedCode()` or retrieve more information using the getters of `MediaObject`.
+
 
 ## Usage
 The simpliest usage, when included via composer autoload, would be:
