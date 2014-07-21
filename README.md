@@ -7,8 +7,12 @@ It currently works with
 ## Requirements
 
 - PHP 5.3+
-
 - Composer
+
+### Note
+This is alpha-software. Please feel free to join in and help out to complete it.
+Once the coverage is high enough we can release a beta and soon after the first stable.
+
 
 ## Installation
 
@@ -32,7 +36,7 @@ php composer.phar install
 
 ## Usage
 
-## Example with "type" and "id" saved in DB
+### Example with "type" and "id" saved in DB
 A helper method
 ```php
 public function video($type, $id, $options = array(), $params = array()) {
@@ -118,6 +122,9 @@ protected function _finalizeVideo($params) {
 
 So `[video]123[/video]` becomes `<iframe ...>...</iframe>` or `<object ...><embed src="..."</embed></object>`.
 
+### More examples
+You can see live examples when you get this repo running locally and browse to `examples` dir.
+`index.php` has a list of examples, you can live-preview. `bbcode.php` shows how to use it in save/read callbacks.
 
 ## License
 

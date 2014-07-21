@@ -343,7 +343,6 @@ class MediaObject implements ObjectInterface {
 			return;
 		}
 
-		// src
 		$src = str_replace('$2', $this->_stub['id'], $this->_stub[$type]);
 		if (!empty($host['replace'])) {
 			foreach ($host['replace'] as $placeholder => $replacement) {
@@ -366,7 +365,6 @@ class MediaObject implements ObjectInterface {
 		if (empty($this->_stub['image-src'])) {
 			return;
 		}
-		//$id = isset($this->_stub['id']) ? $this->_stub['id'] : '$2';
 
 		$src = str_replace('$2', $this->_stub['id'], $this->_stub['image-src']);
 		return $src;
@@ -435,7 +433,7 @@ class MediaObject implements ObjectInterface {
 
     $width = $this->_objectAttributes['width'];
     $height = $this->_objectAttributes['height'];
-		# Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
+		// Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
     return sprintf('<iframe type="text/html" width="%s" height="%s" src="%s?wmode=transparent" frameborder="0"></iframe>', $width, $height, $source);
   }
 

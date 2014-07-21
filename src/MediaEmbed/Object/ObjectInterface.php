@@ -10,18 +10,12 @@ interface ObjectInterface {
 	/**
 	 * @api
 	 *
-	 * @param string|Text $content
-	 * @param array       $options
-	 *
 	 * @return string
 	 */
 	public function id();
 
 	/**
 	 * @api
-	 *
-	 * @param string|Text $content
-	 * @param array       $options
 	 *
 	 * @return string
 	 */
@@ -30,10 +24,7 @@ interface ObjectInterface {
 	/**
 	 * @api
 	 *
-	 * @param string|Text $content
-	 * @param array       $options
-	 *
-	 * @return string
+	 * return string
 	 */
 	public function name();
 
