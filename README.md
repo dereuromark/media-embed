@@ -10,7 +10,7 @@ It currently works with 100+ services, including the most important ones like
 - Vimeo
 - Ustream
 
-etc.
+etc. With community driven updates this aims to be a compete and up-to-date service wrapper lib.
 
 It uses iframes if possible, and has a fallback on the embed object if necessary.
 
@@ -155,7 +155,7 @@ So `[video]123[/video]` becomes `<iframe ...>...</iframe>` or `<object ...><embe
 You can see live examples when you get this repo running locally and browse to `examples` dir.
 `index.php` has a list of examples, you can live-preview. `bbcode.php` shows how to use it in save/read callbacks.
 
-## TODOs
+## Contribute / TODOs
 See [wiki](https://github.com/dereuromark/MediaEmbed/wiki).
 
 ## License
