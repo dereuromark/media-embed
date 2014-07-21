@@ -2,7 +2,17 @@
 A utility that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
 
-It currently works with
+It currently works with 100+ services, including the most important ones like
+
+- YouTube
+- Dailymotion
+- MyVideo
+- Vimeo
+- Ustream
+
+etc.
+
+It uses iframes if possible, and has a fallback on the embed object if necessary.
 
 ## Requirements
 
