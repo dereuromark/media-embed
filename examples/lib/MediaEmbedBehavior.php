@@ -5,7 +5,7 @@ use MediaEmbed\MediaEmbed;
 class MediaEmbedBehavior {
 
 	/**
-	 * We .
+	 * We translate all BBCodes into HTML now.
 	 *
 	 * @param string $string
 	 * @return string

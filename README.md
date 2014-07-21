@@ -40,7 +40,7 @@ public function video($type, $id, $options = array(), $params = array()) {
 		$this->MediaEmbed = new MediaEmbed();
 	}
 	$MediaObject = $this->MediaEmbed->parseId(array('host' => $type, 'id' => $id));
-	if (!$is) {
+	if (!$MediaObject) {
 		return '';
 	}
 	return $MediaObject->getEmbedCode();
@@ -89,8 +89,34 @@ protected function _processVideo($params) {
 So `[video]http://www.youtube.com/v/123[/video]` becomes [video=youtube]123[/video].
 
 #### Display the resulting code snippet upon display
+```php
+/**
+ * @param string $string
+ * @return string
+ */
+public function prepareForOutput($string) {
+	return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', array($this, '_finalizeVideo'), $string);
+}
 
-So `[video]123[/video]` becomes `<object ...><embed src="..."</embed></object>`.
+/**
+ * @param array $params
+ * @return string
+ */
+protected function _finalizeVideo($params) {
+	if (!isset($this->MediaEmbed)) {
+		$this->MediaEmbed = new MediaEmbed();
+	}
+	$host = $params[1];
+	$id = $params[2];
+	if (!($MediaObject = $this->MediaEmbed->parseId(array('host' => $host, 'id' => $id)))) {
+		return $params[0];
+	}
+
+	return $MediaObject->getEmbedCode();
+}
+```
+
+So `[video]123[/video]` becomes `<iframe ...>...</iframe>` or `<object ...><embed src="..."</embed></object>`.
 
 
 ## License
