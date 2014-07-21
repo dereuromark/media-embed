@@ -1,4 +1,4 @@
-# MediaEmbed
+# MediaEmbed [![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](http://travis-ci.org/dereuromark/MediaEmbed)
 A utility that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
 
