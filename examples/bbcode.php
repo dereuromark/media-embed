@@ -27,18 +27,18 @@ That is the user input from a textarea, for example.
 <h2>Upon save it will be processed</h2>
 <?php
 	$Behavior = new \MediaEmbedBehavior();
-	$string = $Behavior->simulateSave($string);
+	$input = $Behavior->simulateSave($string);
 ?>
-<code><pre><?php echo $string; ?></pre></code>
+<code><pre><?php echo $input; ?></pre></code>
 
 <p>You may also validate it and act accordingly (prevent save or remove the video and alert the user).</p>
 
 <h2>Upon display we transform it again</h2>
 The final HTML output:
 <?php
-	$video = $Behavior->prepareForOutput($string);
+	$output = $Behavior->prepareForOutput($input);
 ?>
-<code><pre><?php echo $video; ?></pre></code>
+<code><pre><?php echo $output; ?></pre></code>
 
 </td></tr></table>
 
