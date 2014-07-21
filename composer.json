@@ -1,0 +1,21 @@
+{
+    "name": "dereuromark/media-embed",
+    "description": "",
+    "keywords": ["media", "embed"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mark Scherer",
+            "email": "euromark@web.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "php": ">5.3.0"
+    }
+}
