@@ -46,7 +46,7 @@ php composer.phar install
 
 ### Parsing
 You can either use `parseUrl()` (default lookup) or `parseId()` (reverse lookup) of `MediaEmbed`.
-The latter is useful if you only store the "type" and "id" in the dabatase instead of the
+The latter is useful if you only store the "host slug" and "id" in the dabatase instead of the
 complete URL.
 Both methods will return an `MediaObject` object, which will contain the parsed input.
 
@@ -64,14 +64,14 @@ use MediaEmbed\MediaEmbed;
 $MediaEmbed = new MediaEmbed();
 ```
 
-### Example with "type" and "id" saved in DB
+### Example with "host slug" and "id" saved in DB
 A helper method
 ```php
-public function video($type, $id, $options = array()) {
+public function video($host, $id, $options = array()) {
 	if (!isset($this->MediaEmbed)) {
 		$this->MediaEmbed = new MediaEmbed($options);
 	}
-	$MediaObject = $this->MediaEmbed->parseId(array('host' => $type, 'id' => $id));
+	$MediaObject = $this->MediaEmbed->parseId(array('host' => $host, 'id' => $id));
 	if (!$MediaObject) {
 		return '';
 	}
@@ -154,6 +154,9 @@ So `[video]123[/video]` becomes `<iframe ...>...</iframe>` or `<object ...><embe
 ### More examples
 You can see live examples when you get this repo running locally and browse to `examples` dir.
 `index.php` has a list of examples, you can live-preview. `bbcode.php` shows how to use it in save/read callbacks.
+
+## TODOs
+See [wiki](wiki).
 
 ## License
 
