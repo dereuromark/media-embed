@@ -156,7 +156,7 @@ You can see live examples when you get this repo running locally and browse to `
 `index.php` has a list of examples, you can live-preview. `bbcode.php` shows how to use it in save/read callbacks.
 
 ## TODOs
-See [wiki](wiki).
+See [wiki](https://github.com/dereuromark/MediaEmbed/wiki).
 
 ## License
 
