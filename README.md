@@ -45,19 +45,28 @@ php composer.phar install
 ## API
 
 ## Usage
+The simpliest usage, when included via composer autoload, would be:
+```php
+// At the top of the file
+use MediaEmbed\MediaEmbed;
+
+// Somewhere in your (class) code
+$MediaEmbed = new MediaEmbed();
+```
 
 ### Example with "type" and "id" saved in DB
 A helper method
 ```php
-public function video($type, $id, $options = array(), $params = array()) {
+public function video($type, $id, $options = array()) {
 	if (!isset($this->MediaEmbed)) {
-		$this->MediaEmbed = new MediaEmbed();
+		$this->MediaEmbed = new MediaEmbed($options);
 	}
 	$MediaObject = $this->MediaEmbed->parseId(array('host' => $type, 'id' => $id));
 	if (!$MediaObject) {
 		return '';
 	}
 	return $MediaObject->getEmbedCode();
+}
 ```
 
 ### Example with BBCode
