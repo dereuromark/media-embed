@@ -8,6 +8,8 @@ namespace MediaEmbed\Object;
 interface ObjectInterface {
 
 	/**
+	 * Returns the unique id of a media resource.
+	 *
 	 * @api
 	 *
 	 * @return string
@@ -15,6 +17,8 @@ interface ObjectInterface {
 	public function id();
 
 	/**
+	 * Returns the host as slugged string.
+	 *
 	 * @api
 	 *
 	 * @return string
@@ -22,6 +26,8 @@ interface ObjectInterface {
 	public function slug();
 
 	/**
+	 * Returns the name of this media host type.
+	 *
 	 * @api
 	 *
 	 * return string
@@ -29,9 +35,12 @@ interface ObjectInterface {
 	public function name();
 
 	/**
+	 * Returns the final HTML code for display.
+	 *
 	 * @api
 	 *
 	 * @return string
 	 */
 	public function getEmbedCode();
+
 }

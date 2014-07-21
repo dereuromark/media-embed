@@ -64,14 +64,48 @@ use MediaEmbed\MediaEmbed;
 $MediaEmbed = new MediaEmbed();
 ```
 
+### Auto-transforming user posted URLs in inline content
+
+Usually, users don't care or don't know exactly a video is linked/embedded.
+So if they just paste the URL of the browser, you can directly replace those URLs with the HTML code of it:
+```php
+// Process all links in some content
+public function autoLink($text) {
+	return preg_replace_callback(..., array(&$this, '_linkUrls'), $text);
+}
+
+protected function linkUrls($matches) {
+	if (!isset($this->MediaEmbed)) {
+		$this->MediaEmbed = new MediaEmbed();
+	}
+	if ($MediaObject = $this->MediaEmbed->parseUrl($url)) {
+		return $MediaObject->getEmbedCode();
+	}
+	// No media match found - normal <a href="...">...</a> replacing here
+}
+```
+
+As this is costly when used at runtime, it is usually better to parse the URL upon save
+and transform it into a bbcode like syntax that can be translated into HTML quicker and easier.
+
 ### Example with "host slug" and "id" saved in DB
-A helper method
+When a URL is posted in the video field (varchar 255), we can extract the data from it and validate it:
+```php
+$id = $host = null;
+if ($MediaObject = $this->MediaEmbed->parseUrl($url)) {
+	$id = $MediaObject->id();
+	$host = $MediaObject->slug();
+}
+```
+Those two values can be stored persistently (the complete URL including schema might change).
+
+A helper method can then display it:
 ```php
 public function video($host, $id, $options = array()) {
 	if (!isset($this->MediaEmbed)) {
 		$this->MediaEmbed = new MediaEmbed($options);
 	}
-	$MediaObject = $this->MediaEmbed->parseId(array('host' => $host, 'id' => $id));
+	$MediaObject = $this->MediaEmbed->parseId($id, $host);
 	if (!$MediaObject) {
 		return '';
 	}
@@ -141,7 +175,7 @@ protected function _finalizeVideo($params) {
 	}
 	$host = $params[1];
 	$id = $params[2];
-	if (!($MediaObject = $this->MediaEmbed->parseId(array('host' => $host, 'id' => $id)))) {
+	if (!($MediaObject = $this->MediaEmbed->parseId($id, $host))) {
 		return $params[0];
 	}
 

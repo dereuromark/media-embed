@@ -47,14 +47,14 @@ class MediaEmbed {
 	 * @param array $flashParams
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
-	public function parseId($data, $config = array()) {
-		if (empty($data['id']) || empty($data['host'])) {
+	public function parseId($id, $host, $config = array()) {
+		if (empty($id) || empty($host)) {
 			return;
 		}
 
 		// local files?
-		if ($data['host'] === 'local') {
-			$res = $this->embedLocal($data['id']);
+		if ($host === 'local') {
+			$res = $this->embedLocal($id);
 			if (!$res) {
 				$stub = array();
 				$Object = $this->object($stub, $config);
@@ -65,13 +65,13 @@ class MediaEmbed {
 		}
 
 		// all other hosts
-		if (!($host = $this->getHost($data['host']))) {
+		if (!($host = $this->getHost($host))) {
 			return;
 		}
 		$stub = $host;
 		$config += $this->config;
 
-		$stub['id'] = $data['id'];
+		$stub['id'] = $id;
 		$stub['reverse'] = true;
 		$Object = $this->object($stub, $config);
 

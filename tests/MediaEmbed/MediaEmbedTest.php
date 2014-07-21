@@ -133,7 +133,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 
 		$MediaEmbed = new MediaEmbed();
 		foreach ($test as $host => $id) {
-			$Object = $MediaEmbed->parseId(array('host' => $host, 'id' => $id));
+			$Object = $MediaEmbed->parseId($id, $host);
 			$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
 
 			$is = $Object->getEmbedCode();
