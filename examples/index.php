@@ -86,7 +86,7 @@ Examples available for <?php echo count($videos); ?> services.
 		$id = $Object->id();
 		$slug = $Object->slug();
 		$ObjectFromReverseLookup = $MediaEmbed->parseId($id, $slug);
-		echo '<h3>Reverse lookup by id and host slug</h3>';
+		echo '<h3>Reverse lookup by video id and host slug</h3>';
 		echo 'Result: ' . ($ObjectFromReverseLookup ? 'OK' : 'ERROR');
 
 		if ($ObjectFromReverseLookup) {

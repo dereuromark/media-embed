@@ -839,8 +839,8 @@ $stubs = array(
 		'website' => 'http://www.metatube.com',
 		'url-match' => 'http://www\.metatube\.com/([a-z]+)/videos/([a-z0-9-/]+)/',
 		'embed-src' => '',
-		'embed-width' => '400',
-		'embed-height' => '320',
+		'embed-width' => '420',
+		'embed-height' => '315',
 		'iframe-player' => 'http://www.metatube.com/$2/videos/$3/embed/',
 	),
 	array(
