@@ -231,7 +231,7 @@ $stubs = array(
 	),
 	//TODO: combine these three
 	array(
-		'slug' => 'clipfish_old',
+		'slug' => 'clipfish-old',
 		'name' => 'ClipFish (Old)',
 		'website' => 'http://www.clipfish.de',
 		'url-match' => 'http://(?:www\.)?clipfish\.de/(?:(?:player\.php|videoplayer\.swf)\?(?:[^"]*?)?vid=|video/)([0-9]{1,20})',
@@ -241,7 +241,7 @@ $stubs = array(
 		'iframe-player' => 'http://www.clipfish.de/embed_video/?vid=$2'
 	),
 	array(
-		'slug' => 'clipfish_special',
+		'slug' => 'clipfish-special',
 		'name' => 'ClipFish (Special)',
 		'website' => 'http://www.clipfish.de',
 		'url-match' => 'http://(?:www\.)?clipfish\.de/(?:[^"]*?)/video/((?:[a-z0-9]{18})(?:==)?|(?:[a-z0-9]{6,7})(?:==)?)',
@@ -833,6 +833,15 @@ $stubs = array(
 		'embed-src' => 'http://www.madnessvideo.net/emb.aspx/$2',
 		'embed-width' => '400',
 		'embed-height' => '320',
+	),
+	array(
+		'name' => 'Metatube',
+		'website' => 'http://www.metatube.com',
+		'url-match' => 'http://www\.metatube\.com/([a-z]+)/videos/([a-z0-9-/]+)/',
+		'embed-src' => '',
+		'embed-width' => '400',
+		'embed-height' => '320',
+		'iframe-player' => 'http://www.metatube.com/$2/videos/$3/embed/',
 	),
 	array(
 		'name' => 'MotionBox',

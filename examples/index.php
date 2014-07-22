@@ -68,17 +68,37 @@ Examples available for <?php echo count($videos); ?> services.
 			throw new Exception('An error occured with this type');
 		}
 
+		echo '<table><tr><td>';
+
 		echo '<h3>Parsing Result</h3>';
 		echo 'Video ID: ' . $Object->id();
 
 		echo '<h3>Embedded Media</h3>';
-
 		$embed = $Object->getEmbedCode();
   	// or
 		//$embed = (string)$result;
 		echo $embed;
 
 		echo '<div><h3>Embed code:</h3><textarea>'. htmlspecialchars($embed) . '</textarea></div>';
+
+
+		echo '</td><td>';
+		$id = $Object->id();
+		$slug = $Object->slug();
+		$ObjectFromReverseLookup = $MediaEmbed->parseId($id, $slug);
+		echo '<h3>Reverse lookup by id and host slug</h3>';
+		echo 'Result: ' . ($ObjectFromReverseLookup ? 'OK' : 'ERROR');
+
+		if ($ObjectFromReverseLookup) {
+			echo '<h3>Embedded Media</h3>';
+			$embed = $Object->getEmbedCode();
+
+			echo $embed;
+
+			echo '<div><h3>Embed code:</h3><textarea>'. htmlspecialchars($embed) . '</textarea></div>';
+		}
+
+		echo '</td></tr></table>';
 	}
 ?>
 </td></tr></table>

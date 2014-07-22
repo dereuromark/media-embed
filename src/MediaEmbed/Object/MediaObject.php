@@ -71,7 +71,7 @@ class MediaObject implements ObjectInterface {
 		}
 		if (!empty($this->_stub['reverse'])) {
 			$flashvars = $this->getParams('flashvars');
-			$this->setParam('flashvars', str_replace('$2', $this->_stub['id'], $flashvars));
+			$this->setParam('flashvars', str_replace('$r2', $this->_stub['id'], $flashvars));
 		}
 	}
 
@@ -341,7 +341,7 @@ class MediaObject implements ObjectInterface {
 			return;
 		}
 
-		$src = str_replace('$2', $this->_stub['id'], $this->_stub[$type]);
+		$src = str_replace('$r2', $this->_stub['id'], $this->_stub[$type]);
 		if (!empty($host['replace'])) {
 			foreach ($host['replace'] as $placeholder => $replacement) {
 				$src = str_replace($placeholder, $replacement, $src);
@@ -364,7 +364,7 @@ class MediaObject implements ObjectInterface {
 			return;
 		}
 
-		$src = str_replace('$2', $this->_stub['id'], $this->_stub['image-src']);
+		$src = str_replace('$r2', $this->_stub['id'], $this->_stub['image-src']);
 		return $src;
 	}
 
