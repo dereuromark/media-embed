@@ -13,16 +13,16 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music#hp-sc-p-1' => 'xgv8nw',
 		'http://www.youtube.com/watch?v=yiSjHJnc9CY&feature=feedrec_grec_index' => 'yiSjHJnc9CY',
 		'https://m.youtube.com/watch?v=yWm4YwqO93I' => 'yWm4YwqO93I',
+
+		// Not yet possible
 		//'https://www.youtube.com/playlist?list=PLD1FA4687572EDB23' => 'PLD1FA4687572EDB23',
+
 		'http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy' => '7645001',
 
 		'http://www.metacafe.com/watch/1417475/try_it_yourself_episode_2_hacks_and_tricks_in_google/' => '1417475',
 
 		'http://vimeo.com/19570639' => '19570639',
 		'http://vimeo.com/channels/staffpicks/99585787' => '99585787',
-
-		'http://www.ustream.tv/channel/america2oficial' => '17916695',
-		'http://www.ustream.tv/channel/16962149' => '16962149',
 
 		'http://www.clipfish.de/special/dsds/video/3507980/dsds-recall-anna-und-tobias-harmonieren/' => '3507980',
 		'http://www.clipfish.de/special/kino-trailer/video/3495650/serengeti-filmausschnitt-gepardenkinder-und-die-jagd-der-mutter/' => '3495650',
@@ -59,7 +59,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 
 		'http://www.crunchyroll.com/super-robot-wars-og-the-inspector/episode-25-what-once-was-572858' => '572858',
 
-		#errors
+		// Errors
 		//'http://video.yahoo.com/purinaanimalallstars-10513021/nowplaying-24721185/dog-s-guilty-conscience-charms-web-24722485.html' => '24722485',
 
 		'http://www.viddler.com/explore/sandieman/videos/618/' => '618',
@@ -67,14 +67,19 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		//'http://new.music.yahoo.com/Burning-Spear/videos/view/Burning-Reggae--2139897;_ylt=AhnR4YcZGFPnoo2G5.JJRTesvyUv' => '2139897',
 		'http://new.music.yahoo.com/reggae-cowboys/videos/view/reggae-rodeo--2146467' => '2146467',
 
-		 # more difficult
-		 # 'http://www.youtube.com/user/AttilaHildmannTV#p/c/D0F9D267C03BF7BE/0/hHCnY3RwxMM' => 'hHCnY3RwxMM',
-		 'http://www.youtube.com/watch?v=-vGzem8glbE&feature=channel' => '-vGzem8glbE',
+		// more difficult
+		//'http://www.youtube.com/user/AttilaHildmannTV#p/c/D0F9D267C03BF7BE/0/hHCnY3RwxMM' => 'hHCnY3RwxMM',
+		'http://www.youtube.com/watch?v=-vGzem8glbE&feature=channel' => '-vGzem8glbE',
 
-		 'http://www.ebaumsworld.com/video/watch/80648170' => '80648170',
-		 'http://www.ebaumsworld.com/video/watch/80648170/' => '80648170',
+		'http://www.ebaumsworld.com/video/watch/80648170' => '80648170',
+		'http://www.ebaumsworld.com/video/watch/80648170/' => '80648170',
 
-		 'http://www.videojug.com/film/summer-party-look-with-daniel-sandler' => 'f027ea3e-6eda-8f23-3cc3-ff0008d15e6e',
+		'http://www.videojug.com/film/summer-party-look-with-daniel-sandler' => 'f027ea3e-6eda-8f23-3cc3-ff0008d15e6e',
+
+		// Fetch lookup required
+		'http://www.screencast.com/t/Hh4ulI0M' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
+		'http://www.ustream.tv/channel/america2oficial' => '17916695',
+		'http://www.ustream.tv/channel/16962149' => '16962149',
 
 		// Not available anymore
 		//'http://video.google.com/videoplay?docid=-5767589436465272649#' => '-5767589436465272649',

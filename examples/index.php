@@ -40,16 +40,19 @@ foreach ($videos as $name => $url) {
 		$videoUrl = $videos[$_GET['type']];
 
 		echo '<h2>"' . $_GET['type'] . '"</h2>';
-		echo '<h3>Video URL</h3>';
-		echo $videoUrl;
+		echo 'Video URL: ' . $videoUrl;
+
+		$Object = $MediaEmbed->parseUrl($videoUrl);
+		if (!$Object) {
+			throw new Exception('An error occured with this type');
+		}
+
+		echo '<h3>Parsing Result</h3>';
+		echo 'Video ID: ' . $Object->id();
 
 		echo '<h3>Embedded Media</h3>';
 
-		$result = $MediaEmbed->parseUrl($videoUrl);
-		if (!$result) {
-			throw new Exception('An error occured with this type');
-		}
-		$embed = $result->getEmbedCode();
+		$embed = $Object->getEmbedCode();
   	// or
 		//$embed = (string)$result;
 		echo $embed;
