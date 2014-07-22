@@ -10,7 +10,7 @@ It currently works with 150+ services, including the most important ones like
 - Vimeo
 - Ustream
 
-etc. With community driven updates this aims to be a compete and up-to-date service wrapper lib.
+etc. With community driven updates this aims to be a complete and up-to-date service wrapper lib.
 
 It uses iframes if possible, and has a fallback on the embed object if necessary.
 
@@ -153,7 +153,7 @@ protected function _processVideo($params) {
 }
 ```
 
-So `[video]http://www.youtube.com/v/123[/video]` becomes [video=youtube]123[/video].
+So `[video]http://www.youtube.com/v/123[/video]` becomes `[video=youtube]123[/video]`.
 
 #### Display the resulting code snippet upon display
 ```php
