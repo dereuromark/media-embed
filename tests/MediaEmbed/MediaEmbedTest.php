@@ -87,6 +87,22 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 	);
 
 	/**
+	 * Test Generation of a basic youtube MediaObject (empty)
+	 *
+	 * @return void
+	 */
+	public function testObject() {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->object('youtube');
+		$this->assertTrue($Object !== null);
+		$result = $Object->name();
+		$this->assertEquals('YouTube', $result);
+
+		$result = $Object->id();
+		$this->assertEquals('', $result);
+	}
+
+	/**
 	 * MediaEmbedTest::testParseUrl()
 	 *
 	 * @return void

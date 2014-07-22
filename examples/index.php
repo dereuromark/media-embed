@@ -61,7 +61,7 @@ Examples available for <?php echo count($videos); ?> services.
 		$videoUrl = $videos[$_GET['type']];
 
 		echo '<h2>"' . $_GET['type'] . '"</h2>';
-		echo 'Video URL: ' . $videoUrl;
+		echo '<p>Video URL: ' . $videoUrl . '</p>';
 
 		$Object = $MediaEmbed->parseUrl($videoUrl);
 		if (!$Object) {

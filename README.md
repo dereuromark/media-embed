@@ -67,7 +67,7 @@ $MediaEmbed = new MediaEmbed();
 
 ### Auto-transforming user posted URLs in inline content
 
-Usually, users don't care or don't know exactly a video is linked/embedded.
+Usually, users don't care or don't know how exactly a video is linked/embedded.
 So if they just paste the URL of the browser, you can directly replace those URLs with the HTML code of it:
 ```php
 // Process all links in some content

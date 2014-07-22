@@ -19,8 +19,6 @@ class MediaEmbed {
 
 	protected $_match;
 
-	protected $_stubs = array();
-
 	protected $_hosts = array();
 
 	/**
@@ -33,7 +31,7 @@ class MediaEmbed {
 	 */
 	public function __construct(array $config = array()) {
 		include dirname(__FILE__) . DS . 'Data' . DS . 'stubs.php';
-		$this->_stubs = $stubs;
+		$this->setHosts($stubs);
 
 		$this->config = $config += $this->config;
 	}
@@ -88,7 +86,7 @@ class MediaEmbed {
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
 	public function parseUrl($url, $config = array()) {
-		foreach ($this->_stubs as $stub) {
+		foreach ($this->_hosts as $stub) {
 			if (preg_match('~' . $stub['url-match'] . '~imu', $url, $match)) {
 				$this->_match = $match;
 
@@ -122,22 +120,28 @@ class MediaEmbed {
 	}
 
 	/**
+	 * Set custom stubs overwriting the default ones.
+	 *
+	 * @param array $stubs Same format as in the stubs.php file.
+	 * @param array $reset If default ones should be resetted/removed.
+	 * @return $this
+	 */
+	public function setHosts(array $stubs, $reset = false) {
+		if ($reset) {
+			$this->_hosts = array();
+		}
+		foreach ($stubs as $stub) {
+			$slug = $this->_slug($stub['name']);
+			$this->_hosts[$slug] = $stub;
+		}
+		return $this;
+	}
+
+	/**
 	 * @param array $whitelist (alias/keys)
 	 * @return array hostInfos or false on failure
 	 */
 	public function getHosts($whitelist = array()) {
-		if (!$this->_hosts) {
-			$res = array();
-			foreach ($this->_stubs as $stub) {
-				$slug = $this->_slug($stub['name']);
-
-				// latest ones in stubs array override predecessors (they are the newest ones!)
-				$res[$slug] = $stub;
-			}
-
-			$this->_hosts = $res;
-		}
-
 		if ($whitelist) {
 			$res = array();
 			foreach ($this->_hosts as $slug => $host) {
@@ -175,7 +179,7 @@ class MediaEmbed {
 		return false;
 	}
 
-	public function object($stub, array $config) {
+	public function object($stub, array $config = array()) {
 		if (!is_array($stub)) {
 			$host = $this->getHost($stub);
 			if (!$host) {
