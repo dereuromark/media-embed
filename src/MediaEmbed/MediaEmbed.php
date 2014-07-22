@@ -170,7 +170,7 @@ class MediaEmbed {
 	 * Create the embed code for a local file
 	 *
 	 * @param $file string - the file we are wanting to embed
-	 * @return boolean - whether or not the url contains valid/supported video
+	 * @return bool Whether or not the url contains valid/supported video
 	 */
 	public function embedLocal($file) {
 		return false;

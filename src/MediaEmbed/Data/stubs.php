@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
 	Example:
 	array(
 		'name' =>	Source the embeded media comes from
@@ -908,7 +908,7 @@ $stubs = array(
 		'embed-width' => '470',
 		'embed-height' => '406',
 		'id' => '$3',
-		'replace' => array('$2'=>'de'),
+		'replace' => array('$2' => 'de'),
 	),
 	array(
 		'name' => 'MyVi',
@@ -1438,7 +1438,7 @@ $deprecatedStubs = array(
 		'embed-width' => '400',
 		'embed-height' => '326',
 		'id' => '$3',
-		'replace' => array('$2'=>'com'),
+		'replace' => array('$2' => 'com'),
 	),
 	array(
 		'name' => 'MehrSchbass',

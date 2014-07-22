@@ -254,8 +254,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @param mixed - height to set the object to
 	 *
-	 * @return boolean - true if the value was set, false
-	 *									 if parseURL hasn't been called yet
+	 * @return $this
 	 */
 	public function setHeight($height) {
 		return $this->setAttribute('height', $height);
@@ -266,8 +265,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @param mixed - width to set the object to
 	 *
-	 * @return boolean - true if the value was set, false
-	 *									 if parseURL hasn't been called yet
+	 * @return $this
 	 */
 	public function setWidth($width) {
 		return $this->setAttribute('width', $width);
@@ -382,7 +380,7 @@ class MediaObject implements ObjectInterface {
 		$thumb = $this->_stub['image-src'];
 
 		for ($i = 1; $i <= count($this->_match); $i++) {
-			$thumb = str_ireplace('$'.$i, $this->_match[$i - 1], $thumb);
+			$thumb = str_ireplace('$' . $i, $this->_match[$i - 1], $thumb);
 		}
 
 		return $thumb;
@@ -445,7 +443,7 @@ class MediaObject implements ObjectInterface {
 	 */
 	protected function _setDefaultParams($stub) {
 		$source = $stub['embed-src'];
-		$flashvars = (isset($stub['flashvars']))? $stub['flashvars'] : null;
+		$flashvars = (isset($stub['flashvars'])) ? $stub['flashvars'] : null;
 
 		for ($i = 1; $i <= count($this->_match); $i++) {
 			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
