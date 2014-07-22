@@ -24,7 +24,7 @@ class MediaEmbedBehavior {
 		}
 		$host = $params[1];
 		$id = $params[2];
-		if (!($MediaObject = $this->MediaEmbed->parseId(array('host' => $host, 'id' => $id)))) {
+		if (!($MediaObject = $this->MediaEmbed->parseId($id, $host))) {
 			return $params[0];
 		}
 

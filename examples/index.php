@@ -12,6 +12,10 @@ table td {
 td.types {
 	width: 300px;
 }
+textarea {
+	width: 100%;
+	height: 100px;
+}
 </style>
 
 <h1>Video Examples</h1>
@@ -36,8 +40,10 @@ foreach ($videos as $name => $url) {
 		$videoUrl = $videos[$_GET['type']];
 
 		echo '<h2>"' . $_GET['type'] . '"</h2>';
+		echo '<h3>Video URL</h3>';
 		echo $videoUrl;
-		echo '<br /><br />';
+
+		echo '<h3>Embedded Media</h3>';
 
 		$result = $MediaEmbed->parseUrl($videoUrl);
 		if (!$result) {
@@ -47,6 +53,8 @@ foreach ($videos as $name => $url) {
   	// or
 		//$embed = (string)$result;
 		echo $embed;
+
+		echo '<div><h3>Embed code:</h3><textarea>'. htmlspecialchars($embed) . '</textarea></div>';
 	}
 ?>
 </td></tr></table>
