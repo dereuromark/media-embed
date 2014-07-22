@@ -195,3 +195,6 @@ See [wiki](https://github.com/dereuromark/MediaEmbed/wiki).
 ## License
 
 The MIT License.
+
+## Credits
+Inspired by [autoembed](http://autoembed.com/) which already included most of the supported services and laid the foundation of this OOP approach here.
