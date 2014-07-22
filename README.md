@@ -2,7 +2,7 @@
 A utility that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
 
-It currently works with 100+ services, including the most important ones like
+It currently works with 150+ services, including the most important ones like
 
 - YouTube
 - Dailymotion

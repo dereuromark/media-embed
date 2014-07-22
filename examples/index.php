@@ -16,6 +16,9 @@ textarea {
 	width: 100%;
 	height: 100px;
 }
+ul.no-examples li {
+	font-size: 10px;
+}
 </style>
 
 <h1>Video Examples</h1>
@@ -26,6 +29,8 @@ textarea {
 <ul>
 <?php
 $MediaEmbed = new \MediaEmbed\MediaEmbed();
+$hosts = $MediaEmbed->getHosts();
+ksort($hosts);
 
 foreach ($videos as $name => $url) {
 ?>
@@ -34,6 +39,22 @@ foreach ($videos as $name => $url) {
 }
 ?>
 </ul>
+
+<ul class="no-examples">
+<?php
+foreach ($hosts as $slug => $host) {
+	if ($host['name'] === '$2' || array_key_exists($host['name'], $videos)) {
+		continue;
+	}
+?>
+	<li><?php echo $host['name']; ?></li>
+<?php
+}
+?>
+</ul>
+
+Currently supported services: <?php echo count($hosts); ?><br />
+Examples available for <?php echo count($videos); ?> services.
 </td><td>
 <?php
 	if (!empty($_GET['type']) && isset($videos[$_GET['type']])) {
