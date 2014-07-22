@@ -15,9 +15,9 @@ class MediaObject implements ObjectInterface {
 
 	protected $_match;
 
-  protected $_objectAttributes = array();
+	protected $_objectAttributes = array();
 
-  protected $_objectParams = array();
+	protected $_objectParams = array();
 
 	public $config = array(
 		'prefer' => 'iframe' // Type object or iframe (only available for few, fallback will be object)
@@ -75,24 +75,24 @@ class MediaObject implements ObjectInterface {
 		}
 	}
 
-  /**
-   * Getter/setter for stub
-   *
-   * @param string $property - (optional) the specific
-   *   property of the stub to be returned. If
-   *   omitted, array of all properties are returned.
-   *
-   * @return array|string|$this
-   */
-  public function stub($property = null, $value = null) {
-  	if ($property === null) {
+	/**
+	 * Getter/setter for stub
+	 *
+	 * @param string $property - (optional) the specific
+	 *	 property of the stub to be returned. If
+	 *	 omitted, array of all properties are returned.
+	 *
+	 * @return array|string|$this
+	 */
+	public function stub($property = null, $value = null) {
+		if ($property === null) {
 			return $this->_stub;
-  	}
-  	if ($value === null) {
-    	return isset($this->_stub[$property]) ? $this->_stub[$property] : null;
-  	}
-  	return $this;
-  }
+		}
+		if ($value === null) {
+			return isset($this->_stub[$property]) ? $this->_stub[$property] : null;
+		}
+		return $this;
+	}
 
 	/**
 	 * {@inheritdoc}
@@ -203,134 +203,134 @@ class MediaObject implements ObjectInterface {
 		return $filename;
 	}
 
-  /**
-   * Override a default object param value
-   *
-   * @param $param mixed - the name of the param to be set
-   *                       or an array of multiple params to set
-   * @param $value string - (optional) the value to set the param to
-   *                        if only one param is being set
-   *
-   * @return $this
-   */
-  public function setParam($param, $value = null) {
-    if (is_array($param)) {
-      foreach ($param as $p => $v) {
-        $this->_objectParams[$p] = $v;
-      }
+	/**
+	 * Override a default object param value
+	 *
+	 * @param $param mixed - the name of the param to be set
+	 *											 or an array of multiple params to set
+	 * @param $value string - (optional) the value to set the param to
+	 *												if only one param is being set
+	 *
+	 * @return $this
+	 */
+	public function setParam($param, $value = null) {
+		if (is_array($param)) {
+			foreach ($param as $p => $v) {
+				$this->_objectParams[$p] = $v;
+			}
 
-    } else {
-      $this->_objectParams[$param] = $value;
-    }
+		} else {
+			$this->_objectParams[$param] = $value;
+		}
 
 		return $this;
-  }
+	}
 
-  /**
-   * Override a default object attribute value
-   *
-   * @param $param mixed - the name of the attribute to be set
-   *                       or an array of multiple attribs to be set
-   * @param $value string - (optional) the value to set the param to
-   *                        if only one param is being set
-   *
-   * @return $this
-   */
-  public function setAttribute($param, $value = null) {
-    if (is_array($param)) {
-      foreach ($param as $p => $v) {
-        $this->_objectAttributes[$p] = $v;
-      }
+	/**
+	 * Override a default object attribute value
+	 *
+	 * @param $param mixed - the name of the attribute to be set
+	 *											 or an array of multiple attribs to be set
+	 * @param $value string - (optional) the value to set the param to
+	 *												if only one param is being set
+	 *
+	 * @return $this
+	 */
+	public function setAttribute($param, $value = null) {
+		if (is_array($param)) {
+			foreach ($param as $p => $v) {
+				$this->_objectAttributes[$p] = $v;
+			}
 
-    } else {
-      $this->_objectAttributes[$param] = $value;
-    }
+		} else {
+			$this->_objectAttributes[$param] = $value;
+		}
 
-    return $this;
-  }
+		return $this;
+	}
 
-  /**
-   * Set the height of the object
-   *
-   * @param mixed - height to set the object to
-   *
-   * @return boolean - true if the value was set, false
-   *                   if parseURL hasn't been called yet
-   */
-  public function setHeight($height) {
-    return $this->setAttribute('height', $height);
-  }
+	/**
+	 * Set the height of the object
+	 *
+	 * @param mixed - height to set the object to
+	 *
+	 * @return boolean - true if the value was set, false
+	 *									 if parseURL hasn't been called yet
+	 */
+	public function setHeight($height) {
+		return $this->setAttribute('height', $height);
+	}
 
-  /**
-   * Set the width of the object
-   *
-   * @param mixed - width to set the object to
-   *
-   * @return boolean - true if the value was set, false
-   *                   if parseURL hasn't been called yet
-   */
-  public function setWidth($width) {
-    return $this->setAttribute('width', $width);
-  }
+	/**
+	 * Set the width of the object
+	 *
+	 * @param mixed - width to set the object to
+	 *
+	 * @return boolean - true if the value was set, false
+	 *									 if parseURL hasn't been called yet
+	 */
+	public function setWidth($width) {
+		return $this->setAttribute('width', $width);
+	}
 
-  /**
-   * Return object params about the video metadata
-   *
-   * @return array|string - object params
-   */
-  public function getParams($key = null) {
-  	if ($key === null) {
-    	return $this->_objectParams;
-    }
-    if (!isset($this->_objectParams[$key])) {
-    	return null;
-    }
-    return $this->_objectParams[$key];
-  }
+	/**
+	 * Return object params about the video metadata
+	 *
+	 * @return array|string - object params
+	 */
+	public function getParams($key = null) {
+		if ($key === null) {
+			return $this->_objectParams;
+		}
+		if (!isset($this->_objectParams[$key])) {
+			return null;
+		}
+		return $this->_objectParams[$key];
+	}
 
-  /**
-   * Return object attribute
-   *
-   * @return array - object attribute
-   */
-  public function getAttributes($key = null) {
-  	if ($key === null) {
-    	return $this->_objectAttributes;
-  	}
+	/**
+	 * Return object attribute
+	 *
+	 * @return array - object attribute
+	 */
+	public function getAttributes($key = null) {
+		if ($key === null) {
+			return $this->_objectAttributes;
+		}
 		if (!isset($this->_objectAttributes[$key])) {
-    	return null;
-    }
-    return $this->_objectAttributes[$key];
-  }
+			return null;
+		}
+		return $this->_objectAttributes[$key];
+	}
 
-  /**
-   * Convert the url to an embedable tag
-   *
-   * return string - the embed html
-   */
-  public function getEmbedCode() {
-    if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
-      return $this->_buildIframe();
-    }
-    return $this->_buildObject();
-  }
+	/**
+	 * Convert the url to an embedable tag
+	 *
+	 * return string - the embed html
+	 */
+	public function getEmbedCode() {
+		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
+			return $this->_buildIframe();
+		}
+		return $this->_buildObject();
+	}
 
-  /**
-   * Getter/setter of what this Object currently prefers as output type
-   *
-   * @return $this|string
-   */
-  protected function prefers($type = null) {
-  	if ($type === null) {
-  		$prefers = 'objcet';
-  		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
-  			$prefers = 'iframe';
-  		}
-  		return $prefers;
-  	}
-  	$this->config['prefer'] = $type;
-  	return $this;
-  }
+	/**
+	 * Getter/setter of what this Object currently prefers as output type
+	 *
+	 * @return $this|string
+	 */
+	protected function prefers($type = null) {
+		if ($type === null) {
+			$prefers = 'objcet';
+			if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
+				$prefers = 'iframe';
+			}
+			return $prefers;
+		}
+		$this->config['prefer'] = $type;
+		return $this;
+	}
 
 	/**
 	 * Get final src
@@ -370,23 +370,23 @@ class MediaObject implements ObjectInterface {
 		return $src;
 	}
 
-  /**
-   * Return a thumbnail for the embeded video
-   *
-   * @return string - the thumbnail href
-   */
-  public function image() {
-    if (empty($this->_stub['image-src'])) {
-    	return '';
+	/**
+	 * Return a thumbnail for the embeded video
+	 *
+	 * @return string - the thumbnail href
+	 */
+	public function image() {
+		if (empty($this->_stub['image-src'])) {
+			return '';
 		}
-    $thumb = $this->_stub['image-src'];
+		$thumb = $this->_stub['image-src'];
 
-    for ($i = 1; $i <= count($this->_match); $i++) {
-      $thumb = str_ireplace('$'.$i, $this->_match[$i - 1], $thumb);
-    }
+		for ($i = 1; $i <= count($this->_match); $i++) {
+			$thumb = str_ireplace('$'.$i, $this->_match[$i - 1], $thumb);
+		}
 
-    return $thumb;
-  }
+		return $thumb;
+	}
 
 	/**
 	 * Convenience wrapper for `echo $MediaObject`
@@ -397,65 +397,65 @@ class MediaObject implements ObjectInterface {
 		return $this->getEmbedCode();
 	}
 
-  /**
-   * Build a generic object skeleton
-   *
-   * @return string
-   */
-  protected function _buildObject() {
-    $objectAttributes = $objectParams = '';
+	/**
+	 * Build a generic object skeleton
+	 *
+	 * @return string
+	 */
+	protected function _buildObject() {
+		$objectAttributes = $objectParams = '';
 
-    foreach ($this->_objectAttributes as $param => $value) {
-      $objectAttributes .= ' ' . $param . '="' . $value . '"';
-    }
+		foreach ($this->_objectAttributes as $param => $value) {
+			$objectAttributes .= ' ' . $param . '="' . $value . '"';
+		}
 
-    foreach ($this->_objectParams as $param => $value) {
-      $objectParams .= '<param name="' . $param . '" value="' . $value . '" />';
-    }
+		foreach ($this->_objectParams as $param => $value) {
+			$objectParams .= '<param name="' . $param . '" value="' . $value . '" />';
+		}
 
-    if (!$objectAttributes && !$objectParams) {
-    	return '';
-    }
-    return sprintf("<object %s> %s</object>", $objectAttributes, $objectParams);
-  }
+		if (!$objectAttributes && !$objectParams) {
+			return '';
+		}
+		return sprintf("<object %s> %s</object>", $objectAttributes, $objectParams);
+	}
 
-  /**
-   * Build an iFrame player
-   *
-   * @return string
-   */
-  protected function _buildIframe() {
-    $source = $this->_stub['iframe-player'];
+	/**
+	 * Build an iFrame player
+	 *
+	 * @return string
+	 */
+	protected function _buildIframe() {
+		$source = $this->_stub['iframe-player'];
 
-    for ($i = 1; $i <= count($this->_match); $i++) {
-      $source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
-    }
+		for ($i = 1; $i <= count($this->_match); $i++) {
+			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
+		}
 
-    $width = $this->_objectAttributes['width'];
-    $height = $this->_objectAttributes['height'];
+		$width = $this->_objectAttributes['width'];
+		$height = $this->_objectAttributes['height'];
 		// Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
-    return sprintf('<iframe type="text/html" width="%s" height="%s" src="%s?wmode=transparent" frameborder="0"></iframe>', $width, $height, $source);
-  }
+		return sprintf('<iframe type="text/html" width="%s" height="%s" src="%s?wmode=transparent" frameborder="0"></iframe>', $width, $height, $source);
+	}
 
-  /**
-   * Set the default params for the type of
-   * stub we are working with
-   *
-   * @return void
-   */
-  protected function _setDefaultParams($stub) {
-    $source = $stub['embed-src'];
-    $flashvars = (isset($stub['flashvars']))? $stub['flashvars'] : null;
+	/**
+	 * Set the default params for the type of
+	 * stub we are working with
+	 *
+	 * @return void
+	 */
+	protected function _setDefaultParams($stub) {
+		$source = $stub['embed-src'];
+		$flashvars = (isset($stub['flashvars']))? $stub['flashvars'] : null;
 
-    for ($i = 1; $i <= count($this->_match); $i++) {
-      $source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
-      $flashvars = str_ireplace('$' . $i, $this->_match[$i - 1], $flashvars);
-    }
+		for ($i = 1; $i <= count($this->_match); $i++) {
+			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
+			$flashvars = str_ireplace('$' . $i, $this->_match[$i - 1], $flashvars);
+		}
 
-    $source = $this->_esc($source);
-    $flashvars = $this->_esc($flashvars);
+		$source = $this->_esc($source);
+		$flashvars = $this->_esc($flashvars);
 
-    $this->_objectParams = array(
+		$this->_objectParams = array(
 			'movie' => $source,
 			'quality' => 'high',
 			'allowFullScreen' => 'true',
@@ -472,7 +472,7 @@ class MediaObject implements ObjectInterface {
 			'width' => $stub['embed-width'],
 			'height' => $stub['embed-height'],
 		);
-  }
+	}
 
 	/**
 	 * MediaObject::_esc()

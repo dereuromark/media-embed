@@ -190,13 +190,13 @@ class MediaEmbed {
 		return new MediaObject($stub, $config);
 	}
 
-  /**
-   * Slugify a string.
-   *
-   * @param string $text
-   * @return string
-   */
-  protected function _slug($text) {
+	/**
+	 * Slugify a string.
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	protected function _slug($text) {
 		// replace non letter or digits by -
 		$text = preg_replace('~[^\\pL\d]+~u', '-', $text);
 
@@ -212,7 +212,7 @@ class MediaEmbed {
 		// remove unwanted characters
 		$text = preg_replace('~[^-\w]+~', '', $text);
 		return $text;
-  }
+	}
 
 /* deprecated */
 
