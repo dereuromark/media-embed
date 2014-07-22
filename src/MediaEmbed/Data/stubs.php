@@ -111,6 +111,15 @@ $stubs = array(
 		'embed-height' => '347',
 	),
 	array(
+		'name' => 'Aparat',
+		'website' => 'http://www.aparat.com',
+		'url-match' => 'http://www.aparat.com/v/([A-z0-9-_]+)(?:/.*)?',
+		'embed-src' => '',
+		'embed-width' => '425',
+		'embed-height' => '354',
+		'iframe-player' => 'http://www.aparat.com/video/video/embed/videohash/$2/vt/frame/'
+	),
+	array(
 		'name' => 'Archive.org',
 		'website' => 'http://www.archive.org',
 		'url-match' => 'http://(?:www\.)?archive\.org/download/((?:[0-9a-z_-]*?)/(?:[0-9a-z_-]*?)\.flv)',
@@ -127,7 +136,6 @@ $stubs = array(
 		'embed-width' => '425',
 		'embed-height' => '354',
 	),
-
 	array(
 		'name' => 'Blastro',
 		'website' => 'http://www.blastro.com',

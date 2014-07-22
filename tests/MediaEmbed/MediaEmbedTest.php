@@ -18,9 +18,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		//'https://www.youtube.com/playlist?list=PLD1FA4687572EDB23' => 'PLD1FA4687572EDB23',
 
 		'http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy' => '7645001',
-
 		'http://www.metacafe.com/watch/1417475/try_it_yourself_episode_2_hacks_and_tricks_in_google/' => '1417475',
-
 		'http://vimeo.com/19570639' => '19570639',
 		'http://vimeo.com/channels/staffpicks/99585787' => '99585787',
 
@@ -75,6 +73,8 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://www.ebaumsworld.com/video/watch/80648170/' => '80648170',
 
 		'http://www.videojug.com/film/summer-party-look-with-daniel-sandler' => 'f027ea3e-6eda-8f23-3cc3-ff0008d15e6e',
+
+		'http://www.aparat.com/v/sSLMC' => 'sSLMC',
 
 		// Fetch lookup required
 		'http://www.screencast.com/t/Hh4ulI0M' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
