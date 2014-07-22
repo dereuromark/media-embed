@@ -90,7 +90,6 @@ class MediaEmbed {
 	public function parseUrl($url, $config = array()) {
 		foreach ($this->_stubs as $stub) {
 			if (preg_match('~' . $stub['url-match'] . '~imu', $url, $match)) {
-var_dump($match);
 				$this->_match = $match;
 
 				if (!empty($stub['fetch-match'])) {
