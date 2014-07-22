@@ -109,7 +109,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
 
 		$result = $Object->id();
-		$this->assertEquals($id, $result, 'Invalid ID ' . $result .' for ' . $url);
+		$this->assertEquals($id, $result, 'Invalid ID ' . $result . ' for ' . $url);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 # MediaEmbed [![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](http://travis-ci.org/dereuromark/MediaEmbed)
-A utility that generates HTML embed tags for audio or video located on a given URL.
+A stand-alone utility library that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
 
 It currently works with 150+ services, including the most important ones like
@@ -23,6 +23,7 @@ It uses iframes if possible, and has a fallback on the embed object if necessary
 This is alpha-software. Please feel free to join in and help out to complete it.
 Once the coverage is high enough we can release a beta and soon after the first stable.
 
+The plan is to follow SemVar once there is a stable release.
 
 ## Installation
 
