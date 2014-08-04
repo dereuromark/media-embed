@@ -87,7 +87,7 @@ class MediaEmbed {
 	 */
 	public function parseUrl($url, $config = array()) {
 		foreach ($this->_hosts as $stub) {
-			if (preg_match('~' . $stub['url-match'] . '~imu', $url, $match)) {
+			if ($match = $this->_matchUrl($url, (array)$stub['url-match'])) {
 				$this->_match = $match;
 
 				if (!empty($stub['fetch-match'])) {
@@ -101,6 +101,22 @@ class MediaEmbed {
 				return $Object;
 			}
 		}
+	}
+
+	/**
+	 * MediaEmbed::_match()
+	 *
+	 * @param string $url
+	 * @param array $regexRules
+	 * @return array
+	 */
+	protected function _matchUrl($url, array $regexRules) {
+		foreach ($regexRules as $regexRule) {
+			if (preg_match('~' . $regexRule . '~imu', $url, $match)) {
+				return $match;
+			}
+		}
+		return array();
 	}
 
 	/**

@@ -13,6 +13,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music#hp-sc-p-1' => 'xgv8nw',
 		'http://www.youtube.com/watch?v=yiSjHJnc9CY&feature=feedrec_grec_index' => 'yiSjHJnc9CY',
 		'https://m.youtube.com/watch?v=yWm4YwqO93I' => 'yWm4YwqO93I',
+		'http://youtu.be/MKlq4gQKtU0' => 'MKlq4gQKtU0',
 
 		// Not yet possible
 		//'https://www.youtube.com/playlist?list=PLD1FA4687572EDB23' => 'PLD1FA4687572EDB23',
