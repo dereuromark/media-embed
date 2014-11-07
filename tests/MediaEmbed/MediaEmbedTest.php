@@ -83,6 +83,8 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://www.ustream.tv/channel/16962149' => '16962149',
 		'http://blip.tv/stylestar/shine-6866879' => 'AYOjkCMC',
 
+		'http://example.wistia.com/medias/1voyrefhy9' => '1voyrefhy9',
+
 		// Not available anymore
 		//'http://video.google.com/videoplay?docid=-5767589436465272649#' => '-5767589436465272649',
 	);
