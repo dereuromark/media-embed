@@ -1272,7 +1272,7 @@ $stubs = array(
 		'name' => 'VideoJug',
 		'website' => 'http://www.videojug.com',
 		'url-match' => 'http://(?:www\.)videojug\.com/film/',
-		'fetch-match' => 'http:\/\/www.videojug.com\/player\/videoJugPlayer.swf\?id=((?:[0-9a-f]{1,12}-?){5})',
+		'fetch-match' => 'data-videoid="((?:[0-9a-f]{1,12}-?){5})"',
 		'embed-src' => 'http://www.videojug.com/views/player/Player.swf', //http://www.videojug.com/player?id=
 		'embed-width' => '400',
 		'embed-height' => '345',
