@@ -494,7 +494,7 @@ $stubs = array(
 		'embed-src' => 'http://www.gamekyo.com/flash/flvplayer.swf?videoid=$2',
 		'embed-width' => '512',
 		'embed-height' => '307',
-),
+	),
 	array(
 		'name' => 'GameSpot',
 		'website' => 'http://www.gamespot.com',
@@ -503,7 +503,7 @@ $stubs = array(
 		'embed-width' => '432',
 		'embed-height' => '362',
 		'flashvars' => 'skin=http://image.com.com/gamespot/images/cne_flash/production/media_player/proteus/one/skins/gamespot.png&paramsURI=http%3A%2F%2Fwww.gamespot.com%2Fpages%2Fvideo_player%2Fxml.php%3Fid%3D$2%26mode%3Dembedded%26width%3D432%26height%3D362%2F',
-),
+	),
 	array(
 		'name' => 'GameTrailers (Inc. User Movies)',
 		'website' => 'http://www.gametrailers.com',
@@ -1363,6 +1363,14 @@ $stubs = array(
 		'embed-width' => '425',
 		'embed-height' => '384',
 		'flashvars' => 'playList=http%3A%2F%2Fcommunity.webshots.com%2Fslideshow%2Fmeta%2F$2%3Finline%3Dtrue&inlineUrl=http%3A%2F%2Fcommunity.webshots.com%2FinlinePhoto%26src%3Ds%26referPage%3Dhttp%3A%2F%2Fgood-times.webshots.com%2Fslideshow%2F$2&postRollContent=http%3A%2F%2Fp.webshots.com%2Fflash%2Fws_postroll.swf&shareUrl=http%3A%2F%2Fgood-times.webshots.com%2Fslideshow%2F$2&audio=on&audioVolume=33&autoPlay=false&transitionSpeed=5&startIndex=0&panzoom=on&deployed=true',
+	),
+	array(
+		'name' => 'Wistia',
+		'website' => 'http://www.wistia.com',
+		'url-match' => 'https?://[a-z0-9\-_]*\.wistia\.com/medias/([a-z0-9]*)',
+		'embed-src' => 'http://fast.wistia.net/embed/iframe/$1',
+		'embed-width' => '480',
+		'embed-height' => '270',
 	),
 	array(
 		'name' => 'Yahoo Video HK',
