@@ -227,8 +227,7 @@ class MediaObject implements ObjectInterface {
 			} else {
 				$this->_iframeParams[$param] = $value;
 			}
-		}
-		else {
+		} else {
 			if (is_array($param)) {
 				foreach ($param as $p => $v) {
 					$this->_objectParams[$p] = $v;
@@ -261,8 +260,7 @@ class MediaObject implements ObjectInterface {
 			} else {
 				$this->_iframeAttributes[$param] = $value;
 			}
-		}
-		else {
+		} else {
 			if (is_array($param)) {
 				foreach ($param as $p => $v) {
 					$this->_objectAttributes[$p] = $v;
@@ -274,7 +272,6 @@ class MediaObject implements ObjectInterface {
 		}
 		return $this;
 	}
-
 
 	/**
 	 * Set the height of the object
@@ -489,7 +486,7 @@ class MediaObject implements ObjectInterface {
 			//if === true, is an attribute without value
 			//if === false, remove the attribute
 			if ($val !== false) {
-				$attributes .= ' ' . $key . ($val !== true ? '="' . htmlspecialchars($val) .'"' : '');
+				$attributes .= ' ' . $key . ($val !== true ? '="' . $this->_esc($val) . '"' : '');
 			}
 		}
 
