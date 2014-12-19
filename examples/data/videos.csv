@@ -1,5 +1,7 @@
-host,url
+host,url,attributes,params
 YouTube, "http://www.youtube.com/watch?v=yiSjHJnc9CY"
+YouTube-Embed, "http://www.youtube.com/embed/yiSjHJnc9CY?rel=0"
+YouTube-Attributes, "http://www.youtube.com/watch?v=yiSjHJnc9CY", "{""class"":""video"",""id"":""video_test"",""data-something"":""test""}", "{""autoplay"":1,""loop"":1,""modestbranding"":1}"
 Dailymotion, "http://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music"
 Vimeo, "http://vimeo.com/channels/staffpicks/99585787"
 MyVideo, "http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy"

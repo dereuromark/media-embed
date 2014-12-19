@@ -32,7 +32,10 @@ $MediaEmbed = new \MediaEmbed\MediaEmbed();
 $hosts = $MediaEmbed->getHosts();
 ksort($hosts);
 
-foreach ($videos as $name => $url) {
+foreach ($videos as $name => $parts) {
+	$url = $parts[0];
+	$attributes = $parts[1];
+	$params = $parts[2];
 ?>
 	<li><a href="index.php?type=<?php echo $name; ?>"><?php echo $name; ?></a></li>
 <?php
@@ -58,10 +61,18 @@ Examples available for <?php echo count($videos); ?> services.
 </td><td>
 <?php
 	if (!empty($_GET['type']) && isset($videos[$_GET['type']])) {
-		$videoUrl = $videos[$_GET['type']];
+		$videoUrl = $videos[$_GET['type']][0];
+		$videoAttributes = $videos[$_GET['type']][1];
+		$videoParams = $videos[$_GET['type']][2];
 
 		echo '<h2>"' . $_GET['type'] . '"</h2>';
 		echo '<p>Video URL: ' . $videoUrl . '</p>';
+		if($videoAttributes) {
+			echo '<p>Video Attributes: <pre>' . print_r($videoAttributes, 1) . '</pre></p>';
+		}
+		if($videoParams) {
+			echo '<p>Video Params: <pre>' . print_r($videoParams, 1) . '</pre></p>';
+		}
 
 		$Object = $MediaEmbed->parseUrl($videoUrl);
 		if (!$Object) {
@@ -74,6 +85,14 @@ Examples available for <?php echo count($videos); ?> services.
 		echo 'Video ID: ' . $Object->id();
 
 		echo '<h3>Embedded Media</h3>';
+		//adding attributes
+		if($videoAttributes) {
+			$Object->setAttribute($videoAttributes);
+		}
+		//adding params
+		if($videoParams) {
+			$Object->setParam($videoParams);
+		}
 		$embed = $Object->getEmbedCode();
   	// or
 		//$embed = (string)$result;
@@ -85,6 +104,8 @@ Examples available for <?php echo count($videos); ?> services.
 		echo '</td><td>';
 		$id = $Object->id();
 		$slug = $Object->slug();
+		//remove some params here
+		$Object->setParam('autoplay', 0);
 		$ObjectFromReverseLookup = $MediaEmbed->parseId($id, $slug);
 		echo '<h3>Reverse lookup by video id and host slug</h3>';
 		echo 'Result: ' . ($ObjectFromReverseLookup ? 'OK' : 'ERROR');
