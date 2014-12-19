@@ -1,4 +1,8 @@
-# MediaEmbed [![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](http://travis-ci.org/dereuromark/MediaEmbed)
+# MediaEmbed
+[![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](http://travis-ci.org/dereuromark/MediaEmbed)
+[![License](https://poser.pugx.org/dereuromark/MediaEmbed/license.png)](https://packagist.org/packages/dereuromark/MediaEmbed)
+
+
 A stand-alone utility library that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
 
@@ -214,10 +218,6 @@ You can see live examples when you get this repo running locally and browse to `
 
 ## Contribute / TODOs
 See [wiki](https://github.com/dereuromark/MediaEmbed/wiki).
-
-## License
-
-The MIT License.
 
 ## Credits
 Inspired by [autoembed](http://autoembed.com/) which already included most of the supported services and laid the foundation of this OOP approach here.
