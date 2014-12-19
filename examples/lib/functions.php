@@ -12,7 +12,7 @@ function getVideos($file) {
 				continue;
 			}
 			$count++;
-			$videos[$data[0]] = $data[1];
+			$videos[$data[0]] = array($data[1], json_decode($data[2], true), json_decode($data[3], true));
 		}
 	}
 	return $videos;

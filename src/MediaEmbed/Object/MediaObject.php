@@ -19,6 +19,10 @@ class MediaObject implements ObjectInterface {
 
 	protected $_objectParams = array();
 
+	protected $_iframeAttributes = array();
+
+	protected $_iframeParams = array();
+
 	public $config = array(
 		'prefer' => 'iframe' // Type object or iframe (only available for few, fallback will be object)
 	);
@@ -66,12 +70,12 @@ class MediaObject implements ObjectInterface {
 			$src = $this->_getObjectSrc($type);
 			$this->_stub['iframe-player'] = $src;
 
-			$this->setParam('movie', $src);
-			$this->setAttribute('data', $src);
+			$this->_objectParams['movie'] = $src;
+			$this->_objectAttributes['data'] = $src;
 		}
 		if (!empty($this->_stub['reverse'])) {
-			$flashvars = $this->getParams('flashvars');
-			$this->setParam('flashvars', str_replace('$r2', $this->_stub['id'], $flashvars));
+			$flashvars = $this->_objectParams['flashvars'];
+			$this->_objectParams['flashvars'] =  str_replace('$r2', $this->_stub['id'], $flashvars);
 		}
 	}
 
@@ -207,22 +211,33 @@ class MediaObject implements ObjectInterface {
 	 * Override a default object param value
 	 *
 	 * @param $param mixed - the name of the param to be set
-	 *											 or an array of multiple params to set
+	 *                                           or an array of multiple params to set
 	 * @param $value string - (optional) the value to set the param to
-	 *												if only one param is being set
+	 *                                              if only one param is being set
 	 *
 	 * @return $this
 	 */
 	public function setParam($param, $value = null) {
-		if (is_array($param)) {
-			foreach ($param as $p => $v) {
-				$this->_objectParams[$p] = $v;
+		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
+			if (is_array($param)) {
+				foreach ($param as $p => $v) {
+					$this->_iframeParams[$p] = $v;
+				}
+
+			} else {
+				$this->_iframeParams[$param] = $value;
 			}
-
-		} else {
-			$this->_objectParams[$param] = $value;
 		}
+		else {
+			if (is_array($param)) {
+				foreach ($param as $p => $v) {
+					$this->_objectParams[$p] = $v;
+				}
 
+			} else {
+				$this->_objectParams[$param] = $value;
+			}
+		}
 		return $this;
 	}
 
@@ -230,24 +245,36 @@ class MediaObject implements ObjectInterface {
 	 * Override a default object attribute value
 	 *
 	 * @param $param mixed - the name of the attribute to be set
-	 *											 or an array of multiple attribs to be set
+	 *                                           or an array of multiple attribs to be set
 	 * @param $value string - (optional) the value to set the param to
-	 *												if only one param is being set
+	 *                                              if only one param is being set
 	 *
 	 * @return $this
 	 */
 	public function setAttribute($param, $value = null) {
-		if (is_array($param)) {
-			foreach ($param as $p => $v) {
-				$this->_objectAttributes[$p] = $v;
+		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
+			if (is_array($param)) {
+				foreach ($param as $p => $v) {
+					$this->_iframeAttributes[$p] = $v;
+				}
+
+			} else {
+				$this->_iframeAttributes[$param] = $value;
 			}
-
-		} else {
-			$this->_objectAttributes[$param] = $value;
 		}
+		else {
+			if (is_array($param)) {
+				foreach ($param as $p => $v) {
+					$this->_objectAttributes[$p] = $v;
+				}
 
+			} else {
+				$this->_objectAttributes[$param] = $value;
+			}
+		}
 		return $this;
 	}
+
 
 	/**
 	 * Set the height of the object
@@ -277,6 +304,16 @@ class MediaObject implements ObjectInterface {
 	 * @return array|string - object params
 	 */
 	public function getParams($key = null) {
+		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
+			if ($key === null) {
+				return $this->_iframeParams;
+			}
+			if (!isset($this->_iframeParams[$key])) {
+				return null;
+			}
+			return $this->_iframeParams[$key];
+		}
+
 		if ($key === null) {
 			return $this->_objectParams;
 		}
@@ -292,6 +329,16 @@ class MediaObject implements ObjectInterface {
 	 * @return array - object attribute
 	 */
 	public function getAttributes($key = null) {
+		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
+			if ($key === null) {
+				return $this->_iframeAttributes;
+			}
+			if (!isset($this->_iframeAttributes[$key])) {
+				return null;
+			}
+			return $this->_iframeAttributes[$key];
+		}
+
 		if ($key === null) {
 			return $this->_objectAttributes;
 		}
@@ -320,7 +367,7 @@ class MediaObject implements ObjectInterface {
 	 */
 	protected function prefers($type = null) {
 		if ($type === null) {
-			$prefers = 'objcet';
+			$prefers = 'object';
 			if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
 				$prefers = 'iframe';
 			}
@@ -429,10 +476,25 @@ class MediaObject implements ObjectInterface {
 			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
 		}
 
-		$width = $this->_objectAttributes['width'];
-		$height = $this->_objectAttributes['height'];
+		//add custom params
+		if ($this->_iframeParams) {
+			$c = '?';
+			if (strpos($source, '?') !== false) $c = '&amp;';
+			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
+		}
+		$attributes = '';
+		//add custom attributes
+
+		foreach ($this->_iframeAttributes as $key => $val) {
+			//if === true, is an attribute without value
+			//if === false, remove the attribute
+			if ($val !== false) {
+				$attributes .= ' ' . $key . ($val !== true ? '="' . htmlspecialchars($val) .'"' : '');
+			}
+		}
+
 		// Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
-		return sprintf('<iframe type="text/html" width="%s" height="%s" src="%s?wmode=transparent" frameborder="0"></iframe>', $width, $height, $source);
+		return sprintf('<iframe src="%s"%s></iframe>', $source, $attributes);
 	}
 
 	/**
@@ -469,6 +531,18 @@ class MediaObject implements ObjectInterface {
 			'data' => $source,
 			'width' => $stub['embed-width'],
 			'height' => $stub['embed-height'],
+		);
+
+		//separate iframe params and attributes
+		$this->_iframeParams = array(
+			'wmode' => 'transparent'
+		);
+		$this->_iframeAttributes = array(
+			'type' => 'text/html',
+			'width' => $stub['embed-width'],
+			'height' => $stub['embed-height'],
+			'frameborder' => '0',
+			'allowfullscreen' => true
 		);
 	}
 
