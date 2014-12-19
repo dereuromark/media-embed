@@ -313,15 +313,14 @@ class MediaObject implements ObjectInterface {
 			}
 			return $this->_iframeParams[$key];
 		}
-		else {
-			if ($key === null) {
-				return $this->_objectParams;
-			}
-			if (!isset($this->_objectParams[$key])) {
-				return null;
-			}
-			return $this->_objectParams[$key];
+
+		if ($key === null) {
+			return $this->_objectParams;
 		}
+		if (!isset($this->_objectParams[$key])) {
+			return null;
+		}
+		return $this->_objectParams[$key];
 	}
 
 	/**
@@ -339,15 +338,14 @@ class MediaObject implements ObjectInterface {
 			}
 			return $this->_iframeAttributes[$key];
 		}
-		else {
-			if ($key === null) {
-				return $this->_objectAttributes;
-			}
-			if (!isset($this->_objectAttributes[$key])) {
-				return null;
-			}
-			return $this->_objectAttributes[$key];
+
+		if ($key === null) {
+			return $this->_objectAttributes;
 		}
+		if (!isset($this->_objectAttributes[$key])) {
+			return null;
+		}
+		return $this->_objectAttributes[$key];
 	}
 
 	/**
@@ -479,22 +477,22 @@ class MediaObject implements ObjectInterface {
 		}
 
 		//add custom params
-		if($this->_iframeParams) {
+		if ($this->_iframeParams) {
 			$c = '?';
-			if(strpos($source, '?') !== false) $c = '&amp;';
+			if (strpos($source, '?') !== false) $c = '&amp;';
 			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
 		}
 		$attributes = '';
 		//add custom attributes
-		if($this->_iframeAttributes) {
-			foreach($this->_iframeAttributes as $key => $val) {
-				//if === true, is an attribute without value
-				//if === false, remove the attribute
-				if($val !== false) {
-					$attributes .= ' ' . $key . ($val !== true ? '="' . htmlspecialchars($val) .'"' : '');
-				}
+
+		foreach ($this->_iframeAttributes as $key => $val) {
+			//if === true, is an attribute without value
+			//if === false, remove the attribute
+			if ($val !== false) {
+				$attributes .= ' ' . $key . ($val !== true ? '="' . htmlspecialchars($val) .'"' : '');
 			}
 		}
+
 		// Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
 		return sprintf('<iframe src="%s"%s></iframe>', $source, $attributes);
 	}
