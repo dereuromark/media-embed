@@ -114,6 +114,28 @@ public function video($host, $id, $options = array()) {
 }
 ```
 
+### Customizing attributes and params in the embed code
+This example shows you how to add custom attributes to the iframe tag or parameters to the src url (so you can add the autoplay parameter on youtube for example):
+```php
+if ($MediaObject = $this->MediaEmbed->parseUrl('http://www.youtube.com/watch?v=111111')) {
+	$MediaObject->setParams(array(
+		'autoplay' => 1,
+		'loop' => 1
+	));
+	$MediaObject->setAttributes(array(
+		'type' => null,
+		'class' => 'iframe-class',
+		'data-html5-parameter' => true
+	));
+
+	return $MediaObject->getEmbedCode();
+}
+```
+This should return and embed code like:
+```html
+<embed src="http:/www.youtube.com/embed/111111?autoplay=1&amp;loop=1" class="iframe-class" data-html5-parameter></iframe>
+```
+
 ### Example with BBCode
 
 #### Parse video content upon save (db input)
