@@ -1,6 +1,6 @@
 # MediaEmbed
 [![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](http://travis-ci.org/dereuromark/MediaEmbed)
-[![License](https://poser.pugx.org/dereuromark/MediaEmbed/license.png)](https://packagist.org/packages/dereuromark/MediaEmbed)
+[![License](https://poser.pugx.org/dereuromark/media-embed/license.png)](https://packagist.org/packages/dereuromark/media-embed)
 
 
 A stand-alone utility library that generates HTML embed tags for audio or video located on a given URL.
