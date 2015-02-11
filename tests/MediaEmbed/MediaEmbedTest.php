@@ -10,7 +10,8 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 	protected $_stubs = array(
 		'http://bnqt.com/videos/detail/Tuesdays-with-Miles-Dallas-Session-San-Diego/782337671001' => '782337671001',
 		'http://www.clipmoon.com/videos/91464f/dog-cat-and-printer.html' => '91464f',
-		'http://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music#hp-sc-p-1' => 'xgv8nw',
+		'http://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music' => 'x2bqyl6',
+		'http://dai.ly/x2bqyl6' => 'x2bqyl6',
 		'http://www.youtube.com/watch?v=yiSjHJnc9CY&feature=feedrec_grec_index' => 'yiSjHJnc9CY',
 		'https://m.youtube.com/watch?v=yWm4YwqO93I' => 'yWm4YwqO93I',
 		'https://www.youtube.com/embed/yWm4YwqO93I?rel=0' => 'yWm4YwqO93I',
@@ -152,7 +153,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testParseId() {
 		$test = array(
-			'dailymotion' => 'xgv8nw',
+			'dailymotion' => 'x2bqyl6',
 			'youtube' => 'yiSjHJnc9CY',
 			'myvideo' => '7645001'
 		);
