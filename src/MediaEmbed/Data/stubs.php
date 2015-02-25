@@ -68,7 +68,7 @@ $stubs = array(
 	array(
 		'name' => 'Vimeo',
 		'website' => 'http://www.vimeo.com',
-		'url-match' => '^http://(?:www\.)?vimeo\.com/(?:[0-9a-z_-]+/)?(?:[0-9a-z_-]+/)?([0-9]{1,})$',
+		'url-match' => '^https?://(?:www\.)?vimeo\.com/(?:[0-9a-z_-]+/)?(?:[0-9a-z_-]+/)?([0-9]{1,})$',
 		'embed-src' => 'http://vimeo.com/moogaloop.swf?clip_id=$2&server=vimeo.com&fullscreen=1&show_title=1&show_byline=1&show_portrait=0&color=01AAEA',
 		'embed-width' => '400',
 		'embed-height' => '302',
