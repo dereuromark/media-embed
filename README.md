@@ -1,7 +1,9 @@
 # MediaEmbed
 [![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](http://travis-ci.org/dereuromark/MediaEmbed)
+[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D%205.3-8892BF.svg)](https://php.net/)
 [![License](https://poser.pugx.org/dereuromark/media-embed/license.png)](https://packagist.org/packages/dereuromark/media-embed)
-
+[![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.png)](https://packagist.org/packages/dereuromark/media-embed)
+[![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
 A stand-alone utility library that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
@@ -79,7 +81,7 @@ public function autoLink($text) {
 	return preg_replace_callback(..., array(&$this, '_linkUrls'), $text);
 }
 
-protected function linkUrls($matches) {
+protected function _linkUrls($matches) {
 	if (!isset($this->MediaEmbed)) {
 		$this->MediaEmbed = new MediaEmbed();
 	}
@@ -91,7 +93,7 @@ protected function linkUrls($matches) {
 ```
 
 As this is costly when used at runtime, it is usually better to parse the URL upon save
-and transform it into a bbcode like syntax that can be translated into HTML quicker and easier.
+and transform it into a BBCode like syntax that can be translated into HTML quicker and easier.
 
 ### Example with "host slug" and "id" saved in DB
 When a URL is posted in the video field (varchar 255), we can extract the data from it and validate it:
