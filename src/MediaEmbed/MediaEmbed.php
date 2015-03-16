@@ -19,17 +19,17 @@ class MediaEmbed {
 
 	protected $_match;
 
-	protected $_hosts = array();
+	protected $_hosts = [];
 
 	/**
 	 * See MediaObject for details
 	 */
-	public $config = array();
+	public $config = [];
 
 	/**
 	 * Loads stubs
 	 */
-	public function __construct(array $config = array()) {
+	public function __construct(array $config = []) {
 		include dirname(__FILE__) . DS . 'Data' . DS . 'stubs.php';
 		$this->setHosts($stubs);
 
@@ -45,7 +45,7 @@ class MediaEmbed {
 	 * @param array $flashParams
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
-	public function parseId($id, $host, $config = array()) {
+	public function parseId($id, $host, $config = []) {
 		if (empty($id) || empty($host)) {
 			return;
 		}
@@ -54,7 +54,7 @@ class MediaEmbed {
 		if ($host === 'local') {
 			$res = $this->embedLocal($id);
 			if (!$res) {
-				$stub = array();
+				$stub = [];
 				$Object = $this->object($stub, $config);
 				return $Object;
 			}
@@ -85,7 +85,7 @@ class MediaEmbed {
 	 * @param array $config
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
-	public function parseUrl($url, $config = array()) {
+	public function parseUrl($url, $config = []) {
 		foreach ($this->_hosts as $stub) {
 			if ($match = $this->_matchUrl($url, (array)$stub['url-match'])) {
 				$this->_match = $match;
@@ -116,7 +116,7 @@ class MediaEmbed {
 				return $match;
 			}
 		}
-		return array();
+		return [];
 	}
 
 	/**
@@ -124,7 +124,7 @@ class MediaEmbed {
 	 */
 	protected function _parseLink($url, $regex) {
 		$context = stream_context_create(
-			array('http' => array('header' => 'Connection: close')));
+			['http' => ['header' => 'Connection: close']]);
 		$source = preg_replace('/[^(\x20-\x7F)]*/', '', file_get_contents($url, 0, $context));
 
 		if (preg_match('~' . $regex . '~imu', $source, $match)) {
@@ -144,7 +144,7 @@ class MediaEmbed {
 	 */
 	public function setHosts(array $stubs, $reset = false) {
 		if ($reset) {
-			$this->_hosts = array();
+			$this->_hosts = [];
 		}
 		foreach ($stubs as $stub) {
 			$slug = $this->_slug($stub['name']);
@@ -157,9 +157,9 @@ class MediaEmbed {
 	 * @param array $whitelist (alias/keys)
 	 * @return array hostInfos or false on failure
 	 */
-	public function getHosts($whitelist = array()) {
+	public function getHosts($whitelist = []) {
 		if ($whitelist) {
-			$res = array();
+			$res = [];
 			foreach ($this->_hosts as $slug => $host) {
 				if (!in_array($slug, $whitelist)) {
 					continue;
@@ -195,7 +195,7 @@ class MediaEmbed {
 		return false;
 	}
 
-	public function object($stub, array $config = array()) {
+	public function object($stub, array $config = []) {
 		if (!is_array($stub)) {
 			$host = $this->getHost($stub);
 			if (!$host) {
@@ -239,34 +239,34 @@ class MediaEmbed {
 	 * Contains the preg info
 	 * DOES NOT contain width/height etc
 	 */
-	public $availableTypes = array(
-		'youtube' => array(
+	public $availableTypes = [
+		'youtube' => [
 			'iframe' => 'http://www.youtube.com/embed/{id}',
 			'swf' => 'http://www.youtube.com/v/{id}',
 			'url' => 'http://www.youtube.com/watch?v={id}&t={t}',
-		),
-		'google' => array(
-		),
-		'myvideo' => array(
+		],
+		'google' => [
+		],
+		'myvideo' => [
 			'swf' => 'http://www.myvideo.de/movie/',
-			'url' => array('http://www.myvideo.de/watch/', 'http://www.myvideo.ch/watch/', 'http://www.myvideo.at/watch/'),
-		),
-		'vimeo' => array(
+			'url' => ['http://www.myvideo.de/watch/', 'http://www.myvideo.ch/watch/', 'http://www.myvideo.at/watch/'],
+		],
+		'vimeo' => [
 			'iframe' => 'http://player.vimeo.com/video/{id}',
 			//'swf' => '',
 			'url' => ''
-		),
-		'dailymotion' => array(
+		],
+		'dailymotion' => [
 			'swf' => 'http://www.dailymotion.com/embed/video/{id}',
 			//'url' => 'http://www.dailymotion.com'
-		),
-		'videojug' => array(
-		),
-		'revver' => array(
-		)
-	);
+		],
+		'videojug' => [
+		],
+		'revver' => [
+		]
+	];
 
-	public $availableNonJSTypes = array(
+	public $availableNonJSTypes = [
 		'youtube' => '<iframe src="http://www.youtube.com/embed/{id}" width="100%" height="385" frameborder="0"></iframe>',
 		'vimeo' => '<iframe src="http://player.vimeo.com/video/{id}" width="100%" height="385" frameborder="0"></iframe>',
 		'google' => '<embed id="test" src="http://video.google.com/googleplayer.swf?docid={id}&hl=de&fs=true" style="width:100%;height:385px" allowFullScreen="true" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>',
@@ -278,16 +278,16 @@ class MediaEmbed {
 		'videojug' => '<embed src="http://www.videojug.com/player?id={id}" type="application/x-shockwave-flash" width="100%" height="385" allowFullScreen="true" allowScriptAccess="always"></embed>',
 		'revver' => '<embed type="application/x-shockwave-flash" src="http://flash.revver.com/player/1.0/player.swf?mediaId={id}" pluginspage="http://www.macromedia.com/go/getflashplayer" allowScriptAccess="always" flashvars="allowFullScreen=true" allowfullscreen="true" height="385" width="100%"></embed>',
 		'xvideos' => '<embed src="http://static.xvideos.com/swf/flv_player_site_v4.swf" allowscriptaccess="always" width="100%" height="385" menu="false" quality="high" bgcolor="#000000" allowfullscreen="true" flashvars="id_video={id}" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />',
-	);
+	];
 
-	public $_ojectParamAttr = array(
+	public $_ojectParamAttr = [
 		'allowscriptaccess' => 'always',
 		'allowfullscreen' => 'true',
-	);
+	];
 
-	public $_embedAttr = array(
+	public $_embedAttr = [
 		'allowfullscreen' => 'true',
 		''
-	);
+	];
 
 }

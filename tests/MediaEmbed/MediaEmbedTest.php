@@ -7,7 +7,7 @@ use \MediaEmbed\MediaEmbed;
  */
 class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 
-	protected $_stubs = array(
+	protected $_stubs = [
 		'http://bnqt.com/videos/detail/Tuesdays-with-Miles-Dallas-Session-San-Diego/782337671001' => '782337671001',
 		'http://www.clipmoon.com/videos/91464f/dog-cat-and-printer.html' => '91464f',
 		'http://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music' => 'x2bqyl6',
@@ -89,7 +89,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 
 		// Not available anymore
 		//'http://video.google.com/videoplay?docid=-5767589436465272649#' => '-5767589436465272649',
-	);
+	];
 
 	/**
 	 * Test Generation of a basic youtube MediaObject (empty)
@@ -139,9 +139,9 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 	 * @return array
 	 */
 	public function getUrls() {
-		$urls = array();
+		$urls = [];
 		foreach ($this->_stubs as $k => $v) {
-			$urls[] = array($k, $v);
+			$urls[] = [$k, $v];
 		}
 		return $urls;
 	}
@@ -152,11 +152,11 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 	 * @return void
 	 */
 	public function testParseId() {
-		$test = array(
+		$test = [
 			'dailymotion' => 'x2bqyl6',
 			'youtube' => 'yiSjHJnc9CY',
 			'myvideo' => '7645001'
-		);
+		];
 
 		$MediaEmbed = new MediaEmbed();
 		foreach ($test as $host => $id) {
@@ -197,7 +197,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testYoutubeWithoutIframe() {
-		$MediaEmbed = new MediaEmbed(array('prefer' => 'object'));
+		$MediaEmbed = new MediaEmbed(['prefer' => 'object']);
 		$Object = $MediaEmbed->parseUrl('http://www.youtube.com/watch?v=h9Pu4bZqWyg');
 		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
 
@@ -227,7 +227,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		$hosts = $MediaEmbed->getHosts();
 		$this->assertTrue(count($hosts) > 50);
 
-		$hosts = $MediaEmbed->getHosts(array('myvideo', 'youtube'));
+		$hosts = $MediaEmbed->getHosts(['myvideo', 'youtube']);
 		$this->assertTrue(count($hosts) === 2);
 	}
 

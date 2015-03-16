@@ -15,17 +15,17 @@ class MediaObject implements ObjectInterface {
 
 	protected $_match;
 
-	protected $_objectAttributes = array();
+	protected $_objectAttributes = [];
 
-	protected $_objectParams = array();
+	protected $_objectParams = [];
 
-	protected $_iframeAttributes = array();
+	protected $_iframeAttributes = [];
 
-	protected $_iframeParams = array();
+	protected $_iframeParams = [];
 
-	public $config = array(
+	public $config = [
 		'prefer' => 'iframe' // Type object or iframe (only available for few, fallback will be object)
-	);
+	];
 
 	/**
 	 * MediaObject::__construct()
@@ -35,13 +35,13 @@ class MediaObject implements ObjectInterface {
 	public function __construct(array $stub, array $config) {
 		$this->config = $config += $this->config;
 
-		$stubDefaults = array(
+		$stubDefaults = [
 			'id' => '',
 			'name' => '',
 			'website' => '',
 			'slug' => '',
-			'match' => array()
-		);
+			'match' => []
+		];
 		$this->_stub = $stub + $stubDefaults;
 		$this->_match = $this->_stub['match'];
 		$this->_stub['id'] = $this->id();
@@ -170,7 +170,7 @@ class MediaObject implements ObjectInterface {
 		$icon .= $url;
 
 		$context = stream_context_create(
-			array('http' => array('header' => 'Connection: close')));
+			['http' => ['header' => 'Connection: close']]);
 		// E.g. http://www.google.com/s2/favicons?domain=xyz.com
 		$file = file_get_contents($icon, 0, $context);
 		if ($file === false) {
@@ -512,7 +512,7 @@ class MediaObject implements ObjectInterface {
 		$source = $this->_esc($source);
 		$flashvars = $this->_esc($flashvars);
 
-		$this->_objectParams = array(
+		$this->_objectParams = [
 			'movie' => $source,
 			'quality' => 'high',
 			'allowFullScreen' => 'true',
@@ -521,26 +521,26 @@ class MediaObject implements ObjectInterface {
 			'autoplay' => 'false',
 			'autostart' => 'false',
 			'flashvars' => $flashvars,
-		);
+		];
 
-		$this->_objectAttributes = array(
+		$this->_objectAttributes = [
 			'type' => 'application/x-shockwave-flash',
 			'data' => $source,
 			'width' => $stub['embed-width'],
 			'height' => $stub['embed-height'],
-		);
+		];
 
 		//separate iframe params and attributes
-		$this->_iframeParams = array(
+		$this->_iframeParams = [
 			'wmode' => 'transparent'
-		);
-		$this->_iframeAttributes = array(
+		];
+		$this->_iframeAttributes = [
 			'type' => 'text/html',
 			'width' => $stub['embed-width'],
 			'height' => $stub['embed-height'],
 			'frameborder' => '0',
 			'allowfullscreen' => true
-		);
+		];
 	}
 
 	/**

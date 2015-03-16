@@ -11,7 +11,7 @@ class MediaEmbedBehavior {
 	 * @return string
 	 */
 	public function prepareForOutput($string) {
-		return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', array($this, '_finalizeVideo'), $string);
+		return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', [$this, '_finalizeVideo'], $string);
 	}
 
 	/**
@@ -38,7 +38,7 @@ class MediaEmbedBehavior {
 	 * @return string
 	 */
 	public function simulateSave($string) {
-		return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', array($this, '_processVideo'), $string);
+		return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', [$this, '_processVideo'], $string);
 	}
 
 	/**
