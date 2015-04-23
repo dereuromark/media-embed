@@ -1024,7 +1024,7 @@ $stubs = [
 	[
 		'name' => 'RuTube',
 		'website' => 'http://www.rutube.ru',
-		'url-match' => 'http://(?:www\.|video\.)?rutube\.ru/(?:tracks/\d+?\.html\?(?:(?:pos|related)=1&(?:amp;)?)?v=)?([0-9a-f]{32})',
+		'url-match' => 'http://(?:www\.|video\.)?rutube\.ru/(?:video/|tracks/\d+?\.html\?(?:(?:pos|related)=1&(?:amp;)?)?v=)?([0-9a-f]{32})',
 		'embed-src' => 'http://video.rutube.ru/$2',
 		'embed-width' => '470',
 		'embed-height' => '353',
