@@ -86,6 +86,8 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://blip.tv/stylestar/shine-6866879' => 'AYOjkCMC',
 
 		'http://example.wistia.com/medias/1voyrefhy9' => '1voyrefhy9',
+		
+		'http://rutube.ru/video/c1b3c6c6ee77def7a8e54553c1fabbb8/' => 'c1b3c6c6ee77def7a8e54553c1fabbb8',
 
 		// Not available anymore
 		//'http://video.google.com/videoplay?docid=-5767589436465272649#' => '-5767589436465272649',
