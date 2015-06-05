@@ -68,7 +68,7 @@ $stubs = [
 	[
 		'name' => 'Vimeo',
 		'website' => 'http://www.vimeo.com',
-		'url-match' => '^https?://(?:www\.)?vimeo\.com/(?:[0-9a-z_-]+/)?(?:[0-9a-z_-]+/)?([0-9]{1,})$',
+		'url-match' => 'https?://(?:www\.)?vimeo\.com/(?:[0-9a-z_-]+/)?(?:[0-9a-z_-]+/)?([0-9]{1,})',
 		'embed-src' => 'http://vimeo.com/moogaloop.swf?clip_id=$2&server=vimeo.com&fullscreen=1&show_title=1&show_byline=1&show_portrait=0&color=01AAEA',
 		'embed-width' => '400',
 		'embed-height' => '302',
@@ -336,7 +336,7 @@ $stubs = [
 	[
 		'name' => 'CrunchyRoll',
 		'website' => 'http://www.crunchyroll.com',
-		'url-match' => '^http://(?:www\.)?crunchyroll\.com/[a-z0-9\-_]+/[a-z0-9\-_]+-([0-9]{1,12})$',
+		'url-match' => 'http://(?:www\.)?crunchyroll\.com/[a-z0-9\-_]+/[a-z0-9\-_]+-([0-9]{1,12})',
 		'embed-src' => ' http://www.crunchyroll.com/flash/20080910153703.043ec803b06cc356a1e15c1184831a24/oldplayer2.swf?file=http%3A%2F%2Fwww.crunchyroll.com%2Fgetitem%3Fih%3D$2%26videoid%3D$3%26mediaid%3D$4%26hash%3D$5&autostart=false',
 		'embed-width' => '576',
 		'embed-height' => '325',
@@ -1263,7 +1263,7 @@ $stubs = [
 	[
 		'name' => 'Ustream',
 		'website' => 'http://www.ustream.tv',
-		'url-match' => '^https?://www\.ustream\.tv/channel/[0-9a-z-]+$',
+		'url-match' => 'https?://www\.ustream\.tv/channel/[0-9a-z-]+',
 		'fetch-match' => 'https?://www\.ustream\.tv/embed/([0-9]+)',
 		'embed-src' => 'http://www.ustream.tv/flash/viewer.swf',
 		'embed-width' => '480',
