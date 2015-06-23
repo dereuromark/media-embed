@@ -76,7 +76,7 @@ So if they just paste the URL of the browser, you can directly replace those URL
 ```php
 // Process all links in some content
 public function autoLink($text) {
-	return preg_replace_callback(..., array(&$this, '_linkUrls'), $text);
+	return preg_replace_callback(..., [&$this, '_linkUrls'], $text);
 }
 
 protected function _linkUrls($matches) {
@@ -106,7 +106,7 @@ Those two values can be stored persistently (the complete URL including schema m
 
 A helper method can then display it:
 ```php
-public function video($host, $id, $options = array()) {
+public function video($host, $id, array $options = []) {
 	if (!isset($this->MediaEmbed)) {
 		$this->MediaEmbed = new MediaEmbed($options);
 	}
@@ -122,15 +122,15 @@ public function video($host, $id, $options = array()) {
 This example shows you how to add custom attributes to the iframe tag or parameters to the src url (so you can add the autoplay parameter on youtube for example):
 ```php
 if ($MediaObject = $this->MediaEmbed->parseUrl('http://www.youtube.com/watch?v=111111')) {
-	$MediaObject->setParam(array(
+	$MediaObject->setParam([
 		'autoplay' => 1,
 		'loop' => 1
-	));
-	$MediaObject->setAttribute(array(
+	]);
+	$MediaObject->setAttribute([
 		'type' => null,
 		'class' => 'iframe-class',
 		'data-html5-parameter' => true
-	));
+	]);
 
 	return $MediaObject->getEmbedCode();
 }
@@ -149,7 +149,7 @@ This should return and embed code like:
  * @return string
  */
 protected function _parseVideo($string) {
-	return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', array($this, '_processVideo'), $string);
+	return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', [$this, '_processVideo'], $string);
 }
 
 /**
@@ -189,7 +189,7 @@ So `[video]http://www.youtube.com/v/123[/video]` becomes `[video=youtube]123[/vi
  * @return string
  */
 public function prepareForOutput($string) {
-	return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', array($this, '_finalizeVideo'), $string);
+	return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', [$this, '_finalizeVideo'], $string);
 }
 
 /**
