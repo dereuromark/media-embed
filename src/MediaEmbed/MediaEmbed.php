@@ -63,7 +63,7 @@ class MediaEmbed {
 		}
 
 		// all other hosts
-		if (!($host = $this->getHost($host))) {var_dump($host);
+		if (!($host = $this->getHost($host))) {
 			return;
 		}
 		$stub = $host;
