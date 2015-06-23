@@ -26,10 +26,8 @@ It uses iframes if possible, and has a fallback on the embed object if necessary
 - Composer
 
 ### Note
-This is alpha-software. Please feel free to join in and help out to complete it.
-Once the coverage is high enough we can release a beta and soon after the first stable.
-
-The plan is to follow SemVar once there is a stable release.
+Please feel free to join in and help out to further improve or complete it.
+There are always some providers changing their URLs/API or some new ones which are not yet completed.
 
 ## Installation
 
@@ -38,7 +36,7 @@ create `composer.json`:
 ```json
 {
     "require": {
-        "dereuromark/media-embed": "dev-master"
+        "dereuromark/media-embed": "0.*"
     }
 }
 ```
@@ -62,7 +60,7 @@ You can then display the HTML code with `getEmbedCode()` or retrieve more inform
 
 
 ## Usage
-The simpliest usage, when included via composer autoload, would be:
+The simplest usage, when included via composer autoload, would be:
 ```php
 // At the top of the file
 use MediaEmbed\MediaEmbed;
