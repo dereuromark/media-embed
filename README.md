@@ -114,6 +114,11 @@ public function video($host, $id, array $options = []) {
 	if (!$MediaObject) {
 		return '';
 	}
+	if (!empty($options['attributes'])) {
+		foreach ($options['attributes'] as $attribute => $value) {
+			$MediaObject->setAttribute($attribute, $value);
+		}
+	}
 	return $MediaObject->getEmbedCode();
 }
 ```

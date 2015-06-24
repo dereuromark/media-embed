@@ -48,17 +48,6 @@ class MediaObject implements ObjectInterface {
 
 		$this->_setDefaultParams($stub);
 
-		/*
-		// iframe or object?
-		if (isset($stub['iframe-player'])) {
-			if ($config['prefer'] === 'iframe') {
-				$src = $this->getObjectSrc($data, 'iframe-player');
-				$stub['iframe-player'] = $src;
-				return true;
-			}
-			unset($stub['iframe-player']);
-		}
-		*/
 		$type = 'embed-src';
 		if (isset($this->_stub['iframe-player'])) {
 			if ($this->config['prefer'] === 'iframe') {
@@ -73,9 +62,16 @@ class MediaObject implements ObjectInterface {
 			$this->_objectParams['movie'] = $src;
 			$this->_objectAttributes['data'] = $src;
 		}
-		if (!empty($this->_stub['reverse'])) {
-			$flashvars = $this->_objectParams['flashvars'];
-			$this->_objectParams['flashvars'] =  str_replace('$r2', $this->_stub['id'], $flashvars);
+
+		if (empty($this->_stub['reverse'])) {
+			return;
+		}
+
+		$flashvars = $this->_objectParams['flashvars'];
+		if (strpos($flashvars, '$r2') !== false) {
+			$this->_objectParams['flashvars'] = str_replace('$r2', $this->_stub['id'], $flashvars);
+		} else {
+			$this->_objectParams['flashvars'] = str_replace('$2', $this->_stub['id'], $flashvars);
 		}
 	}
 
@@ -154,7 +150,6 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Returns a png img
 	 *
-	 * @param array $stub or string $alias
 	 * @return Resource or null if not available
 	 */
 	public function icon() {
@@ -181,8 +176,8 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * @param string location Absolute path with trailing slash
-	 * @param binary Icon Icon data
+	 * @param string $location Absolute path with trailing slash
+	 * @param binary $icon Icon data
 	 * @return string|null $filename
 	 */
 	public function saveIcon($location = null, $icon = null) {
@@ -244,10 +239,9 @@ class MediaObject implements ObjectInterface {
 	 * Override a default object attribute value
 	 *
 	 * @param $param mixed - the name of the attribute to be set
-	 *                                           or an array of multiple attribs to be set
+	 *   or an array of multiple attribs to be set
 	 * @param $value string - (optional) the value to set the param to
-	 *                                              if only one param is being set
-	 *
+	 *   if only one param is being set
 	 * @return $this
 	 */
 	public function setAttribute($param, $value = null) {
@@ -276,28 +270,53 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Set the height of the object
 	 *
-	 * @param mixed - height to set the object to
-	 *
+	 * @param mixed $height Height to set the object to
+	 * @param bool $adjustWidth
 	 * @return $this
 	 */
-	public function setHeight($height) {
+	public function setHeight($height, $adjustWidth = false) {
+		if ($adjustWidth && is_numeric($height)) {
+			$this->_adjustDimensions('width', 'height', $height);
+		}
 		return $this->setAttribute('height', $height);
 	}
 
 	/**
 	 * Set the width of the object
 	 *
-	 * @param mixed - width to set the object to
-	 *
+	 * @param mixed $width Width to set the object to
+	 * @param bool $adjustHeight
 	 * @return $this
 	 */
-	public function setWidth($width) {
+	public function setWidth($width, $adjustHeight = false) {
+		if ($adjustHeight && is_numeric($width)) {
+			$this->_adjustDimensions('height', 'width', $width);
+		}
 		return $this->setAttribute('width', $width);
+	}
+
+	/**
+	 * Auto-adjusts one dimension from the other to keep the current ratio.
+	 *
+	 * @param string $type
+	 * @param string $fromType
+	 * @param int $fromLength
+	 * @return void
+	 */
+	protected function _adjustDimensions($type, $fromType, $fromLength) {
+		$currentLength = $this->getAttributes($type);
+		$currentFromLength = $this->getAttributes($fromType);
+
+		$ratio = $fromLength / $currentFromLength;
+		$newLength = $currentLength * $ratio;
+
+		$this->setAttribute($type, (int)$newLength);
 	}
 
 	/**
 	 * Return object params about the video metadata
 	 *
+	 * @param string|null $key
 	 * @return array|string - object params
 	 */
 	public function getParams($key = null) {
@@ -323,6 +342,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Return object attribute
 	 *
+	 * @param string|null $key
 	 * @return array - object attribute
 	 */
 	public function getAttributes($key = null) {
@@ -360,6 +380,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Getter/setter of what this Object currently prefers as output type
 	 *
+	 * @param string|null $type
 	 * @return $this|string
 	 */
 	protected function prefers($type = null) {
@@ -385,7 +406,12 @@ class MediaObject implements ObjectInterface {
 			return;
 		}
 
-		$src = str_replace('$r2', $this->_stub['id'], $this->_stub[$type]);
+		$stubSrc = $this->_stub[$type];
+		if (strpos($stubSrc, '$r2') !== false) {
+			$src = str_replace('$r2', $this->_stub['id'], $stubSrc);
+		} else {
+			$src = str_replace('$2', $this->_stub['id'], $stubSrc);
+		}
 		if (!empty($host['replace'])) {
 			foreach ($host['replace'] as $placeholder => $replacement) {
 				$src = str_replace($placeholder, $replacement, $src);
@@ -408,7 +434,13 @@ class MediaObject implements ObjectInterface {
 			return;
 		}
 
-		$src = str_replace('$r2', $this->_stub['id'], $this->_stub['image-src']);
+		$stubImgSrc = $this->_stub['image-src'];
+		if (strpos($stubImgSrc, '$r2') !== false) {
+			$src = str_replace('$r2', $this->_stub['id'], $stubImgSrc);
+		} else {
+			$src = str_replace('$2', $this->_stub['id'], $stubImgSrc);
+		}
+
 		return $src;
 	}
 
@@ -498,6 +530,7 @@ class MediaObject implements ObjectInterface {
 	 * Set the default params for the type of
 	 * stub we are working with
 	 *
+	 * @param array $stub
 	 * @return void
 	 */
 	protected function _setDefaultParams($stub) {
