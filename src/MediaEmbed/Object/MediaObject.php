@@ -423,10 +423,9 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * VideoLib::getImageSrc()
 	 *
-	 * @param array $data
 	 * @return string|null
 	 */
-	public function getImageSrc($data) {
+	public function getImageSrc() {
 		if (empty($this->_stub['id'])) {
 			return;
 		}
