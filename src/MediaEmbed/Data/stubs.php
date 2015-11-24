@@ -190,16 +190,6 @@ $stubs = [
 		'embed-height' => '412',
 	],
 	[
-		'name' => 'Blip',
-		'website' => 'http://www.blip.tv',
-		'url-match' => 'http://blip\.tv/[a-z0-9-]+/[a-z0-9-]+-',
-		'fetch-match' => 'http://blip\.tv/(play|file)/([a-z0-9]+)',
-		'embed-src' => '',
-		'embed-width' => '500',
-		'embed-height' => '315',
-		'iframe-player' => 'http://blip.tv/play/$3.x?p=1',
-	],
-	[
 		'name' => 'CBS News',
 		'website' => 'http://www.cbsnews.com/video',
 		'url-match' => 'http://(?:www\.)?cbsnews\.com/video/watch/',

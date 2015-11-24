@@ -83,7 +83,6 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://www.screencast.com/t/Hh4ulI0M' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
 		'http://www.ustream.tv/channel/america2oficial' => '17916695',
 		'http://www.ustream.tv/channel/16962149' => '16962149',
-		'http://blip.tv/stylestar/shine-6866879' => 'AYOjkCMC',
 
 		'http://example.wistia.com/medias/1voyrefhy9' => '1voyrefhy9',
 		
