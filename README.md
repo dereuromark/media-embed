@@ -31,7 +31,7 @@ There are always some providers changing their URLs/API or some new ones which a
 
 ## Installation
 
-create `composer.json`:
+Add the dependency to your `composer.json`:
 
 ```json
 {
@@ -83,7 +83,8 @@ protected function _linkUrls($matches) {
 	if (!isset($this->MediaEmbed)) {
 		$this->MediaEmbed = new MediaEmbed();
 	}
-	if ($MediaObject = $this->MediaEmbed->parseUrl($url)) {
+	$MediaObject = $this->MediaEmbed->parseUrl($url);
+	if ($MediaObject) {
 		return $MediaObject->getEmbedCode();
 	}
 	// No media match found - normal <a href="...">...</a> replacing here
@@ -169,7 +170,8 @@ protected function _processVideo($params) {
 	if (strpos($url, 'www.') === 0) {
 		$url = 'http://' . $url;
 	}
-	if (!($MediaObject = $this->MediaEmbed->parseUrl($url))) {
+	$MediaObject = $this->MediaEmbed->parseUrl($url);
+	if (!$MediaObject) {
 		return $params[0];
 	}
 	$slug = $MediaObject->slug();
@@ -207,7 +209,8 @@ protected function _finalizeVideo($params) {
 	}
 	$host = $params[1];
 	$id = $params[2];
-	if (!($MediaObject = $this->MediaEmbed->parseId($id, $host))) {
+	$MediaObject = $this->MediaEmbed->parseId($id, $host);
+	if (!$MediaObject) {
 		return $params[0];
 	}
 

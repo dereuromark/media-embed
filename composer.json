@@ -1,7 +1,7 @@
 {
     "name": "dereuromark/media-embed",
-    "description": "A PHP library to deal with all those media services around, parsing their URLs and displaying their audios/videos.",
-    "keywords": ["media", "embed"],
+    "description": "A PHP library to deal with all those media services around, parsing their URLs and embedding their audio/video content in websites.",
+    "keywords": ["media", "embed", "PHP", "iframe", "video", "audio"],
     "license": "MIT",
     "authors": [
         {
@@ -9,7 +9,6 @@
             "email": "euromark@web.de"
         }
     ],
-    "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
             "": "src/"
