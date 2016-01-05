@@ -98,7 +98,8 @@ and transform it into a BBCode like syntax that can be translated into HTML quic
 When a URL is posted in the video field (varchar 255), we can extract the data from it and validate it:
 ```php
 $id = $host = null;
-if ($MediaObject = $this->MediaEmbed->parseUrl($url)) {
+$MediaObject = $this->MediaEmbed->parseUrl($url);
+if ($MediaObject) {
 	$id = $MediaObject->id();
 	$host = $MediaObject->slug();
 }
@@ -127,7 +128,8 @@ public function video($host, $id, array $options = []) {
 ### Customizing attributes and params in the embed code
 This example shows you how to add custom attributes to the iframe tag or parameters to the src url (so you can add the autoplay parameter on youtube for example):
 ```php
-if ($MediaObject = $this->MediaEmbed->parseUrl('http://www.youtube.com/watch?v=111111')) {
+$MediaObject = $this->MediaEmbed->parseUrl('http://www.youtube.com/watch?v=111111');
+if ($MediaObject) {
 	$MediaObject->setParam([
 		'autoplay' => 1,
 		'loop' => 1
