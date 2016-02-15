@@ -79,8 +79,8 @@ class MediaObject implements ObjectInterface {
 	 * Getter/setter for stub
 	 *
 	 * @param string $property - (optional) the specific
-	 *	 property of the stub to be returned. If
-	 *	 omitted, array of all properties are returned.
+	 *     property of the stub to be returned. If
+	 *     omitted, array of all properties are returned.
 	 *
 	 * @return array|string|$this
 	 */
@@ -99,16 +99,17 @@ class MediaObject implements ObjectInterface {
 	 */
 	public function id() {
 		$res = $this->_match;
+		$count = count($res);
 
 		if (empty($this->_stub['id'])) {
-			if (empty($res[count($res) - 1])) {
+			if (empty($res[$count - 1])) {
 				return '';
 			}
-			$this->_stub['id'] = $res[count($res) - 1];
+			$this->_stub['id'] = $res[$count - 1];
 		}
 		$id = $this->_stub['id'];
 
-		for ($i = 1; $i <= count($res); $i++) {
+		for ($i = 1; $i <= $count; $i++) {
 			$id = str_ireplace('$' . $i, $res[$i - 1], $id);
 		}
 		return $id;
@@ -126,13 +127,14 @@ class MediaObject implements ObjectInterface {
 	 */
 	public function name() {
 		$res = $this->_match;
+		$count = count($res);
 
 		if (empty($this->_stub['name'])) {
 			return '';
 		}
 		$name = $this->_stub['name'];
 
-		for ($i = 1; $i <= count($res); $i++) {
+		for ($i = 1; $i <= $count; $i++) {
 			$name = str_ireplace('$' . $i, $res[$i - 1], $name);
 		}
 		return $name;
@@ -150,12 +152,12 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Returns a png img
 	 *
-	 * @return Resource or null if not available
+	 * @return resource|null Resource or null if not available
 	 */
 	public function icon() {
 		$url = $this->_stub['website'];
 		if (!$url) {
-			return;
+			return null;
 		}
 
 		$pieces = parse_url($url);
@@ -177,7 +179,7 @@ class MediaObject implements ObjectInterface {
 
 	/**
 	 * @param string $location Absolute path with trailing slash
-	 * @param binary $icon Icon data
+	 * @param string $icon Icon data
 	 * @return string|null $filename
 	 */
 	public function saveIcon($location = null, $icon = null) {
@@ -185,7 +187,7 @@ class MediaObject implements ObjectInterface {
 			$icon = $this->icon();
 		}
 		if (!$icon) {
-			return;
+			return null;
 		}
 		if (!$location) {
 			$location = IMAGES . 'content' . DS . 'video_types';
@@ -197,7 +199,7 @@ class MediaObject implements ObjectInterface {
 		$filename = $this->slug() . '.png';
 		$file = $location . $filename;
 		if (!file_put_contents($file, $icon)) {
-			return;
+			return null;
 		}
 		return $filename;
 	}
@@ -205,9 +207,9 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Override a default object param value
 	 *
-	 * @param $param mixed - the name of the param to be set
+	 * @param mixed $param The name of the param to be set
 	 *                                           or an array of multiple params to set
-	 * @param $value string - (optional) the value to set the param to
+	 * @param string $value (optional) the value to set the param to
 	 *                                              if only one param is being set
 	 *
 	 * @return $this
@@ -238,9 +240,9 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Override a default object attribute value
 	 *
-	 * @param $param mixed - the name of the attribute to be set
+	 * @param mixed $param  The name of the attribute to be set
 	 *   or an array of multiple attribs to be set
-	 * @param $value string - (optional) the value to set the param to
+	 * @param string $value (optional) the value to set the param to
 	 *   if only one param is being set
 	 * @return $this
 	 */
@@ -427,10 +429,10 @@ class MediaObject implements ObjectInterface {
 	 */
 	public function getImageSrc() {
 		if (empty($this->_stub['id'])) {
-			return;
+			return null;
 		}
 		if (empty($this->_stub['image-src'])) {
-			return;
+			return null;
 		}
 
 		$stubImgSrc = $this->_stub['image-src'];
@@ -454,7 +456,8 @@ class MediaObject implements ObjectInterface {
 		}
 		$thumb = $this->_stub['image-src'];
 
-		for ($i = 1; $i <= count($this->_match); $i++) {
+		$count = count($this->_match);
+		for ($i = 1; $i <= $count; $i++) {
 			$thumb = str_ireplace('$' . $i, $this->_match[$i - 1], $thumb);
 		}
 
@@ -499,15 +502,18 @@ class MediaObject implements ObjectInterface {
 	 */
 	protected function _buildIframe() {
 		$source = $this->_stub['iframe-player'];
+		$count = count($this->_match);
 
-		for ($i = 1; $i <= count($this->_match); $i++) {
+		for ($i = 1; $i <= $count; $i++) {
 			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
 		}
 
 		//add custom params
 		if ($this->_iframeParams) {
 			$c = '?';
-			if (strpos($source, '?') !== false) $c = '&amp;';
+			if (strpos($source, '?') !== false) {
+				$c = '&amp;';
+			}
 			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
 		}
 		$attributes = '';
@@ -535,8 +541,9 @@ class MediaObject implements ObjectInterface {
 	protected function _setDefaultParams($stub) {
 		$source = $stub['embed-src'];
 		$flashvars = (isset($stub['flashvars'])) ? $stub['flashvars'] : null;
+		$count = count($this->_match);
 
-		for ($i = 1; $i <= count($this->_match); $i++) {
+		for ($i = 1; $i <= $count; $i++) {
 			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
 			$flashvars = str_ireplace('$' . $i, $this->_match[$i - 1], $flashvars);
 		}

@@ -85,7 +85,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://www.ustream.tv/channel/16962149' => '16962149',
 
 		'http://example.wistia.com/medias/1voyrefhy9' => '1voyrefhy9',
-		
+
 		'http://rutube.ru/video/c1b3c6c6ee77def7a8e54553c1fabbb8/' => 'c1b3c6c6ee77def7a8e54553c1fabbb8',
 
 		// Not available anymore

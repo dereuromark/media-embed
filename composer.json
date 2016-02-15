@@ -1,20 +1,24 @@
 {
-    "name": "dereuromark/media-embed",
-    "description": "A PHP library to deal with all those media services around, parsing their URLs and embedding their audio/video content in websites.",
-    "keywords": ["media", "embed", "PHP", "iframe", "video", "audio"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Mark Scherer",
-            "email": "euromark@web.de"
-        }
-    ],
-    "autoload": {
-        "psr-0": {
-            "": "src/"
-        }
-    },
-    "require": {
-        "php": ">=5.4"
-    }
+	"name": "dereuromark/media-embed",
+	"description": "A PHP library to deal with all those media services around, parsing their URLs and embedding their audio/video content in websites.",
+	"keywords": ["media", "embed", "PHP", "iframe", "video", "audio"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Mark Scherer",
+			"role": "Author",
+			"homepage": "http://www.dereuromark.de"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"": "src/"
+		}
+	},
+	"require": {
+		"php": ">=5.4"
+	},
+	"require-dev":{
+		"fig-r/psr2r-sniffer": "dev-master"
+	}
 }

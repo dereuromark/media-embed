@@ -67,10 +67,10 @@ Examples available for <?php echo count($videos); ?> services.
 
 		echo '<h2>"' . $_GET['type'] . '"</h2>';
 		echo '<p>Video URL: ' . $videoUrl . '</p>';
-		if($videoAttributes) {
+		if ($videoAttributes) {
 			echo '<p>Video Attributes: <pre>' . print_r($videoAttributes, 1) . '</pre></p>';
 		}
-		if($videoParams) {
+		if ($videoParams) {
 			echo '<p>Video Params: <pre>' . print_r($videoParams, 1) . '</pre></p>';
 		}
 
@@ -86,11 +86,11 @@ Examples available for <?php echo count($videos); ?> services.
 
 		echo '<h3>Embedded Media</h3>';
 		//adding attributes
-		if($videoAttributes) {
+		if ($videoAttributes) {
 			$Object->setAttribute($videoAttributes);
 		}
 		//adding params
-		if($videoParams) {
+		if ($videoParams) {
 			$Object->setParam($videoParams);
 		}
 		$embed = $Object->getEmbedCode();
@@ -98,7 +98,7 @@ Examples available for <?php echo count($videos); ?> services.
 		//$embed = (string)$result;
 		echo $embed;
 
-		echo '<div><h3>Embed code:</h3><textarea>'. htmlspecialchars($embed) . '</textarea></div>';
+		echo '<div><h3>Embed code:</h3><textarea>' . htmlspecialchars($embed) . '</textarea></div>';
 
 
 		echo '</td><td>';
@@ -116,7 +116,7 @@ Examples available for <?php echo count($videos); ?> services.
 
 			echo $embed;
 
-			echo '<div><h3>Embed code:</h3><textarea>'. htmlspecialchars($embed) . '</textarea></div>';
+			echo '<div><h3>Embed code:</h3><textarea>' . htmlspecialchars($embed) . '</textarea></div>';
 		}
 
 		echo '</td></tr></table>';

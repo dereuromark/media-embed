@@ -81,7 +81,7 @@ class MediaEmbed {
 	 *
 	 * It will return an object if the url contains valid/supported video.
 	 *
-	 * @param $url string - href to check for embeded video
+	 * @param string $url Href to check for embeded video
 	 * @param array $config
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
@@ -121,6 +121,10 @@ class MediaEmbed {
 
 	/**
 	 * Attempt to parse the embed id from a given URL
+	 *
+	 * @param string $url
+	 * @param string $regex
+	 * @return bool
 	 */
 	protected function _parseLink($url, $regex) {
 		$context = stream_context_create(
@@ -139,7 +143,7 @@ class MediaEmbed {
 	 * Set custom stubs overwriting the default ones.
 	 *
 	 * @param array $stubs Same format as in the stubs.php file.
-	 * @param array $reset If default ones should be resetted/removed.
+	 * @param bool $reset If default ones should be resetted/removed.
 	 * @return $this
 	 */
 	public function setHosts(array $stubs, $reset = false) {
@@ -188,7 +192,7 @@ class MediaEmbed {
 	/**
 	 * Create the embed code for a local file
 	 *
-	 * @param $file string - the file we are wanting to embed
+	 * @param string $file The file we are wanting to embed
 	 * @return bool Whether or not the url contains valid/supported video
 	 */
 	public function embedLocal($file) {
@@ -232,8 +236,6 @@ class MediaEmbed {
 		$text = preg_replace('~[^-\w]+~', '', $text);
 		return $text;
 	}
-
-/* deprecated */
 
 	/**
 	 * Contains the preg info
