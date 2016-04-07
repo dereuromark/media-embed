@@ -2,7 +2,7 @@
 
 namespace MediaEmbed;
 
-use \MediaEmbed\Object\MediaObject;
+use MediaEmbed\Object\MediaObject;
 
 if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
@@ -17,37 +17,46 @@ if (!defined('DS')) {
  */
 class MediaEmbed {
 
+	/**
+	 * @var array
+	 */
 	protected $_match;
 
+	/**
+	 * @var array
+	 */
 	protected $_hosts = [];
 
 	/**
+	 * @var array
 	 * See MediaObject for details
 	 */
 	public $config = [];
 
 	/**
 	 * Loads stubs
+	 *
+	 * @param array $config
 	 */
 	public function __construct(array $config = []) {
 		include dirname(__FILE__) . DS . 'Data' . DS . 'stubs.php';
 		$this->setHosts($stubs);
 
-		$this->config = $config += $this->config;
+		$this->config = $config + $this->config;
 	}
 
 	/**
 	 * Prepare embed video from different video hosts.
 	 *
-	 * @param array $data:
-	 * - id
-	 * - host (slugged)
-	 * @param array $flashParams
+	 * @param string $id
+	 * @param string $host
+	 * @param array $config
+	 *
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
 	public function parseId($id, $host, $config = []) {
 		if (empty($id) || empty($host)) {
-			return;
+			return null;
 		}
 
 		// local files?
@@ -59,12 +68,13 @@ class MediaEmbed {
 				return $Object;
 			}
 			//TODO
-			return;
+			return null;
 		}
 
 		// all other hosts
-		if (!($host = $this->getHost($host))) {
-			return;
+		$host = $this->getHost($host);
+		if (!$host) {
+			return null;
 		}
 		$stub = $host;
 		$config += $this->config;
@@ -81,7 +91,7 @@ class MediaEmbed {
 	 *
 	 * It will return an object if the url contains valid/supported video.
 	 *
-	 * @param string $url Href to check for embeded video
+	 * @param string $url Href to check for embedded video
 	 * @param array $config
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
@@ -92,7 +102,7 @@ class MediaEmbed {
 
 				if (!empty($stub['fetch-match'])) {
 					if (!$this->_parseLink($url, $stub['fetch-match'])) {
-						return;
+						return null;
 					}
 				}
 
@@ -199,11 +209,17 @@ class MediaEmbed {
 		return false;
 	}
 
+	/**
+	 * @param string|array $stub
+	 * @param array $config
+	 *
+	 * @return \MediaEmbed\Object\MediaObject|null
+	 */
 	public function object($stub, array $config = []) {
 		if (!is_array($stub)) {
 			$host = $this->getHost($stub);
 			if (!$host) {
-				return;
+				return null;
 			}
 			$stub = $host;
 		}
@@ -240,6 +256,8 @@ class MediaEmbed {
 	/**
 	 * Contains the preg info
 	 * DOES NOT contain width/height etc
+	 *
+	 * @var array
 	 */
 	public $availableTypes = [
 		'youtube' => [
@@ -268,6 +286,9 @@ class MediaEmbed {
 		]
 	];
 
+	/**
+	 * @var array
+	 */
 	public $availableNonJSTypes = [
 		'youtube' => '<iframe src="http://www.youtube.com/embed/{id}" width="100%" height="385" frameborder="0"></iframe>',
 		'vimeo' => '<iframe src="http://player.vimeo.com/video/{id}" width="100%" height="385" frameborder="0"></iframe>',
@@ -282,11 +303,17 @@ class MediaEmbed {
 		'xvideos' => '<embed src="http://static.xvideos.com/swf/flv_player_site_v4.swf" allowscriptaccess="always" width="100%" height="385" menu="false" quality="high" bgcolor="#000000" allowfullscreen="true" flashvars="id_video={id}" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />',
 	];
 
+	/**
+	 * @var array
+	 */
 	public $_ojectParamAttr = [
 		'allowscriptaccess' => 'always',
 		'allowfullscreen' => 'true',
 	];
 
+	/**
+	 * @var array
+	 */
 	public $_embedAttr = [
 		'allowfullscreen' => 'true',
 		''

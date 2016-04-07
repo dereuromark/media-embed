@@ -11,18 +11,39 @@ use MediaEmbed\Object\ObjectInterface;
  */
 class MediaObject implements ObjectInterface {
 
+	/**
+	 * @var array
+	 */
 	protected $_stub;
 
+	/**
+	 * @var array
+	 */
 	protected $_match;
 
+	/**
+	 * @var array
+	 */
 	protected $_objectAttributes = [];
 
+	/**
+	 * @var array
+	 */
 	protected $_objectParams = [];
 
+	/**
+	 * @var array
+	 */
 	protected $_iframeAttributes = [];
 
+	/**
+	 * @var array
+	 */
 	protected $_iframeParams = [];
 
+	/**
+	 * @var array
+	 */
 	public $config = [
 		'prefer' => 'iframe' // Type object or iframe (only available for few, fallback will be object)
 	];
@@ -30,6 +51,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * MediaObject::__construct()
 	 *
+	 * @param array $stub
 	 * @param array $config
 	 */
 	public function __construct(array $stub, array $config) {
@@ -78,11 +100,12 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Getter/setter for stub
 	 *
-	 * @param string $property - (optional) the specific
+	 * @param string|null $property - (optional) the specific
 	 *     property of the stub to be returned. If
 	 *     omitted, array of all properties are returned.
+	 * @param string|null $value
 	 *
-	 * @return array|string|$this
+	 * @return $this|array|string
 	 */
 	public function stub($property = null, $value = null) {
 		if ($property === null) {
@@ -178,8 +201,8 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * @param string $location Absolute path with trailing slash
-	 * @param string $icon Icon data
+	 * @param string|null $location Absolute path with trailing slash
+	 * @param string|null $icon Icon data
 	 * @return string|null $filename
 	 */
 	public function saveIcon($location = null, $icon = null) {
@@ -209,7 +232,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @param mixed $param The name of the param to be set
 	 *                                           or an array of multiple params to set
-	 * @param string $value (optional) the value to set the param to
+	 * @param string|null $value (optional) the value to set the param to
 	 *                                              if only one param is being set
 	 *
 	 * @return $this
@@ -242,7 +265,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @param mixed $param  The name of the attribute to be set
 	 *   or an array of multiple attribs to be set
-	 * @param string $value (optional) the value to set the param to
+	 * @param string|null $value (optional) the value to set the param to
 	 *   if only one param is being set
 	 * @return $this
 	 */
@@ -368,9 +391,9 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Convert the url to an embedable tag
+	 * Convert the url to an embeddable tag
 	 *
-	 * return string - the embed html
+	 * @return string The embed HTML
 	 */
 	public function getEmbedCode() {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
@@ -405,7 +428,7 @@ class MediaObject implements ObjectInterface {
 	 */
 	protected function _getObjectSrc($type = 'embed-src') {
 		if (empty($this->_stub['id']) || empty($this->_stub['slug'])) {
-			return;
+			return null;
 		}
 
 		$stubSrc = $this->_stub[$type];
@@ -492,7 +515,7 @@ class MediaObject implements ObjectInterface {
 		if (!$objectAttributes && !$objectParams) {
 			return '';
 		}
-		return sprintf("<object %s> %s</object>", $objectAttributes, $objectParams);
+		return sprintf('<object %s> %s</object>', $objectAttributes, $objectParams);
 	}
 
 	/**

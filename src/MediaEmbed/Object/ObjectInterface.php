@@ -30,7 +30,7 @@ interface ObjectInterface {
 	 *
 	 * @api
 	 *
-	 * return string
+	 * @return string
 	 */
 	public function name();
 

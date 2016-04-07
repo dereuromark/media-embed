@@ -1,12 +1,15 @@
 <?php
 
-use \MediaEmbed\MediaEmbed;
+use MediaEmbed\MediaEmbed;
 
 /**
  * Test MediaEmbed
  */
 class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 
+	/**
+	 * @var array
+	 */
 	protected $_stubs = [
 		'http://bnqt.com/videos/detail/Tuesdays-with-Miles-Dallas-Session-San-Diego/782337671001' => '782337671001',
 		'http://www.clipmoon.com/videos/91464f/dog-cat-and-printer.html' => '91464f',
@@ -75,7 +78,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://www.ebaumsworld.com/video/watch/80648170' => '80648170',
 		'http://www.ebaumsworld.com/video/watch/80648170/' => '80648170',
 
-		'http://www.videojug.com/film/summer-party-look-with-daniel-sandler' => 'f027ea3e-6eda-8f23-3cc3-ff0008d15e6e',
+		//'http://www.videojug.com/film/summer-party-look-with-daniel-sandler' => 'f027ea3e-6eda-8f23-3cc3-ff0008d15e6e',
 		'http://www.aparat.com/v/sSLMC' => 'sSLMC',
 		'http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/' => '245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
 
@@ -123,6 +126,8 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 	 * MediaEmbedTest::testParseUrl()
 	 *
 	 * @dataProvider getUrls
+	 * @param string $url
+	 * @param string $id
 	 * @return void
 	 */
 	public function testParseUrl($url, $id) {
