@@ -45,6 +45,17 @@ $stubs = [
 		'iframe-player' => 'https://www.youtube.com/embed/$2',
 	],
 	[
+		'name' => 'Facebook',
+		'website' => 'https://www.facebook.com',
+		'url-match' => [
+			'https://www.facebook.com/[0-9a-z-_]+/videos/([0-9]+)/'
+		],
+		'embed-src' => 'https://www.facebook.com/video/embed?video_id=$2',
+		'embed-width' => '480',
+		'embed-height' => '295',
+		'iframe-player' => 'https://www.facebook.com/plugins/video.php?href=$1&show_text=0',
+	],
+	[
 		'name' => 'Dailymotion',
 		'website' => 'http://www.dailymotion.com',
 		'url-match' => [
