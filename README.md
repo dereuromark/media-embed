@@ -51,7 +51,7 @@ php composer.phar install
 
 ### Parsing
 You can either use `parseUrl()` (default lookup) or `parseId()` (reverse lookup) of `MediaEmbed`.
-The latter is useful if you only store the "host slug" and "id" in the dabatase instead of the
+The latter is useful if you only store the "host slug" and "id" in the database instead of the
 complete URL.
 Both methods will return an `MediaObject` object, which will contain the parsed input.
 
