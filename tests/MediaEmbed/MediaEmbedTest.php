@@ -20,7 +20,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'https://www.youtube.com/embed/yWm4YwqO93I?rel=0' => 'yWm4YwqO93I',
 		'http://youtu.be/MKlq4gQKtU0' => 'MKlq4gQKtU0',
 		'https://www.facebook.com/mega90er/videos/1309058692443747/' => '1309058692443747',
-
+                'https://www.facebook.com/diginights.HN/videos/1231155290281511/' => '1231155290281511',
 		// Not yet possible
 		//'https://www.youtube.com/playlist?list=PLD1FA4687572EDB23' => 'PLD1FA4687572EDB23',
 
