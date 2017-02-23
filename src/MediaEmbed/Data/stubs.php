@@ -41,8 +41,8 @@ $stubs = [
 		'embed-src' => 'https://www.youtube.com/v/$2&rel=0&fs=1',
 		'embed-width' => '480',
 		'embed-height' => '295',
-		'image-src' => 'https://img.youtube.com/vi/$2/0.jpg',
-		'iframe-player' => 'https://www.youtube.com/embed/$2',
+		'image-src' => '//img.youtube.com/vi/$2/0.jpg',
+		'iframe-player' => '//www.youtube.com/embed/$2',
 	],
 	[
 		'name' => 'Facebook',
@@ -50,10 +50,10 @@ $stubs = [
 		'url-match' => [
 			'https://www.facebook.com/[0-9a-z-_.]+/videos/([0-9]+)/'
 		],
-		'embed-src' => 'https://www.facebook.com/video/embed?video_id=$2',
+		'embed-src' => '//www.facebook.com/video/embed?video_id=$2',
 		'embed-width' => '480',
 		'embed-height' => '295',
-		'iframe-player' => 'https://www.facebook.com/plugins/video.php?href=$1&show_text=0',
+		'iframe-player' => '//www.facebook.com/plugins/video.php?href=$1&show_text=0',
 	],
 	[
 		'name' => 'Dailymotion',
@@ -83,7 +83,7 @@ $stubs = [
 		'embed-src' => 'http://vimeo.com/moogaloop.swf?clip_id=$2&server=vimeo.com&fullscreen=1&show_title=1&show_byline=1&show_portrait=0&color=01AAEA',
 		'embed-width' => '400',
 		'embed-height' => '302',
-		'iframe-player' => 'http://player.vimeo.com/video/$2',
+		'iframe-player' => '//player.vimeo.com/video/$2',
 	],
 	[
 		'name' => '123video',
