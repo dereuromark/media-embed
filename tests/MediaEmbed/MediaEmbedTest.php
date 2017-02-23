@@ -196,7 +196,7 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('youtube.png', $filename);
 
 		$img = $Object->image();
-		$this->assertEquals('https://img.youtube.com/vi/h9Pu4bZqWyg/0.jpg', $img);
+		$this->assertEquals('//img.youtube.com/vi/h9Pu4bZqWyg/0.jpg', $img);
 
 		$code = $Object->getEmbedCode();
 		$this->assertContains('<iframe', $code);
