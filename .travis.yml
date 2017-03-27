@@ -20,9 +20,10 @@ matrix:
 before_script:
   - composer self-update
   - composer install --prefer-dist --no-interaction
+  - if [[ $PHPCS != 1 ]]; then composer require phpunit/phpunit:"*"; fi
 
 script:
-  - phpunit
+  - if [[ $PHPCS != 1 ]]; then vendor/bin/phpunit ; fi
   - if [[ $PHPCS == 1 ]]; then vendor/bin/phpcs -p --extensions=php --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --ignore=vendor/,tests/test_files/ . ; fi
 
 matrix:
