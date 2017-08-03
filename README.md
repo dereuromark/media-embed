@@ -33,7 +33,7 @@ There are always some providers changing their URLs/API or some new ones which a
 
 Run
 ```bash
-php composer.phar require dereuromark/media-embed
+composer require dereuromark/media-embed
 ```
 This will get the latest tagged version for you.
 
@@ -48,7 +48,7 @@ Or manually add the dependency to your `composer.json`:
 and run:
 
 ```bash
-php composer.phar install
+composer install
 ```
 
 ## API Overview
