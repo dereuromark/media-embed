@@ -243,7 +243,7 @@ Run coverage
 ```
 composer test-coverage
 ```
-and browse to the genrated `tmp/index.php` via browser.
+and browse to the generated `tmp/index.php` via browser.
 
 Run CS check/fix with
 ```
