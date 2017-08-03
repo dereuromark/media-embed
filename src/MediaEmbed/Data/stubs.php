@@ -49,8 +49,8 @@ $stubs = [
 		'website' => 'https://www.facebook.com',
 		'url-match' => [
 			'https://www.facebook.com/[0-9a-z-_.]+/videos/([0-9]+)/',
-            'https://www.facebook.com/[0-9a-zA-Z-_.]+/videos/(?:vb.\d+)/(\d+)/',
-            'https://www.facebook.com/[0-9a-zA-Z-_.]+/videos/(?:vl.\d+)/(\d+)/'
+			'https://www.facebook.com/[0-9a-zA-Z-_.]+/videos/(?:vb.\d+)/(\d+)/',
+			'https://www.facebook.com/[0-9a-zA-Z-_.]+/videos/(?:vl.\d+)/(\d+)/'
 		],
 		'embed-src' => '//www.facebook.com/video/embed?video_id=$2',
 		'embed-width' => '480',

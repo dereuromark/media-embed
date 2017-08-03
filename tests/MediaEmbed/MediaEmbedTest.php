@@ -21,8 +21,8 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		'http://youtu.be/MKlq4gQKtU0' => 'MKlq4gQKtU0',
 		'https://www.facebook.com/mega90er/videos/1309058692443747/' => '1309058692443747',
 		'https://www.facebook.com/diginights.HN/videos/1231155290281511/' => '1231155290281511',
-        'https://www.facebook.com/SkySports/videos/vb.10911153761/10153310275743762/?type=2&theater' => '10153310275743762',
-        'https://www.facebook.com/demotivateurFood/videos/vl.184872862011827/1034411179983244/?type=1' => '1034411179983244',
+		'https://www.facebook.com/SkySports/videos/vb.10911153761/10153310275743762/?type=2&theater' => '10153310275743762',
+		'https://www.facebook.com/demotivateurFood/videos/vl.184872862011827/1034411179983244/?type=1' => '1034411179983244',
 		// Not yet possible
 		//'https://www.youtube.com/playlist?list=PLD1FA4687572EDB23' => 'PLD1FA4687572EDB23',
 

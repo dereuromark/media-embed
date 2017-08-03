@@ -114,9 +114,9 @@ class MediaObject implements ObjectInterface {
 		if ($value === null) {
 			return isset($this->_stub[$property]) ? $this->_stub[$property] : null;
 		}
-        if(!empty($property) && !empty($value)){
-            $this->_stub[$property] = $value;
-        }
+		if (!empty($property) && !empty($value)) {
+			$this->_stub[$property] = $value;
+		}
 		return $this;
 	}
 
