@@ -31,8 +31,13 @@ There are always some providers changing their URLs/API or some new ones which a
 
 ## Installation
 
-Add the dependency to your `composer.json`:
+Run
+```bash
+php composer.phar require dereuromark/media-embed
+```
+This will get the latest tagged version for you.
 
+Or manually add the dependency to your `composer.json`:
 ```json
 {
     "require": {
@@ -40,8 +45,7 @@ Add the dependency to your `composer.json`:
     }
 }
 ```
-
-run:
+and run:
 
 ```bash
 php composer.phar install
@@ -228,6 +232,24 @@ You can see live examples when you get this repo running locally and browse to `
 
 ## Contribute / TODOs
 See [wiki](https://github.com/dereuromark/MediaEmbed/wiki).
+
+Run tests with
+```
+composer test-setup
+composer test
+```
+
+Run coverage
+```
+composer test-coverage
+```
+and browse to the genrated `tmp/index.php` via browser.
+
+Run CS check/fix with
+```
+composer cs-check
+composer cs-fix
+```
 
 ## Credits
 Inspired by [autoembed](http://autoembed.com/) which already included most of the supported services and laid the foundation of this OOP approach here.

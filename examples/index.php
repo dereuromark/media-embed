@@ -100,7 +100,6 @@ Examples available for <?php echo count($videos); ?> services.
 
 		echo '<div><h3>Embed code:</h3><textarea>' . htmlspecialchars($embed) . '</textarea></div>';
 
-
 		echo '</td><td>';
 		$id = $Object->id();
 		$slug = $Object->slug();

@@ -119,6 +119,8 @@ class MediaObject implements ObjectInterface {
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return string
 	 */
 	public function id() {
 		$res = $this->_match;
@@ -140,6 +142,8 @@ class MediaObject implements ObjectInterface {
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return string
 	 */
 	public function slug() {
 		return $this->_stub['slug'];
@@ -147,6 +151,8 @@ class MediaObject implements ObjectInterface {
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @return string
 	 */
 	public function name() {
 		$res = $this->_match;

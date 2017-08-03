@@ -97,19 +97,22 @@ class MediaEmbed {
 	 */
 	public function parseUrl($url, $config = []) {
 		foreach ($this->_hosts as $stub) {
-			if ($match = $this->_matchUrl($url, (array)$stub['url-match'])) {
-				$this->_match = $match;
-
-				if (!empty($stub['fetch-match'])) {
-					if (!$this->_parseLink($url, $stub['fetch-match'])) {
-						return null;
-					}
-				}
-
-				$stub['match'] = $this->_match;
-				$Object = $this->object($stub, $config + $this->config);
-				return $Object;
+			$match = $this->_matchUrl($url, (array)$stub['url-match']);
+			if (!$match) {
+				continue;
 			}
+
+			$this->_match = $match;
+
+			if (!empty($stub['fetch-match'])) {
+				if (!$this->_parseLink($url, $stub['fetch-match'])) {
+					return null;
+				}
+			}
+
+			$stub['match'] = $this->_match;
+			$Object = $this->object($stub, $config + $this->config);
+			return $Object;
 		}
 	}
 

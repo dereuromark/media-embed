@@ -1,5 +1,6 @@
 /vendor/
 /build/
+/tmp/
 composer.lock
 composer.phar
 phpunit.phar
