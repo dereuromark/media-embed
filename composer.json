@@ -11,7 +11,7 @@
 		}
 	],
 	"require": {
-		"php": ">=5.4|>=7.1",
+		"php": "^5.4|^7.1",
 		"jbroadway/urlify": "1.0.*"
 	},
 	"require-dev":{
