@@ -55,7 +55,7 @@ $stubs = [
 		'embed-src' => '//www.facebook.com/video/embed?video_id=$2',
 		'embed-width' => '480',
 		'embed-height' => '295',
-		'iframe-player' => '//www.facebook.com/plugins/video.php?href=$2&show_text=0',
+		'iframe-player' => '//www.facebook.com/plugins/video.php?href=$1&show_text=0',
 	],
 	[
 		'name' => 'Dailymotion',
