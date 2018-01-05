@@ -621,7 +621,7 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	protected function _esc($text) {
-		return htmlspecialchars($text, ENT_QUOTES, null, false);
+		return htmlspecialchars($text, ENT_QUOTES, '', false);
 	}
 
 }
