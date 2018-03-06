@@ -843,6 +843,15 @@ $stubs = [
 		'embed-height' => '320',
 	],
 	[
+		'name' => 'Matterport',
+		'website' => 'https://matterport.com',
+		'url-match' => 'https://my\.matterport\.com/show/[?&]m=([0-9a-zA-Z]+)',
+		'embed-src' => '',
+		'embed-width' => '450',
+		'embed-height' => '450',
+		'iframe-player' => 'https://my.matterport.com/show/?m=$2',
+	],
+	[
 		'name' => 'Metatube',
 		'website' => 'http://www.metatube.com',
 		'url-match' => 'http://www\.metatube\.com/([a-z]+)/videos/([a-z0-9-/]+)/',
