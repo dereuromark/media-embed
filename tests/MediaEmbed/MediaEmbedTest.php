@@ -1,11 +1,12 @@
 <?php
 
 use MediaEmbed\MediaEmbed;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test MediaEmbed
  */
-class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
+class MediaEmbedTest extends TestCase {
 
 	/**
 	 * @var array
