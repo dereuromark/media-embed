@@ -96,6 +96,8 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 
 		// Not available anymore
 		//'http://video.google.com/videoplay?docid=-5767589436465272649#' => '-5767589436465272649',
+
+        'https://my.matterport.com/show/?m=Zh14WDtkjdC&lp=1' => 'Zh14WDtkjdC',
 	];
 
 	/**
@@ -164,7 +166,8 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		$test = [
 			'dailymotion' => 'x2bqyl6',
 			'youtube' => 'yiSjHJnc9CY',
-			'myvideo' => '7645001'
+			'myvideo' => '7645001',
+            'matterport' => 'Zh14WDtkjdC',
 		];
 
 		$MediaEmbed = new MediaEmbed();
@@ -223,6 +226,20 @@ class MediaEmbedTest extends \PHPUnit_Framework_TestCase {
 		$img = $Object->image();
 		$this->assertEquals('http://www.dailymotion.com/thumbnail/160x120/video/xgv8nw', $img);
 	}
+
+	public function testMatterport() {
+	    $mediaEmbed = new MediaEmbed();
+
+	    $url = 'https://my.matterport.com/show/?m=Zh14WDtkjdC&st=2000';
+	    $Object = $mediaEmbed->parseUrl($url);
+	    $this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+
+	    $id = $Object->id();
+	    $this->assertEquals('Zh14WDtkjdC', $id);
+
+        $code = $Object->getEmbedCode();
+        $this->assertContains('<iframe', $code);
+    }
 
 	/**
 	 * Test getHosts()
