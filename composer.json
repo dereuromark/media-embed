@@ -11,14 +11,20 @@
 		}
 	],
 	"require": {
-		"php": ">=5.4"
+		"php": ">=5.6",
+		"jbroadway/urlify": "^1.0.0"
 	},
 	"require-dev":{
 		"fig-r/psr2r-sniffer": "dev-master"
 	},
 	"autoload": {
-		"psr-0": {
-			"": "src/"
+		"psr-4": {
+			"MediaEmbed\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"MediaEmbed\\Test\\": "tests/"
 		}
 	},
 	"scripts": {

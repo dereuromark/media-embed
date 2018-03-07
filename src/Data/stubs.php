@@ -1487,3 +1487,5 @@ $deprecatedStubs = [
 		'name' => '$3',
 	],
 ];
+
+return $stubs;
