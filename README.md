@@ -5,7 +5,7 @@
 [![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.png)](https://packagist.org/packages/dereuromark/media-embed)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
-A stand-alone utility library that generates HTML embed tags for audio or video located on a given URL.
+A utility library that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
 
 It currently works with 150+ services, including the most important ones like
