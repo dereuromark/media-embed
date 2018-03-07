@@ -3,6 +3,7 @@
 namespace MediaEmbed;
 
 use MediaEmbed\Object\MediaObject;
+use URLify;
 
 if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
@@ -39,7 +40,7 @@ class MediaEmbed {
 	 * @param array $config
 	 */
 	public function __construct(array $config = []) {
-		$stubs = include(dirname(__FILE__) . DS . 'Data' . DS . 'stubs.php');
+		$stubs = include dirname(__FILE__) . DS . 'Data' . DS . 'stubs.php';
 		$this->setHosts($stubs);
 		$this->config = $config + $this->config;
 	}
@@ -238,7 +239,7 @@ class MediaEmbed {
 	 * @return string
 	 */
 	protected function _slug($text) {
-		return \URLify::filter($text);
+		return URLify::filter($text);
 	}
 
 	/**

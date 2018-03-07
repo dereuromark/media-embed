@@ -17,7 +17,7 @@ matrix:
 
 before_script:
   - composer install --prefer-dist --no-interaction
-  - if [[ $PHPCS != 1 ]]; then composer require phpunit/phpunit:"^6.0|^7.0"; fi
+  - if [[ $PHPCS != 1 ]]; then composer require phpunit/phpunit:"^5.0|^6.0|^7.0"; fi
 
 script:
   - if [[ $PHPCS != 1 ]]; then vendor/bin/phpunit ; fi
