@@ -12,8 +12,8 @@
     syntaxCheck                 = "false">
 
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+        <testsuite name="media-embed">
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
 
