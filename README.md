@@ -1,6 +1,6 @@
 # MediaEmbed
 [![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](http://travis-ci.org/dereuromark/MediaEmbed)
-[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D%205.4-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net/)
 [![License](https://poser.pugx.org/dereuromark/media-embed/license.png)](https://packagist.org/packages/dereuromark/media-embed)
 [![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.png)](https://packagist.org/packages/dereuromark/media-embed)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
@@ -22,8 +22,9 @@ It uses iframes if possible, and has a fallback on the embed object if necessary
 
 ## Requirements
 
-- PHP 5.4+
+- PHP 5.6+
 - Composer
+- [jbroadway/urlify](https://github.com/jbroadway/urlify) for slugging
 
 ### Note
 Please feel free to join in and help out to further improve or complete it.

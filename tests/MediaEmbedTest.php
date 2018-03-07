@@ -1,4 +1,5 @@
 <?php
+namespace MediaEmbed\Test;
 
 use MediaEmbed\MediaEmbed;
 use PHPUnit\Framework\TestCase;
