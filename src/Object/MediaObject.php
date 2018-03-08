@@ -615,8 +615,6 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * MediaObject::_esc()
-	 *
 	 * @param string $text
 	 * @return string
 	 */
@@ -624,4 +622,19 @@ class MediaObject implements ObjectInterface {
 		return htmlspecialchars($text, ENT_QUOTES, '', false);
 	}
 
+	/**
+	 * Returns an array that can be used to describe the internal state of this
+	 * object.
+	 *
+	 * @return array
+	 */
+	public function __debugInfo() {
+		return [
+			'stub' => $this->_stub,
+			'objectAttributes' => $this->_objectAttributes,
+			'objectParams' => $this->_objectParams,
+			'iframeAttributes' => $this->_iframeAttributes,
+			'iframeParams' => $this->_iframeParams,
+		];
+	}
 }
