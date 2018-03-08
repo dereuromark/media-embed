@@ -21,7 +21,7 @@ etc. With community driven updates this aims to be a complete and up-to-date ser
 It uses iframes if possible, and has a fallback on the embed object if necessary.
 
 ## Demo
-http://sandbox.dereuromark.de/sandbox/media-embed
+https://sandbox.dereuromark.de/sandbox/media-embed
 
 ## Requirements
 
