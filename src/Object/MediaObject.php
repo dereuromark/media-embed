@@ -637,4 +637,5 @@ class MediaObject implements ObjectInterface {
 			'iframeParams' => $this->_iframeParams,
 		];
 	}
+
 }
