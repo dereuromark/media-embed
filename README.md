@@ -237,6 +237,9 @@ You can see live examples when you get this repo running locally and browse to `
 ## Contribute / TODOs
 See [wiki](https://github.com/dereuromark/MediaEmbed/wiki).
 
+Looking forward for contributions, e.g. adding more yet missing services etc.
+Please provide a simple test URL and test case for any new service.
+
 Run tests with
 ```
 composer test-setup
