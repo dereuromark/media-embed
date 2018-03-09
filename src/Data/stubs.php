@@ -174,7 +174,6 @@ $stubs = [
 		'embed-width' => '480',
 		'embed-height' => '294',
 		'id' => '$3',
-		'name' => '$2',
 	],
 	[
 		'name' => 'BoFunk',
