@@ -28,8 +28,8 @@
 		}
 	},
 	"scripts": {
-		"test": "phpunit",
-		"test-coverage": "phpunit --log-junit tmp/coverage/unitreport.xml --coverage-html tmp/coverage --coverage-clover tmp/coverage/coverage.xml",
+		"test": "php phpunit.phar",
+		"test-coverage": "php phpunit.phar --log-junit tmp/coverage/unitreport.xml --coverage-html tmp/coverage --coverage-clover tmp/coverage/coverage.xml",
 		"test-setup": "[ ! -f phpunit.phar ] && wget https://phar.phpunit.de/phpunit.phar || true",
 		"cs-check": "phpcs -v -p --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --extensions=php --ignore=tests/test_files/ src/ tests/",
 		"cs-fix": "phpcbf -v --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --extensions=php --ignore=tests/test_files/ src/ tests/"
