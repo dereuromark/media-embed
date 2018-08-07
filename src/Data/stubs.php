@@ -1452,8 +1452,8 @@ $stubs = [
 	[
 		'name' => 'Twitch Video',
 		'website' => 'https://www.twitch.tv',
-		'url-match' => 'https?://www\.twitch\.tv/videos/([0-9]{9})'
-		'embed-src' => 'https://player.twitch.tv/?video=v$2'
+		'url-match' => 'https?://www\.twitch\.tv/videos/([0-9]{9})',
+		'embed-src' => 'https://player.twitch.tv/?video=v$2',
 		'embed-width' => '620',
 		'embed-height' => '378',
 		'iframe-player' => 'https://player.twitch.tv/?video=v$2'
@@ -1461,8 +1461,8 @@ $stubs = [
 	[
 		'name' => 'Twitch Clip',
 		'website' => 'https://clips.twitch.tv',
-		'url-match' => 'https?://clips\.twitch\.tv/([A-Za-z]+)'
-		'embed-src' => 'https://clips.twitch.tv/embed?clip=$2'
+		'url-match' => 'https?://clips\.twitch\.tv/([A-Za-z]+)',
+		'embed-src' => 'https://clips.twitch.tv/embed?clip=$2',
 		'embed-width' => '620',
 		'embed-height' => '378',
 		'iframe-player' => 'https://clips.twitch.tv/embed?clip=$2'

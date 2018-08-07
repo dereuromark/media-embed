@@ -100,6 +100,9 @@ class MediaEmbedTest extends TestCase {
 		//'http://video.google.com/videoplay?docid=-5767589436465272649#' => '-5767589436465272649',
 
 		'https://my.matterport.com/show/?m=Zh14WDtkjdC&lp=1' => 'Zh14WDtkjdC',
+
+		'https://www.twitch.tv/videos/293684811' => '293684811',
+		'https://clips.twitch.tv/WonderfulPiliableSquirrelBleedPurple' => 'WonderfulPiliableSquirrelBleedPurple',
 	];
 
 	/**
