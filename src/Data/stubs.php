@@ -1470,11 +1470,11 @@ $stubs = [
 	[
 		'name' => 'Bit.Tube',
 		'website' => 'https://bit.tube/',
-		'url-match' => 'https:\/\/bit\.tube\/play\?(hash)=([0-9A-Za-z-]+)\&channel=([0-9]+)', 
+		'url-match' => 'https:\/\/bit\.tube\/play\?(hash)=([0-9A-Za-z-]+)\&channel=([0-9]+)',
 		'iframe-player' => '//bit.tube/playerembed/$2/$3/',
-		'embed-src' => '', 
+		'embed-src' => '',
 		'embed-width' => '480',
-		'embed-height' => '270', 
+		'embed-height' => '270',
 	],
 ];
 
