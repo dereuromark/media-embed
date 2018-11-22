@@ -1,6 +1,6 @@
 # MediaEmbed
-[![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](http://travis-ci.org/dereuromark/MediaEmbed)
-[![Minimum PHP Version](http://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net/)
+[![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](https://travis-ci.org/dereuromark/MediaEmbed)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net/)
 [![License](https://poser.pugx.org/dereuromark/media-embed/license.png)](https://packagist.org/packages/dereuromark/media-embed)
 [![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.png)](https://packagist.org/packages/dereuromark/media-embed)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
@@ -139,7 +139,7 @@ if ($MediaObject) {
 ```
 This should return and embed code like:
 ```html
-<embed src="http:/www.youtube.com/embed/111111?autoplay=1&amp;loop=1" class="iframe-class" data-html5-parameter></iframe>
+<embed src="https://www.youtube.com/embed/111111?autoplay=1&amp;loop=1" class="iframe-class" data-html5-parameter></iframe>
 ```
 
 ### Example with BBCode
@@ -237,6 +237,12 @@ Run coverage
 composer test-coverage
 ```
 and browse to the generated `tmp/index.php` via browser.
+
+Run PHPStan
+```
+composer phpstan-setup
+composer phpstan
+```
 
 Run CS check/fix with
 ```
