@@ -142,7 +142,12 @@ class MediaEmbed {
 	protected function _parseLink($url, $regex) {
 		$context = stream_context_create(
 			['http' => ['header' => 'Connection: close']]);
-		$source = preg_replace('/[^(\x20-\x7F)]*/', '', file_get_contents($url, 0, $context));
+		$content = file_get_contents($url, false, $context);
+		if (!$content) {
+			return false;
+		}
+
+		$source = preg_replace('/[^(\x20-\x7F)]*/', '', $content);
 
 		if (preg_match('~' . $regex . '~imu', $source, $match)) {
 			$this->_match = $match;
@@ -172,7 +177,7 @@ class MediaEmbed {
 
 	/**
 	 * @param array $whitelist (alias/keys)
-	 * @return array hostInfos or false on failure
+	 * @return array Host info
 	 */
 	public function getHosts($whitelist = []) {
 		if ($whitelist) {
@@ -190,14 +195,14 @@ class MediaEmbed {
 
 	/**
 	 * @param string $alias
-	 * @return array hostInfos or false on failure
+	 * @return array|null Host info or null on failure
 	 */
 	public function getHost($alias) {
 		if (!$this->_hosts) {
 			$this->_hosts = $this->getHosts();
 		}
 		if (empty($this->_hosts[$alias])) {
-			return false;
+			return null;
 		}
 		return $this->_hosts[$alias];
 	}

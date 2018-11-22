@@ -41,20 +41,6 @@ composer require dereuromark/media-embed
 ```
 This will get the latest tagged version for you.
 
-Or manually add the dependency to your `composer.json`:
-```json
-{
-    "require": {
-        "dereuromark/media-embed": "0.*"
-    }
-}
-```
-and run:
-
-```bash
-composer install
-```
-
 ## API Overview
 
 ### Parsing

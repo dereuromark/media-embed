@@ -2,8 +2,6 @@
 
 namespace MediaEmbed\Object;
 
-use MediaEmbed\Object\ObjectInterface;
-
 /**
  * A generic object - for now.
  *
@@ -55,7 +53,7 @@ class MediaObject implements ObjectInterface {
 	 * @param array $config
 	 */
 	public function __construct(array $stub, array $config) {
-		$this->config = $config += $this->config;
+		$this->config = $config + $this->config;
 
 		$stubDefaults = [
 			'id' => '',
@@ -184,7 +182,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Returns a png img
 	 *
-	 * @return resource|null Resource or null if not available
+	 * @return string|null Resource content or null if not available
 	 */
 	public function icon() {
 		$url = $this->_stub['website'];
@@ -201,7 +199,7 @@ class MediaObject implements ObjectInterface {
 		$context = stream_context_create(
 			['http' => ['header' => 'Connection: close']]);
 		// E.g. http://www.google.com/s2/favicons?domain=xyz.com
-		$file = file_get_contents($icon, 0, $context);
+		$file = file_get_contents($icon, false, $context);
 		if ($file === false) {
 			return null;
 		}
@@ -210,11 +208,11 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * @param string|null $location Absolute path with trailing slash
+	 * @param string $location Absolute path with trailing slash
 	 * @param string|null $icon Icon data
 	 * @return string|null $filename
 	 */
-	public function saveIcon($location = null, $icon = null) {
+	public function saveIcon($location, $icon = null) {
 		if ($icon === null) {
 			$icon = $this->icon();
 		}
@@ -222,11 +220,7 @@ class MediaObject implements ObjectInterface {
 			return null;
 		}
 		if (!$location) {
-			$location = IMAGES . 'content' . DS . 'video_types';
-			if (!is_dir($location)) {
-				mkdir($location, 0755, true);
-			}
-			$location .= DS;
+			return null;
 		}
 		$filename = $this->slug() . '.png';
 		$file = $location . $filename;
@@ -274,7 +268,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @param mixed $param  The name of the attribute to be set
 	 *   or an array of multiple attribs to be set
-	 * @param string|null $value (optional) the value to set the param to
+	 * @param string|int|null $value (optional) the value to set the param to
 	 *   if only one param is being set
 	 * @return $this
 	 */
@@ -351,7 +345,7 @@ class MediaObject implements ObjectInterface {
 	 * Return object params about the video metadata
 	 *
 	 * @param string|null $key
-	 * @return array|string - object params
+	 * @return array|string|null Object params
 	 */
 	public function getParams($key = null) {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
@@ -377,7 +371,7 @@ class MediaObject implements ObjectInterface {
 	 * Return object attribute
 	 *
 	 * @param string|null $key
-	 * @return array - object attribute
+	 * @return mixed Object attribute
 	 */
 	public function getAttributes($key = null) {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
@@ -455,8 +449,6 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * VideoLib::getImageSrc()
-	 *
 	 * @return string|null
 	 */
 	public function getImageSrc() {

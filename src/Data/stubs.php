@@ -304,7 +304,6 @@ $stubs = [
 	[
 		'name' => 'CollegeHumor',
 		'website' => 'http://www.collegehumour.com',
-		'name' => 'CollegeHumor',
 		'url-match' => 'http://(?:www\.)?collegehumor\.com/video:([0-9]{1,12})',
 		'embed-src' => 'http://www.collegehumor.com/moogaloop/moogaloop.swf?clip_id=$2',
 		'embed-width' => '480',
@@ -386,7 +385,6 @@ $stubs = [
 	[
 		'name' => 'Dropshots',
 		'website' => 'http://www.dropshots.com',
-		'name' => 'dropshots.com',
 		'url-match' => '(http://media(?:[0-9]{0,2})\.dropshots\.com/photos(?:(?:/(?:[0-9]{1,10})){1,3})\.flv)',
 		'embed-src' => 'http://www.dropshots.com/dropshotsplayer.swf?url=$2',
 		'embed-width' => '480',
@@ -520,7 +518,6 @@ $stubs = [
 	[
 		'name' => 'GameTube',
 		'website' => 'http://www.gametube.org',
-		'name' => 'Gametube.org',
 		'url-match' => 'http://(?:www\.)?gametube\.org/(?:\#/video/|htmlVideo\.jsp\?id=|miniPlayer\.swf\?vidId=)([A-z0-9=_-]{28})',
 		'embed-src' => 'http://www.gametube.org/miniPlayer.swf?vidId=$2',
 		'embed-width' => '425',
@@ -1224,7 +1221,6 @@ $stubs = [
 	[
 		'name' => 'Tu',
 		'website' => 'http://www.tu.tv',
-		'name' => 'Tu.tv',
 		'url-match' => '(http://tu\.tv/tutvweb\.swf\?xtp=(?:[0-9]{1,10}))',
 		'embed-src' => '$2',
 		'embed-width' => '425',
@@ -1510,7 +1506,7 @@ $deprecatedStubs = [
 		'embed-height' => '320',
 		'flashvars' => 'config=http://www.mehr-schbass.de/videos/xml-config.php?id=$2-embed',
 		'id' => '$2',
-		'name' => '$3',
+		//'name' => '$3',
 	],
 ];
 
