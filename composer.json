@@ -15,8 +15,7 @@
 		"jbroadway/urlify": "^1.0.0"
 	},
 	"require-dev":{
-		"fig-r/psr2r-sniffer": "dev-master",
-		"phpstan/phpstan-shim": "^0.10.5"
+		"fig-r/psr2r-sniffer": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
@@ -33,6 +32,7 @@
 		"test-coverage": "php phpunit.phar --log-junit tmp/coverage/unitreport.xml --coverage-html tmp/coverage --coverage-clover tmp/coverage/coverage.xml",
 		"test-setup": "[ ! -f phpunit.phar ] && wget https://phar.phpunit.de/phpunit.phar || true",
 		"phpstan": "phpstan analyse -c tests/phpstan.neon -l 5 src/",
+		"phpstan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:\"^0.10\" && mv composer.backup composer.json",
 		"cs-check": "phpcs -v -p --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --extensions=php --ignore=tests/test_files/ src/ tests/",
 		"cs-fix": "phpcbf -v --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --extensions=php --ignore=tests/test_files/ src/ tests/"
 	}

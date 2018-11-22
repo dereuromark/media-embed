@@ -19,7 +19,7 @@ matrix:
       env: PREFER_LOWEST=1
 
     - php: 7.2
-      env: PHPCS=1 DEFAULT=0
+      env: CHECKS=1 DEFAULT=0
 
 before_script:
   - if [[ $PREFER_LOWEST != 1 ]]; then composer install --prefer-source --no-interaction ; fi
