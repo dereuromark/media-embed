@@ -224,12 +224,26 @@ class MediaEmbedTest extends TestCase {
 	public function testDailymotion() {
 		$MediaEmbed = new MediaEmbed();
 
-		$url = 'http://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music#hp-sc-p-1';
+		$url = 'https://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music#hp-sc-p-1';
 		$Object = $MediaEmbed->parseUrl($url);
 		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
 
 		$img = $Object->image();
-		$this->assertEquals('http://www.dailymotion.com/thumbnail/160x120/video/xgv8nw', $img);
+		$this->assertEquals('https://www.dailymotion.com/thumbnail/160x120/video/xgv8nw', $img);
+
+		$url = 'https://www.dailymotion.com/video/x6x13ln';
+		$Object = $MediaEmbed->parseUrl($url);
+		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+
+		$img = $Object->image();
+		$this->assertEquals('https://www.dailymotion.com/thumbnail/160x120/video/x6x13ln', $img);
+
+		$url = 'https://dai.ly/x6x039x';
+		$Object = $MediaEmbed->parseUrl($url);
+		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+
+		$img = $Object->image();
+		$this->assertEquals('https://www.dailymotion.com/thumbnail/160x120/video/x6x039x', $img);
 	}
 
 	public function testMatterport() {

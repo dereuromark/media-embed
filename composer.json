@@ -15,7 +15,8 @@
 		"jbroadway/urlify": "^1.0.0"
 	},
 	"require-dev":{
-		"fig-r/psr2r-sniffer": "dev-master"
+		"fig-r/psr2r-sniffer": "dev-master",
+		"phpunit/phpunit": "^7.4"
 	},
 	"autoload": {
 		"psr-4": {
