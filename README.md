@@ -1,8 +1,8 @@
 # MediaEmbed
-[![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.png?branch=master)](https://travis-ci.org/dereuromark/MediaEmbed)
+[![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.svg?branch=master)](https://travis-ci.org/dereuromark/MediaEmbed/)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net/)
-[![License](https://poser.pugx.org/dereuromark/media-embed/license.png)](https://packagist.org/packages/dereuromark/media-embed)
-[![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.png)](https://packagist.org/packages/dereuromark/media-embed)
+[![License](https://poser.pugx.org/dereuromark/media-embed/license.svg)](https://packagist.org/packages/dereuromark/media-embed)
+[![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.svg)](https://packagist.org/packages/dereuromark/media-embed)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
 A utility library that generates HTML embed tags for audio or video located on a given URL.
@@ -122,7 +122,7 @@ public function video($host, $id, array $options = []) {
 ### Customizing attributes and params in the embed code
 This example shows you how to add custom attributes to the iframe tag or parameters to the src url (so you can add the autoplay parameter on youtube for example):
 ```php
-$MediaObject = $this->MediaEmbed->parseUrl('http://www.youtube.com/watch?v=111111');
+$MediaObject = $this->MediaEmbed->parseUrl('https://www.youtube.com/watch?v=111111');
 if ($MediaObject) {
 	$MediaObject->setParam([
 		'autoplay' => 1,
@@ -221,7 +221,7 @@ You can see live examples when you get this repo running locally and browse to `
 `index.php` has a list of examples, you can live-preview. `bbcode.php` shows how to use it in save/read callbacks.
 
 ## Contribute / TODOs
-See [wiki](https://github.com/dereuromark/MediaEmbed/wiki).
+See [wiki](https://github.com/dereuromark/media-embed/wiki).
 
 Looking forward for contributions, e.g. adding more yet missing services etc.
 Please provide a simple test URL and test case for any new service.
