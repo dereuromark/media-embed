@@ -103,6 +103,8 @@ class MediaEmbedTest extends TestCase {
 
 		'https://www.twitch.tv/videos/293684811' => '293684811',
 		'https://clips.twitch.tv/WonderfulPiliableSquirrelBleedPurple' => 'WonderfulPiliableSquirrelBleedPurple',
+
+		'https://lds.cdn.vooplayer.com/publish/MTEwNTMw' => 'MTEwNTMw',
 	];
 
 	/**

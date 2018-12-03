@@ -1472,6 +1472,15 @@ $stubs = [
 		'embed-width' => '480',
 		'embed-height' => '270',
 	],
+	[
+		'name' => 'Vooplayer',
+		'website' => 'https://vooplayer.com/',
+		'url-match' => 'https:\/\/(.+)\.cdn\.vooplayer\.com/publish/([0-9A-Za-z-]+)',
+		'iframe-player' => 'https://$2.cdn.vooplayer.com/publish/$3?fallback=true',
+		'embed-src' => '',
+		'embed-width' => '480',
+		'embed-height' => '270',
+	],
 ];
 
 /**
