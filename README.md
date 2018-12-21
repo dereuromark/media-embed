@@ -1,5 +1,5 @@
 # MediaEmbed
-[![Build Status](https://secure.travis-ci.org/dereuromark/MediaEmbed.svg?branch=master)](https://travis-ci.org/dereuromark/MediaEmbed/)
+[![Build Status](https://secure.travis-ci.org/dereuromark/media-embed.svg?branch=master)](https://travis-ci.org/dereuromark/media-embed/)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net/)
 [![License](https://poser.pugx.org/dereuromark/media-embed/license.svg)](https://packagist.org/packages/dereuromark/media-embed)
 [![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.svg)](https://packagist.org/packages/dereuromark/media-embed)
