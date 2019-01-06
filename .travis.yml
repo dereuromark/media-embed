@@ -23,14 +23,14 @@ matrix:
 
 before_script:
   - if [[ $PREFER_LOWEST != 1 ]]; then composer install --prefer-source --no-interaction ; fi
-  - if [[ $PREFER_LOWEST == 1 ]]; then composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable ; fi
+  - if [[ $PREFER_LOWEST == 1 ]]; then composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction ; fi
 
   - if [[ $DEFAULT == 1 ]]; then composer require --dev phpunit/phpunit:"^5.0|^6.0|^7.0"; fi
 
 script:
   - if [[ $DEFAULT == 1 ]]; then vendor/bin/phpunit ; fi
 
-  - if [[ $CHECKS == 1 ]]; then composer require --dev phpstan/phpstan-shim:"^0.10" && composer phpstan; fi
+  - if [[ $CHECKS == 1 ]]; then composer phpstan-setup && composer phpstan; fi
   - if [[ $CHECKS == 1 ]]; then vendor/bin/phpcs -p --extensions=php --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --ignore=tests/test_files/ src/ tests/ ; fi
 
 notifications:
