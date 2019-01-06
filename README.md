@@ -183,7 +183,7 @@ protected function _processVideo($params) {
 }
 ```
 
-So `[video]http://www.youtube.com/v/123[/video]` becomes `[video=youtube]123[/video]`.
+So `[video]https://www.youtube.com/v/123[/video]` becomes `[video=youtube]123[/video]`.
 
 #### Display the resulting code snippet upon display
 ```php
@@ -251,4 +251,4 @@ composer cs-fix
 ```
 
 ## Credits
-Inspired by [autoembed](http://autoembed.com/) which already included most of the supported services and laid the foundation of this OOP approach here.
+Inspired by autoembed.com which already included most of the supported services and laid the foundation of this OOP approach here.
