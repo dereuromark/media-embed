@@ -88,9 +88,9 @@ class MediaEmbedTest extends TestCase {
 		'http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/' => '245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
 
 		// Fetch lookup required
-		'http://www.screencast.com/t/Hh4ulI0M' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
-		'http://www.ustream.tv/channel/america2oficial' => '17916695',
-		'http://www.ustream.tv/channel/16962149' => '16962149',
+		'https://www.screencast.com/t/Hh4ulI0M' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
+		'https://www.ustream.tv/channel/america2oficial' => '17916695',
+		'https://www.ustream.tv/channel/16962149' => '16962149',
 
 		'http://example.wistia.com/medias/1voyrefhy9' => '1voyrefhy9',
 

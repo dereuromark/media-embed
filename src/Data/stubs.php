@@ -1039,13 +1039,13 @@ $stubs = [
 	],
 	[
 		'name' => 'Screencast',
-		'website' => 'http://www.screencast.com',
-		'url-match' => 'http://(?:www\.)?screencast\.com/t/([0-9a-zA-Z]+)',
-		'fetch-match' => 'http://www\.screencast\.com/users/CamtasiaTraining/folders/Camtasia/media/([a-z0-9-]+)/embed',
-		'embed-src' => 'http://content.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/1d44810a-01f4-4c60-a862-6d114bed50c7/tscplayer.swf',
+		'website' => 'https://www.screencast.com',
+		'url-match' => 'https://(?:www\.)?screencast\.com/t/([0-9a-zA-Z]+)',
+		'fetch-match' => 'https://www\.screencast\.com/users/CamtasiaTraining/folders/Camtasia/media/([a-z0-9-]+)/embed',
+		'embed-src' => 'https://content.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/1d44810a-01f4-4c60-a862-6d114bed50c7/tscplayer.swf',
 		'embed-width' => '425',
 		'embed-height' => '344',
-		'iframe-player' => 'http://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/$2/embed'
+		'iframe-player' => 'https://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/$2/embed'
 	],
 	[
 		'name' => 'ScreenToaster',
