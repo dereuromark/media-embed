@@ -43,4 +43,13 @@ interface ObjectInterface {
 	 */
 	public function getEmbedCode();
 
+	/**
+	 * Returns the embed src. Useful for iframes where you only need the src attribute
+	 *
+	 * @api
+	 *
+	 * @return string
+	 */
+	public function getEmbedSrc();
+
 }

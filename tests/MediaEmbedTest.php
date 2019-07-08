@@ -212,6 +212,9 @@ class MediaEmbedTest extends TestCase {
 
 		$code = $Object->getEmbedCode();
 		$this->assertContains('<iframe', $code);
+
+		$src = $Object->getEmbedSrc();
+		$this->assertContains('//www.youtube.com/embed/h9Pu4bZqWyg', $src);
 	}
 
 	public function testYoutubeWithoutIframe() {

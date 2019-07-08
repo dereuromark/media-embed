@@ -406,6 +406,31 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
+	 * Add src getter method
+	 *
+	 * @return string The src attribute
+	 */
+	public function getEmbedSrc() {
+		$source = $this->_stub['iframe-player'];
+		$count = count($this->_match);
+
+		for ($i = 1; $i <= $count; $i++) {
+			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
+		}
+
+		//add custom params
+		if ($this->_iframeParams) {
+			$c = '?';
+			if (strpos($source, '?') !== false) {
+				$c = '&amp;';
+			}
+			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
+		}
+
+		return $source;
+	}
+
+	/**
 	 * Getter/setter of what this Object currently prefers as output type
 	 *
 	 * @param string|null $type
