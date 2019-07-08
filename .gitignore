@@ -5,3 +5,4 @@ composer.lock
 composer.phar
 phpunit.phar
 .idea/
+.phpunit.result.cache
