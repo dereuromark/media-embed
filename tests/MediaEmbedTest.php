@@ -217,6 +217,9 @@ class MediaEmbedTest extends TestCase {
 		$this->assertContains('//www.youtube.com/embed/h9Pu4bZqWyg', $src);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testYoutubeWithoutIframe() {
 		$MediaEmbed = new MediaEmbed(['prefer' => 'object']);
 		$Object = $MediaEmbed->parseUrl('http://www.youtube.com/watch?v=h9Pu4bZqWyg');
@@ -226,6 +229,9 @@ class MediaEmbedTest extends TestCase {
 		$this->assertNotContains('<iframe', $code);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testDailymotion() {
 		$MediaEmbed = new MediaEmbed();
 
@@ -251,6 +257,9 @@ class MediaEmbedTest extends TestCase {
 		$this->assertEquals('https://www.dailymotion.com/thumbnail/160x120/video/x6x039x', $img);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testMatterport() {
 	    $mediaEmbed = new MediaEmbed();
 
