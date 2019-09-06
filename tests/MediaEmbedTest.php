@@ -31,6 +31,7 @@ class MediaEmbedTest extends TestCase {
 		'http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy' => '7645001',
 		'http://www.metacafe.com/watch/1417475/try_it_yourself_episode_2_hacks_and_tricks_in_google/' => '1417475',
 		'http://vimeo.com/19570639' => '19570639',
+		'http://vimeo.com/245928033/572c32a20d' => '245928033',
 		'http://vimeo.com/channels/staffpicks/99585787' => '99585787',
 
 		'http://www.clipfish.de/special/dsds/video/3507980/dsds-recall-anna-und-tobias-harmonieren/' => '3507980',
