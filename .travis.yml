@@ -1,10 +1,9 @@
 language: php
 
-sudo: false
-
 php:
   - 5.6
   - 7.3
+  - 7.4snapshot
 
 env:
   global:
@@ -30,7 +29,7 @@ script:
   - if [[ $DEFAULT == 1 ]]; then vendor/bin/phpunit ; fi
 
   - if [[ $CHECKS == 1 ]]; then composer phpstan-setup && composer phpstan; fi
-  - if [[ $CHECKS == 1 ]]; then vendor/bin/phpcs -p --extensions=php --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --ignore=tests/test_files/ src/ tests/ ; fi
+  - if [[ $CHECKS == 1 ]]; then composer cs-check ; fi
 
 notifications:
   email: false
