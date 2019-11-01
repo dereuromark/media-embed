@@ -1,37 +1,37 @@
 <?php
 
 /*
-	Example:
-	array(
-		'name' =>	Source the embeded media comes from
-		'website' =>	URI of the media source
-		'url-match' =>	Regexp for matching the submitted url to a stub
-		'embed-src' =>	The source of the media to embed.	Replace $2, $3, etc with matches from the url-match or fetch-match regexp ($1 is the entire matched url)
-		'embed-width' =>	The default width of the embeded object
-		'embed-height' =>	The default width of the embeded object
-		'fetch-match' => (optional) if set, html will be fetched and this regexp will be used to pull the media id or the source of the video
-		'flashvars' => (optional) if set, will be passed in the embed tag.	Replace $2, $3, etc with matches from url-match or fetch-match
-		'id' => to get only the id if possible (set to false if impossible), defaults to $2
-		'slug' => identification for pure IDs to retrieve embed tag (defaults to strtolower + autosluggable behavior)
-		'replace' => to force-replace certain parts/placeholders
-	),
+  Example:
+  array(
+  'name' =>	Source the embeded media comes from
+  'website' =>	URI of the media source
+  'url-match' =>	Regexp for matching the submitted url to a stub
+  'embed-src' =>	The source of the media to embed.	Replace $2, $3, etc with matches from the url-match or fetch-match regexp ($1 is the entire matched url)
+  'embed-width' =>	The default width of the embeded object
+  'embed-height' =>	The default width of the embeded object
+  'fetch-match' => (optional) if set, html will be fetched and this regexp will be used to pull the media id or the source of the video
+  'flashvars' => (optional) if set, will be passed in the embed tag.	Replace $2, $3, etc with matches from url-match or fetch-match
+  'id' => to get only the id if possible (set to false if impossible), defaults to $2
+  'slug' => identification for pure IDs to retrieve embed tag (defaults to strtolower + autosluggable behavior)
+  'replace' => to force-replace certain parts/placeholders
+  ),
 
-	TODO: pages like in.com => resolve into actual website and parse it then?
+  TODO: pages like in.com => resolve into actual website and parse it then?
 
-*/
+ */
 $stubs = [
 	/*
-	// Embedding is only available for videos - with playlist as optional param
-	array(
-		'name' => 'YouTube (Playlists)',
-		'website' => 'http://www.youtube.com',
-		'url-match' => 'https?://(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com(?:[^"]*?)?(?:&|&amp;|/|\?|;)(?:id=|p=|p/)([0-9a-f]{16})',
-		'embed-src' => 'https://www.youtube.com/p/$2&rel=0&fs=1',
-		'embed-width' => '480',
-		'embed-height' => '385',
-		'iframe-player' => 'https://www.youtube.com/embed/$2',
-	),
-	*/
+	  // Embedding is only available for videos - with playlist as optional param
+	  array(
+	  'name' => 'YouTube (Playlists)',
+	  'website' => 'http://www.youtube.com',
+	  'url-match' => 'https?://(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com(?:[^"]*?)?(?:&|&amp;|/|\?|;)(?:id=|p=|p/)([0-9a-f]{16})',
+	  'embed-src' => 'https://www.youtube.com/p/$2&rel=0&fs=1',
+	  'embed-width' => '480',
+	  'embed-height' => '385',
+	  'iframe-player' => 'https://www.youtube.com/embed/$2',
+	  ),
+	 */
 	[
 		'name' => 'YouTube',
 		'website' => 'https://www.youtube.com',
@@ -282,7 +282,7 @@ $stubs = [
 		'embed-src' => 'http://www.clipmoon.com/flvplayer.swf?config=http://www.clipmoon.com/flvplayer.php?viewkey=$2&external=yes',
 		'embed-width' => '460',
 		'embed-height' => '357',
-		//'flashVars' => 'autostart=false',
+	//'flashVars' => 'autostart=false',
 	],
 	[
 		'name' => 'ClipShack',
@@ -357,7 +357,7 @@ $stubs = [
 		'embed-src' => 'http://www.dailyhaha.com/_vids/Whohah.swf?Vid=$2.flv',
 		'embed-width' => '425',
 		'embed-height' => '350',
-],
+	],
 	[
 		'name' => 'Dave.tv',
 		'website' => 'http://www.dave.tv',
@@ -565,7 +565,6 @@ $stubs = [
 		'embed-height' => '264',
 		'flashvars' => '$2',
 	],
-
 	[
 		'name' => 'Glumbert',
 		'website' => 'http://www.glumbert.com',
@@ -796,24 +795,24 @@ $stubs = [
 		'embed-height' => '369',
 	],
 	/*
-	# no videos
-	array(
-		'name' => 'Machinima (Old)',
-		'website' => 'http://www.machinima.com',
-		'url-match' => 'http://(?:www\.)?machinima\.com/(?:film/view&(?:amp;)?id=|#details_)([0-9]{1,8})(?:_contents)?',
-		'embed-src' => 'http://www.machinima.com/_flash_media_player/mediaplayer.swf?file=http://machinima.com/p/$2',
-		'embed-width' => '400',
-		'embed-height' => '300',
-	),
-	array(
-		'name' => 'Machinima (New)',
-		'website' => 'http://www.machinima.com',
-		'url-match' => 'http://(?:www\.)?machinima\.com:80/f/([0-9a-f]{32})',
-		'embed-src' => 'http://machinima.com:80/_flash_media_player/mediaplayer.swf?file=http://machinima.com:80/f/$2',
-		'embed-width' => '400',
-		'embed-height' => '300',
-	),
-	*/
+	  # no videos
+	  array(
+	  'name' => 'Machinima (Old)',
+	  'website' => 'http://www.machinima.com',
+	  'url-match' => 'http://(?:www\.)?machinima\.com/(?:film/view&(?:amp;)?id=|#details_)([0-9]{1,8})(?:_contents)?',
+	  'embed-src' => 'http://www.machinima.com/_flash_media_player/mediaplayer.swf?file=http://machinima.com/p/$2',
+	  'embed-width' => '400',
+	  'embed-height' => '300',
+	  ),
+	  array(
+	  'name' => 'Machinima (New)',
+	  'website' => 'http://www.machinima.com',
+	  'url-match' => 'http://(?:www\.)?machinima\.com:80/f/([0-9a-f]{32})',
+	  'embed-src' => 'http://machinima.com:80/_flash_media_player/mediaplayer.swf?file=http://machinima.com:80/f/$2',
+	  'embed-width' => '400',
+	  'embed-height' => '300',
+	  ),
+	 */
 	[
 		'name' => 'MSNBC',
 		'website' => 'http://www.msnbc.msn.com/',
@@ -955,7 +954,7 @@ $stubs = [
 		'embed-src' => '$2?autostart=false&autoplay=false',
 		'embed-width' => '480',
 		'embed-height' => '400',
-],
+	],
 	[
 		'name' => 'NhacCuaTui',
 		'website' => 'http://www.nhaccuatui.com',
@@ -1481,6 +1480,18 @@ $stubs = [
 		'embed-width' => '480',
 		'embed-height' => '270',
 	],
+	[
+		'name' => 'SoundCloud',
+		'website' => 'https://soundcloud.com',
+		'url-match' => [
+			'https://soundcloud\.com/([0-9a-zA-Z-_\/]+)'
+		],
+		'embed-src' => '',
+		'embed-width' => '100%',
+		'embed-height' => '150',
+		'iframe-player' => 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2F$2',
+		'id' => '$2',
+	]
 ];
 
 /**
@@ -1515,8 +1526,8 @@ $deprecatedStubs = [
 		'embed-height' => '320',
 		'flashvars' => 'config=http://www.mehr-schbass.de/videos/xml-config.php?id=$2-embed',
 		'id' => '$2',
-		//'name' => '$3',
-	],
+	//'name' => '$3',
+	]
 ];
 
 return $stubs;
