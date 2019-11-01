@@ -149,6 +149,9 @@ class MediaEmbed {
 		}
 
 		$source = preg_replace('/[^(\x20-\x7F)]*/', '', $content);
+		if (!$source) {
+			return false;
+		}
 
 		if (preg_match('~' . $regex . '~imu', $source, $match)) {
 			$this->_match = $match;

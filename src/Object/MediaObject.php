@@ -191,6 +191,10 @@ class MediaObject implements ObjectInterface {
 		}
 
 		$pieces = parse_url($url);
+		if (!$pieces) {
+			return null;
+		}
+
 		$url = $pieces['host'];
 
 		$icon = 'http://www.google.com/s2/favicons?domain=';
@@ -298,7 +302,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Set the height of the object
 	 *
-	 * @param mixed $height Height to set the object to
+	 * @param int $height Height to set the object to
 	 * @param bool $adjustWidth
 	 * @return $this
 	 */
@@ -312,7 +316,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Set the width of the object
 	 *
-	 * @param mixed $width Width to set the object to
+	 * @param int $width Width to set the object to
 	 * @param bool $adjustHeight
 	 * @return $this
 	 */
