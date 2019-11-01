@@ -40,7 +40,7 @@ class MediaEmbed {
 	 * @param array $config
 	 */
 	public function __construct(array $config = []) {
-		$stubs = include dirname(__FILE__) . DS . 'Data' . DS . 'stubs.php';
+		$stubs = include dirname(__DIR__) . DS . 'data' . DS . 'stubs.php';
 		$this->setHosts($stubs);
 		$this->config = $config + $this->config;
 	}
@@ -184,7 +184,7 @@ class MediaEmbed {
 		if ($whitelist) {
 			$res = [];
 			foreach ($this->_hosts as $slug => $host) {
-				if (!in_array($slug, $whitelist)) {
+				if (!in_array($slug, $whitelist, true)) {
 					continue;
 				}
 				$res[$slug] = $host;
