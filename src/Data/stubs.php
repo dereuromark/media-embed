@@ -282,7 +282,6 @@ $stubs = [
 		'embed-src' => 'http://www.clipmoon.com/flvplayer.swf?config=http://www.clipmoon.com/flvplayer.php?viewkey=$2&external=yes',
 		'embed-width' => '460',
 		'embed-height' => '357',
-	//'flashVars' => 'autostart=false',
 	],
 	[
 		'name' => 'ClipShack',
@@ -1526,7 +1525,6 @@ $deprecatedStubs = [
 		'embed-height' => '320',
 		'flashvars' => 'config=http://www.mehr-schbass.de/videos/xml-config.php?id=$2-embed',
 		'id' => '$2',
-	//'name' => '$3',
 	],
 ];
 

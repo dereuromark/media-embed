@@ -3,6 +3,7 @@
 namespace MediaEmbed\Test;
 
 use MediaEmbed\MediaEmbed;
+use MediaEmbed\Object\MediaObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -81,7 +82,7 @@ class MediaEmbedTest extends TestCase {
 		'https://www.twitch.tv/videos/293684811' => '293684811',
 		'https://clips.twitch.tv/WonderfulPiliableSquirrelBleedPurple' => 'WonderfulPiliableSquirrelBleedPurple',
 		'https://lds.cdn.vooplayer.com/publish/MTEwNTMw' => 'MTEwNTMw',
-		'https://soundcloud.com/kalax/kalax-take-me-back-feat-world-wild-1' => 'kalax/kalax-take-me-back-feat-world-wild-1'
+		'https://soundcloud.com/kalax/kalax-take-me-back-feat-world-wild-1' => 'kalax/kalax-take-me-back-feat-world-wild-1',
 	];
 
 	/**
@@ -94,10 +95,10 @@ class MediaEmbedTest extends TestCase {
 		$Object = $MediaEmbed->object('youtube');
 		$this->assertTrue($Object !== null);
 		$result = $Object->name();
-		$this->assertEquals('YouTube', $result);
+		$this->assertSame('YouTube', $result);
 
 		$result = $Object->id();
-		$this->assertEquals('', $result);
+		$this->assertSame('', $result);
 	}
 
 	/**
@@ -122,10 +123,10 @@ class MediaEmbedTest extends TestCase {
 	public function testParseUrl($url, $id) {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl($url);
-		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$result = $Object->id();
-		$this->assertEquals($id, $result, 'Invalid ID ' . $result . ' for ' . $url);
+		$this->assertSame($id, $result, 'Invalid ID ' . $result . ' for ' . $url);
 	}
 
 	/**
@@ -157,7 +158,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 		foreach ($test as $host => $id) {
 			$Object = $MediaEmbed->parseId($id, $host);
-			$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+			$this->assertInstanceOf(MediaObject::class, $Object);
 
 			$is = $Object->getEmbedCode();
 			$this->assertTrue(!empty($is));
@@ -172,20 +173,20 @@ class MediaEmbedTest extends TestCase {
 	public function testYoutube() {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('http://www.youtube.com/watch?v=h9Pu4bZqWyg');
-		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$id = $Object->id();
-		$this->assertEquals('h9Pu4bZqWyg', $id);
+		$this->assertSame('h9Pu4bZqWyg', $id);
 
 		$icon = $Object->icon();
 		$this->assertNotEmpty($icon);
 
 		$location = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DS;
 		$filename = $Object->saveIcon($location, $icon);
-		$this->assertEquals('youtube.png', $filename);
+		$this->assertSame('youtube.png', $filename);
 
 		$img = $Object->image();
-		$this->assertEquals('//img.youtube.com/vi/h9Pu4bZqWyg/0.jpg', $img);
+		$this->assertSame('//img.youtube.com/vi/h9Pu4bZqWyg/0.jpg', $img);
 
 		$code = $Object->getEmbedCode();
 		$this->assertContains('<iframe', $code);
@@ -200,7 +201,7 @@ class MediaEmbedTest extends TestCase {
 	public function testYoutubeWithoutIframe() {
 		$MediaEmbed = new MediaEmbed(['prefer' => 'object']);
 		$Object = $MediaEmbed->parseUrl('http://www.youtube.com/watch?v=h9Pu4bZqWyg');
-		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$code = $Object->getEmbedCode();
 		$this->assertNotContains('<iframe', $code);
@@ -214,24 +215,24 @@ class MediaEmbedTest extends TestCase {
 
 		$url = 'https://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music#hp-sc-p-1';
 		$Object = $MediaEmbed->parseUrl($url);
-		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$img = $Object->image();
-		$this->assertEquals('https://www.dailymotion.com/thumbnail/160x120/video/xgv8nw', $img);
+		$this->assertSame('https://www.dailymotion.com/thumbnail/160x120/video/xgv8nw', $img);
 
 		$url = 'https://www.dailymotion.com/video/x6x13ln';
 		$Object = $MediaEmbed->parseUrl($url);
-		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$img = $Object->image();
-		$this->assertEquals('https://www.dailymotion.com/thumbnail/160x120/video/x6x13ln', $img);
+		$this->assertSame('https://www.dailymotion.com/thumbnail/160x120/video/x6x13ln', $img);
 
 		$url = 'https://dai.ly/x6x039x';
 		$Object = $MediaEmbed->parseUrl($url);
-		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$img = $Object->image();
-		$this->assertEquals('https://www.dailymotion.com/thumbnail/160x120/video/x6x039x', $img);
+		$this->assertSame('https://www.dailymotion.com/thumbnail/160x120/video/x6x039x', $img);
 	}
 
 	/**
@@ -242,10 +243,10 @@ class MediaEmbedTest extends TestCase {
 
 		$url = 'https://my.matterport.com/show/?m=Zh14WDtkjdC&st=2000';
 		$Object = $mediaEmbed->parseUrl($url);
-		$this->assertInstanceOf('\MediaEmbed\Object\MediaObject', $Object);
+		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$id = $Object->id();
-		$this->assertEquals('Zh14WDtkjdC', $id);
+		$this->assertSame('Zh14WDtkjdC', $id);
 
 		$code = $Object->getEmbedCode();
 		$this->assertContains('<iframe', $code);
