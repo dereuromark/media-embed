@@ -125,6 +125,7 @@ class MediaEmbed {
 	 */
 	protected function _matchUrl($url, array $regexRules) {
 		foreach ($regexRules as $regexRule) {
+
 			if (preg_match('~' . $regexRule . '~imu', $url, $match)) {
 				return $match;
 			}
@@ -141,7 +142,7 @@ class MediaEmbed {
 	 */
 	protected function _parseLink($url, $regex) {
 		$context = stream_context_create(
-			['http' => ['header' => 'Connection: close']]);
+				['http' => ['header' => 'Connection: close']]);
 		$content = file_get_contents($url, false, $context);
 		if (!$content) {
 			return false;
@@ -272,7 +273,7 @@ class MediaEmbed {
 		],
 		'dailymotion' => [
 			'swf' => 'http://www.dailymotion.com/embed/video/{id}',
-			//'url' => 'http://www.dailymotion.com'
+		//'url' => 'http://www.dailymotion.com'
 		],
 		'videojug' => [
 		],
