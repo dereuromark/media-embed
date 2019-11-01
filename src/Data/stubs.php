@@ -1527,7 +1527,7 @@ $deprecatedStubs = [
 		'flashvars' => 'config=http://www.mehr-schbass.de/videos/xml-config.php?id=$2-embed',
 		'id' => '$2',
 	//'name' => '$3',
-	]
+	],
 ];
 
 return $stubs;
