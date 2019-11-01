@@ -97,7 +97,7 @@ class MediaEmbed {
 	 */
 	public function parseUrl($url, $config = []) {
 		foreach ($this->_hosts as $stub) {
-			$match = $this->_matchUrl($url, (array) $stub['url-match']);
+			$match = $this->_matchUrl($url, (array)$stub['url-match']);
 			if (!$match) {
 				continue;
 			}
