@@ -4,6 +4,9 @@ namespace MediaEmbed\Docs;
 
 use SebastianBergmann\Diff\Differ;
 
+/**
+ * @internal Only for internal docs generation.
+ */
 trait DiffTrait {
 
 	/**

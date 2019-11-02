@@ -4,6 +4,9 @@ namespace MediaEmbed\Docs;
 
 use MediaEmbed\MediaEmbed;
 
+/**
+ * @internal Only for internal docs generation.
+ */
 class Generator {
 
 	use DiffTrait;
