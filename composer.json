@@ -15,6 +15,7 @@
 		"jbroadway/urlify": "^1.0.0"
 	},
 	"require-dev":{
+		"sebastian/diff": "@stable",
 		"fig-r/psr2r-sniffer": "dev-master"
 	},
 	"autoload": {
@@ -27,6 +28,9 @@
 			"MediaEmbed\\Test\\": "tests/"
 		}
 	},
+	"bin": [
+		"bin/generate-docs"
+	],
 	"scripts": {
 		"test": "php phpunit.phar",
 		"test-coverage": "php phpunit.phar --log-junit tmp/coverage/unitreport.xml --coverage-html tmp/coverage --coverage-clover tmp/coverage/coverage.xml",

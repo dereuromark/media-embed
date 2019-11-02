@@ -72,11 +72,11 @@ class MediaEmbed {
 		}
 
 		// all other hosts
-		$host = $this->getHost($host);
-		if (!$host) {
+		$hostArray = $this->getHost($host);
+		if (!$hostArray) {
 			return null;
 		}
-		$stub = $host;
+		$stub = $hostArray;
 		$config += $this->config;
 
 		$stub['id'] = $id;
