@@ -30,6 +30,7 @@ script:
 
   - if [[ $CHECKS == 1 ]]; then composer phpstan-setup && composer phpstan; fi
   - if [[ $CHECKS == 1 ]]; then composer cs-check ; fi
+  - if [[ $CHECKS == 1 ]]; then bin/generate-docs -d ; fi
 
 notifications:
   email: false

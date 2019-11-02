@@ -209,3 +209,8 @@ Run CS check/fix with
 composer cs-check
 composer cs-fix
 ```
+
+Update list of services with
+```
+bin/generate-docs
+```
