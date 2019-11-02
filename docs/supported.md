@@ -1,5 +1,7 @@
 # Supported Media Services
 
+167 services
+
  - [123video](http://www.123video.nl)
  - [5min Life Videopedia](http://www.5min.com)
  - [AdultSwim](http://video.adultswim.com)
