@@ -38,7 +38,7 @@ class Generator {
 			return static::CODE_SUCCESS;
 		}
 
-		$currentContent = file_get_contents($path);
+		$currentContent = file_get_contents($path) ?: '';
 		$diff = $this->getDiff($currentContent, $content);
 		if (!$diff) {
 			return static::CODE_SUCCESS;
@@ -63,12 +63,16 @@ class Generator {
 			$services[] = ' - ' . $this->name($host);
 		}
 
-		$content = implode(PHP_EOL, $services);
+		$counter = count($services) . ' services';
+
+		$serviceList = implode(PHP_EOL, $services);
 
 		$content = <<<TEXT
 # Supported Media Services
 
-$content
+$counter
+
+$serviceList
 
 TEXT;
 

@@ -37,7 +37,7 @@ trait DiffTrait {
 	}
 
 	/**
-	 * @param string[] $array
+	 * @param array $array
 	 *
 	 * @return string
 	 */
@@ -45,14 +45,14 @@ trait DiffTrait {
 		$out = [];
 
 		$begin = null;
-		$end = null;
+		$end = 0;
 		foreach ($array as $key => $row) {
 			if ($row[1] === 0) {
 				continue;
 			}
 
 			if ($begin === null) {
-				$begin = $key;
+				$begin = (int)$key;
 			}
 			$end = $key;
 		}
