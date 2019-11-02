@@ -210,7 +210,7 @@ composer cs-check
 composer cs-fix
 ```
 
-Update list of services with
+Update list of services in `docs/supported.md` with
 ```
 bin/generate-docs
 ```
