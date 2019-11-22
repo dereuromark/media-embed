@@ -43,7 +43,7 @@ class MediaObject implements ObjectInterface {
 	 * @var array
 	 */
 	public $config = [
-		'prefer' => 'iframe' // Type object or iframe (only available for few, fallback will be object)
+		'prefer' => 'iframe', // Type object or iframe (only available for few, fallback will be object)
 	];
 
 	/**
@@ -60,7 +60,7 @@ class MediaObject implements ObjectInterface {
 			'name' => '',
 			'website' => '',
 			'slug' => '',
-			'match' => []
+			'match' => [],
 		];
 		$this->_stub = $stub + $stubDefaults;
 		$this->_match = $this->_stub['match'];
@@ -624,14 +624,14 @@ class MediaObject implements ObjectInterface {
 
 		//separate iframe params and attributes
 		$this->_iframeParams = [
-			'wmode' => 'transparent'
+			'wmode' => 'transparent',
 		];
 		$this->_iframeAttributes = [
 			'type' => 'text/html',
 			'width' => $stub['embed-width'],
 			'height' => $stub['embed-height'],
 			'frameborder' => '0',
-			'allowfullscreen' => true
+			'allowfullscreen' => true,
 		];
 	}
 

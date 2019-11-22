@@ -272,7 +272,7 @@ class MediaEmbed {
 		'vimeo' => [
 			'iframe' => 'http://player.vimeo.com/video/{id}',
 			//'swf' => '',
-			'url' => ''
+			'url' => '',
 		],
 		'dailymotion' => [
 			'swf' => 'http://www.dailymotion.com/embed/video/{id}',
@@ -281,7 +281,7 @@ class MediaEmbed {
 		'videojug' => [
 		],
 		'revver' => [
-		]
+		],
 	];
 
 	/**
@@ -314,7 +314,7 @@ class MediaEmbed {
 	 */
 	public $_embedAttr = [
 		'allowfullscreen' => 'true',
-		''
+		'',
 	];
 
 }
