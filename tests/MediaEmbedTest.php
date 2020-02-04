@@ -83,7 +83,10 @@ class MediaEmbedTest extends TestCase {
 		'https://clips.twitch.tv/WonderfulPiliableSquirrelBleedPurple' => 'WonderfulPiliableSquirrelBleedPurple',
 		'https://lds.cdn.vooplayer.com/publish/MTEwNTMw' => 'MTEwNTMw',
 		'https://soundcloud.com/kalax/kalax-take-me-back-feat-world-wild-1' => 'kalax/kalax-take-me-back-feat-world-wild-1',
-	];
+        'https://www.loom.com/share/bdb8f2009224416ca642a50296430b8f' => 'bdb8f2009224416ca642a50296430b8f',
+        'https://www.loom.com/embed/bdb8f2009224416ca642a50296430b8f?referrer=https%3A%2F%2Fwww.loom.com%2Fuse-cases%2Fengineering' => 'bdb8f2009224416ca642a50296430b8f',
+        'https://www.loom.com/embed/bdb8f2009224416ca642a50296430b8f' => 'bdb8f2009224416ca642a50296430b8f'
+    ];
 
 	/**
 	 * Test Generation of a basic youtube MediaObject (empty)
