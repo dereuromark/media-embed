@@ -1492,7 +1492,7 @@ $stubs = [
 		'id' => '$2',
 	],
     [
-        'name' => 'loom',
+        'name' => 'Loom',
         'website' => 'https://loom.com',
         'url-match' => [
             'https:\/\/www\.loom\.com\/(share|embed)?\/([0-9a-z-]+)'
