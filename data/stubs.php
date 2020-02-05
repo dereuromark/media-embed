@@ -1490,7 +1490,19 @@ $stubs = [
 		'embed-height' => '150',
 		'iframe-player' => 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2F$2',
 		'id' => '$2',
-	]
+	],
+    [
+        'name' => 'loom',
+        'website' => 'https://loom.com',
+        'url-match' => [
+            'https:\/\/www\.loom\.com\/(share|embed)?\/([0-9a-z-]+)'
+        ],
+        'embed-src' => '',
+        'embed-width' => '640',
+        'embed-height' => '400',
+        'iframe-player' => 'https://www.loom.com/embed/$3',
+        'id' => '$3',
+    ]
 ];
 
 /**

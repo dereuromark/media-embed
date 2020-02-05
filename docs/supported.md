@@ -1,6 +1,6 @@
 # Supported Media Services
 
-167 services
+168 services
 
  - [123video](http://www.123video.nl)
  - [5min Life Videopedia](http://www.5min.com)
@@ -86,6 +86,7 @@
  - [LiveLeak](http://www.liveleak.com)
  - [LiveVideo](http://www.livevideo.com)
  - Local Content
+ - [loom](https://loom.com)
  - [M Thai](http://video.mthai.com)
  - [MadnessVideo](http://www.madnessvideo.net)
  - [Matterport](https://matterport.com)
