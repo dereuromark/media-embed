@@ -86,7 +86,7 @@
  - [LiveLeak](http://www.liveleak.com)
  - [LiveVideo](http://www.livevideo.com)
  - Local Content
- - [loom](https://loom.com)
+ - [Loom](https://loom.com)
  - [M Thai](http://video.mthai.com)
  - [MadnessVideo](http://www.madnessvideo.net)
  - [Matterport](https://matterport.com)
