@@ -16,7 +16,7 @@
 	},
 	"require-dev":{
 		"sebastian/diff": "@stable",
-		"fig-r/psr2r-sniffer": "dev-master"
+		"fig-r/psr2r-sniffer": "^0.6"
 	},
 	"autoload": {
 		"psr-4": {
