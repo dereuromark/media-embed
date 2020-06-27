@@ -200,8 +200,8 @@ and browse to the generated `tmp/index.php` via browser.
 
 Run PHPStan
 ```
-composer phpstan-setup
-composer phpstan
+composer stan-setup
+composer stan
 ```
 
 Run CS check/fix with

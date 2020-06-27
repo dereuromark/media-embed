@@ -29,8 +29,9 @@ class MediaEmbed {
 	protected $_hosts = [];
 
 	/**
-	 * @var array
 	 * See MediaObject for details
+	 *
+	 * @var array
 	 */
 	public $config = [];
 
@@ -114,6 +115,8 @@ class MediaEmbed {
 			$Object = $this->object($stub, $config + $this->config);
 			return $Object;
 		}
+
+		return null;
 	}
 
 	/**
