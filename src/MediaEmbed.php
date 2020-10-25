@@ -197,6 +197,7 @@ class MediaEmbed {
 			}
 			return $res;
 		}
+
 		return $this->_hosts;
 	}
 

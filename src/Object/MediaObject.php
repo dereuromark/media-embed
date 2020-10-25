@@ -469,8 +469,8 @@ class MediaObject implements ObjectInterface {
 		} else {
 			$src = str_replace('$2', $this->_stub['id'], $stubSrc);
 		}
-		if (!empty($host['replace'])) {
-			foreach ($host['replace'] as $placeholder => $replacement) {
+		if (!empty($this->_stub['replace'])) {
+			foreach ((array)$this->_stub['replace'] as $placeholder => $replacement) {
 				$src = str_replace($placeholder, $replacement, $src);
 			}
 		}
