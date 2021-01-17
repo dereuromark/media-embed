@@ -40,8 +40,8 @@ class MediaEmbed {
 	 *
 	 * @param array $config
 	 */
-	public function __construct(array $config = []) {
-		$stubs = include dirname(__DIR__) . DS . 'data' . DS . 'stubs.php';
+	public function __construct(array $config = [], $stubsPath = null) {
+		$stubs = include($stubsPath ?? dirname(__DIR__) . DS . 'data' . DS . 'stubs.php');
 		$this->setHosts($stubs);
 		$this->config = $config + $this->config;
 	}
