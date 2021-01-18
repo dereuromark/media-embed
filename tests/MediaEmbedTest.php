@@ -193,10 +193,10 @@ class MediaEmbedTest extends TestCase {
 		$this->assertSame('//img.youtube.com/vi/h9Pu4bZqWyg/0.jpg', $img);
 
 		$code = $Object->getEmbedCode();
-		$this->assertContains('<iframe', $code);
+		$this->assertStringContainsString('<iframe', $code);
 
 		$src = $Object->getEmbedSrc();
-		$this->assertContains('//www.youtube.com/embed/h9Pu4bZqWyg', $src);
+		$this->assertStringContainsString('//www.youtube.com/embed/h9Pu4bZqWyg', $src);
 	}
 
 	/**
@@ -208,7 +208,7 @@ class MediaEmbedTest extends TestCase {
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$code = $Object->getEmbedCode();
-		$this->assertNotContains('<iframe', $code);
+		$this->assertStringNotContainsString('<iframe', $code);
 	}
 
 	/**
@@ -253,7 +253,7 @@ class MediaEmbedTest extends TestCase {
 		$this->assertSame('Zh14WDtkjdC', $id);
 
 		$code = $Object->getEmbedCode();
-		$this->assertContains('<iframe', $code);
+		$this->assertStringContainsString('<iframe', $code);
 	}
 
 	/**
