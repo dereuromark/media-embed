@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  testsuite:
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['5.6', '7.4']
+        prefer-lowest: ['']
+        include:
+          - php-version: '5.6'
+            prefer-lowest: 'prefer-lowest'
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl
+          coverage: pcov
+
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composercache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Composer install --no-progress --prefer-dist --optimize-autoloader
+        run: |
+          composer --version
+          composer require --dev phpunit/phpunit:"^5.7.27|^6.5.12|^7.0|^8.5|^9.5"
+          if ${{ matrix.prefer-lowest == 'prefer-lowest' }}
+          then
+            composer update --prefer-lowest --prefer-stable
+          else
+            composer install --no-progress --prefer-dist --optimize-autoloader
+          fi
+          if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then composer require --dev dereuromark/composer-prefer-lowest:dev-master; fi
+      - name: Run PHPUnit
+        run: |
+          if [[ ${{ matrix.php-version }} == '7.4' ]]
+          then
+            vendor/bin/phpunit --coverage-clover=coverage.xml
+          else
+            vendor/bin/phpunit
+          fi
+      - name: Validate prefer-lowest
+        run: if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then vendor/bin/validate-prefer-lowest -m; fi
+
+      - name: Code Coverage Report
+        if: success() && matrix.php-version == '7.4'
+        uses: codecov/codecov-action@v1
+
+  validation:
+    name: Coding Standard & Static Analysis
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, intl
+          coverage: none
+
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composercache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install PHPStan
+        run: composer stan-setup
+
+      - name: Run PHPStan
+        run: composer stan
+
+      - name: Run phpcs
+        run: composer cs-check
