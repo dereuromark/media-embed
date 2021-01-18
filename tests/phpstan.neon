@@ -1,4 +1,3 @@
 parameters:
 	checkMissingIterableValueType: false
 	ignoreErrors:
-		- "#Offset 'host' does not exist on .+#"
