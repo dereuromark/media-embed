@@ -1,6 +1,6 @@
 # MediaEmbed
 [![CI](https://github.com/dereuromark/media-embed/workflows/CI/badge.svg)](https://github.com/dereuromark/media-embed/actions?query=workflow%3ACI+branch%3Amaster)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.6-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.2-8892BF.svg)](https://php.net/)
 [![License](https://poser.pugx.org/dereuromark/media-embed/license.svg)](https://packagist.org/packages/dereuromark/media-embed)
 [![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.svg)](https://packagist.org/packages/dereuromark/media-embed)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
@@ -25,7 +25,7 @@ https://sandbox.dereuromark.de/sandbox/media-embed
 
 ## Requirements
 
-- PHP 5.6+
+- PHP 7.2+ since 0.6
 - Composer
 - [jbroadway/urlify](https://github.com/jbroadway/urlify) for slugging
 

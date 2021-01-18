@@ -70,8 +70,10 @@ class MediaEmbed {
 			if (!$res) {
 				$stub = [];
 				$Object = $this->object($stub, $config);
+
 				return $Object;
 			}
+
 			//TODO
 			return null;
 		}
@@ -117,6 +119,7 @@ class MediaEmbed {
 
 			$stub['match'] = $this->_match;
 			$Object = $this->object($stub, $config + $this->config);
+
 			return $Object;
 		}
 
@@ -137,6 +140,7 @@ class MediaEmbed {
 				return $match;
 			}
 		}
+
 		return [];
 	}
 
@@ -162,6 +166,7 @@ class MediaEmbed {
 
 		if (preg_match('~' . $regex . '~imu', $source, $match)) {
 			$this->_match = $match;
+
 			return true;
 		}
 
@@ -183,6 +188,7 @@ class MediaEmbed {
 			$slug = $this->_slug($stub['name']);
 			$this->_hosts[$slug] = $stub;
 		}
+
 		return $this;
 	}
 
@@ -199,6 +205,7 @@ class MediaEmbed {
 				}
 				$res[$slug] = $host;
 			}
+
 			return $res;
 		}
 
@@ -216,6 +223,7 @@ class MediaEmbed {
 		if (empty($this->_hosts[$alias])) {
 			return null;
 		}
+
 		return $this->_hosts[$alias];
 	}
 
@@ -246,6 +254,7 @@ class MediaEmbed {
 		if (!isset($stub['slug']) && !empty($stub['name'])) {
 			$stub['slug'] = $this->_slug($stub['name']);
 		}
+
 		return new MediaObject($stub, $config);
 	}
 

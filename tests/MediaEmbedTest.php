@@ -143,6 +143,7 @@ class MediaEmbedTest extends TestCase {
 		foreach ($this->_stubs as $k => $v) {
 			$urls[] = [$k, $v];
 		}
+
 		return $urls;
 	}
 

@@ -115,6 +115,7 @@ class MediaObject implements ObjectInterface {
 		if (!empty($property) && !empty($value)) {
 			$this->_stub[$property] = $value;
 		}
+
 		return $this;
 	}
 
@@ -138,6 +139,7 @@ class MediaObject implements ObjectInterface {
 		for ($i = 1; $i <= $count; $i++) {
 			$id = str_ireplace('$' . $i, $res[$i - 1], $id);
 		}
+
 		return $id;
 	}
 
@@ -167,6 +169,7 @@ class MediaObject implements ObjectInterface {
 		for ($i = 1; $i <= $count; $i++) {
 			$name = str_ireplace('$' . $i, $res[$i - 1], $name);
 		}
+
 		return $name;
 	}
 
@@ -207,6 +210,7 @@ class MediaObject implements ObjectInterface {
 		if ($file === false) {
 			return null;
 		}
+
 		// TODO: transform into 16x16 png
 		return $file;
 	}
@@ -214,7 +218,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * @param string $location Absolute path with trailing slash
 	 * @param string|null $icon Icon data
-	 * @return string|null $filename
+	 * @return string|null Filename
 	 */
 	public function saveIcon($location, $icon = null) {
 		if ($icon === null) {
@@ -231,6 +235,7 @@ class MediaObject implements ObjectInterface {
 		if (!file_put_contents($file, $icon)) {
 			return null;
 		}
+
 		return $filename;
 	}
 
@@ -264,13 +269,14 @@ class MediaObject implements ObjectInterface {
 				$this->_objectParams[$param] = $value;
 			}
 		}
+
 		return $this;
 	}
 
 	/**
 	 * Override a default object attribute value
 	 *
-	 * @param mixed $param  The name of the attribute to be set
+	 * @param mixed $param The name of the attribute to be set
 	 *   or an array of multiple attribs to be set
 	 * @param string|int|null $value (optional) the value to set the param to
 	 *   if only one param is being set
@@ -296,6 +302,7 @@ class MediaObject implements ObjectInterface {
 				$this->_objectAttributes[$param] = $value;
 			}
 		}
+
 		return $this;
 	}
 
@@ -310,6 +317,7 @@ class MediaObject implements ObjectInterface {
 		if ($adjustWidth && is_numeric($height)) {
 			$this->_adjustDimensions('width', 'height', $height);
 		}
+
 		return $this->setAttribute('height', $height);
 	}
 
@@ -324,6 +332,7 @@ class MediaObject implements ObjectInterface {
 		if ($adjustHeight && is_numeric($width)) {
 			$this->_adjustDimensions('height', 'width', $width);
 		}
+
 		return $this->setAttribute('width', $width);
 	}
 
@@ -359,6 +368,7 @@ class MediaObject implements ObjectInterface {
 			if (!isset($this->_iframeParams[$key])) {
 				return null;
 			}
+
 			return $this->_iframeParams[$key];
 		}
 
@@ -368,6 +378,7 @@ class MediaObject implements ObjectInterface {
 		if (!isset($this->_objectParams[$key])) {
 			return null;
 		}
+
 		return $this->_objectParams[$key];
 	}
 
@@ -385,6 +396,7 @@ class MediaObject implements ObjectInterface {
 			if (!isset($this->_iframeAttributes[$key])) {
 				return null;
 			}
+
 			return $this->_iframeAttributes[$key];
 		}
 
@@ -394,6 +406,7 @@ class MediaObject implements ObjectInterface {
 		if (!isset($this->_objectAttributes[$key])) {
 			return null;
 		}
+
 		return $this->_objectAttributes[$key];
 	}
 
@@ -406,6 +419,7 @@ class MediaObject implements ObjectInterface {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
 			return $this->_buildIframe();
 		}
+
 		return $this->_buildObject();
 	}
 
@@ -446,9 +460,11 @@ class MediaObject implements ObjectInterface {
 			if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
 				$prefers = 'iframe';
 			}
+
 			return $prefers;
 		}
 		$this->config['prefer'] = $type;
+
 		return $this;
 	}
 
@@ -474,6 +490,7 @@ class MediaObject implements ObjectInterface {
 				$src = str_replace($placeholder, $replacement, $src);
 			}
 		}
+
 		return $src;
 	}
 
@@ -545,6 +562,7 @@ class MediaObject implements ObjectInterface {
 		if (!$objectAttributes && !$objectParams) {
 			return '';
 		}
+
 		return sprintf('<object %s> %s</object>', $objectAttributes, $objectParams);
 	}
 
