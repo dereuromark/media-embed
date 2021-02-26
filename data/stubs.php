@@ -45,6 +45,17 @@ $stubs = [
 		'iframe-player' => '//www.youtube.com/embed/$2',
 	],
 	[
+		'name' => 'Coub',
+		'website' => 'https://coub.com',
+		'url-match' => [
+			'https?://coub.com/view/([0-9a-z-_]{4,7})',
+		],
+		'embed-src' => 'https://coub.com/view/$2',
+		'embed-width' => '640',
+		'embed-height' => '360',
+		'iframe-player' => '//coub.com/embed/$2',
+	],
+	[
 		'name' => 'Facebook',
 		'website' => 'https://www.facebook.com',
 		'url-match' => [
