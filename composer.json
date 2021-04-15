@@ -1,5 +1,6 @@
 {
 	"name": "dereuromark/media-embed",
+	"type": "library",
 	"description": "A PHP library to deal with all those media services around, parsing their URLs and embedding their audio/video content in websites.",
 	"keywords": ["media", "embed", "PHP", "iframe", "video", "audio"],
 	"license": "MIT",

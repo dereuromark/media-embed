@@ -3,6 +3,7 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
 
@@ -19,9 +20,7 @@ jobs:
             prefer-lowest: 'prefer-lowest'
 
     steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -72,9 +71,7 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
