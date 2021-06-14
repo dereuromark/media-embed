@@ -3,7 +3,6 @@
 168 services
 
  - [123video](http://www.123video.nl)
- - [5min Life Videopedia](http://www.5min.com)
  - [AdultSwim](http://video.adultswim.com)
  - [AniBoom](http://www.aniboom.com)
  - [AOL Video (Old)](http://video.aol.com)
@@ -71,7 +70,6 @@
  - [ImageShack](http://www.imageshack.us)
  - [IMDB](http://www.imdb.com)
  - [IndyaRocks](http://www.indyarocks.com)
- - [iReport](http://www.ireport.com)
  - [Izlesene](http://www.izlesene.com)
  - [Jamendo](http://www.jamendo.com)
  - [Jokeroo](http://www.jokeroo.com)
@@ -84,7 +82,6 @@
  - [Last.fm (Video)](http://www.last.fm)
  - [Libero](http://www.libero.it)
  - [LiveLeak](http://www.liveleak.com)
- - [LiveVideo](http://www.livevideo.com)
  - Local Content
  - [Loom](https://loom.com)
  - [M Thai](http://video.mthai.com)

@@ -107,14 +107,6 @@ $stubs = [
 		'embed-height' => '339',
 	],
 	[
-		'name' => '5min Life Videopedia',
-		'website' => 'http://www.5min.com',
-		'url-match' => 'http://(?:www\.)?5min\.com/(?:Embeded/|Video/(?:[0-9a-z_-]*?)?-)([0-9]{8})',
-		'embed-src' => 'http://www.5min.com/Embeded/$2/',
-		'embed-width' => '425',
-		'embed-height' => '355',
-	],
-	[
 		'name' => 'AdultSwim',
 		'website' => 'http://video.adultswim.com',
 		'url-match' => 'http://video\.adultswim\.com/([0-9a-z-_]+)/',
@@ -690,14 +682,6 @@ $stubs = [
 		'embed-height' => '350',
 	],
 	[
-		'name' => 'iReport',
-		'website' => 'http://www.ireport.com',
-		'url-match' => 'http://www\.ireport\.com/docs/DOC-([0-9]{4,8})',
-		'embed-src' => 'http://www.ireport.com/themes/custom/resources/cvplayer/ireport_embed.swf?player=embed&configPath=http://www.ireport.com&playlistId=$2&contentId=$2/0&',
-		'embed-width' => '400',
-		'embed-height' => '300',
-	],
-	[
 		'name' => 'Izlesene',
 		'website' => 'http://www.izlesene.com',
 		'url-match' => 'http://(?:www\.)?izlesene\.com/(?:player2\.swf\?video=|video/(?:[a-z0-9-_]*?)/)([0-9]{1,10})',
@@ -795,14 +779,6 @@ $stubs = [
 		'embed-src' => 'http://www.liveleak.com/e/$2',
 		'embed-width' => '450',
 		'embed-height' => '370',
-	],
-	[
-		'name' => 'LiveVideo',
-		'website' => 'http://www.livevideo.com',
-		'url-match' => 'http://(?:www\.)?livevideo\.com/(?:flvplayer/embed/|video/(?:view/)?(?:(?:[^"]*?)?/)?)([0-9a-f]{32})',
-		'embed-src' => 'http://www.livevideo.com/flvplayer/embed/$2',
-		'embed-width' => '445',
-		'embed-height' => '369',
 	],
 	/*
 	  # no videos
