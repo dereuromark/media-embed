@@ -149,15 +149,6 @@ $stubs = [
 		'embed-height' => '360',
 	],
 	[
-		'name' => 'Atom',
-		'website' => 'http://www.atom.com',
-		'url-match' => 'http://(?:www\.)?atom\.com/funny_videos/([A-z0-9-_]*)/',
-		'fetch-match' => '<embed src="([A-z:/\.0-9-_=]*)"',
-		'embed-src' => '$2',
-		'embed-width' => '425',
-		'embed-height' => '354',
-	],
-	[
 		'name' => 'Blastro',
 		'website' => 'http://www.blastro.com',
 		'url-match' => 'http://(?:www\.)?blastro\.com/player/([a-z0-9-_]*)\.html',
@@ -574,31 +565,6 @@ $stubs = [
 		'embed-height' => '270',
 	],
 	[
-		'name' => 'GrindTv',
-		'website' => 'http://www.grindtv.com',
-		'url-match' => '(http://(?:www\.)?grindtv\.com/video/(.*)/(?:[^"]*?)i=(?:[0-9]{1,12}))',
-		'embed-src' => 'http://images.grindtv.com/1.0.2/swf/video.swf?sa=1&si=1&i=$3&sct=$2',
-		'embed-width' => '640',
-		'embed-height' => '480',
-	],
-	[
-		'name' => 'Guzer',
-		'website' => 'http://www.guzer.com',
-		'url-match' => 'http://(?:www\.)?guzer\.com/videos/(.*).php',
-		'embed-src' => 'http://www.guzer.com/player/mediaplayer.swf',
-		'embed-width' => '486',
-		'embed-height' => '382',
-		'flashvars' => 'height=382&amp;width=486&amp;file=http://media.guzer.com/videos/$2.flv&amp;image=http://www.guzer.com/videos/s$2.jpg'
-	],
-	[
-		'name' => 'TheHub',
-		'website' => 'http://hub.witness.org',
-		'url-match' => 'http://hub\.witness\.org/(?:en|fr|es)/node/([0-9]{1,10})',
-		'embed-src' => 'http://hub.witness.org/sites/hub.witness.org/modules/contrib-5/flvmediaplayer/mediaplayer.swf?file=http://hub.witness.org/xspf/node/$2&overstretch=fit&repeat=false&logo=http://hub.witness.org/sites/hub.witness.org/themes/witness/images/hub_wm.png',
-		'embed-width' => '320',
-		'embed-height' => '260',
-	],
-	[
 		'name' => 'Howcast',
 		'website' => 'http://www.howcast.com',
 		'url-match' => 'http://(?:www\.)?howcast\.com/videos/([0-9]{1,8})',
@@ -882,14 +848,6 @@ $stubs = [
 		'embed-height' => '334',
 	],
 	[
-		'name' => 'MyShows.cn/SeeHaha.com',
-		'website' => 'http://www.myshows.cn',
-		'url-match' => '(http://www\.seehaha\.com/flash/player\.swf\?vidFileName=(?:[0-9]*?)\.flv)',
-		'embed-src' => '$2',
-		'embed-width' => '425',
-		'embed-height' => '350',
-	],
-	[
 		'name' => 'MySpaceTv',
 		'website' => 'http://www.myspacetv.com',
 		'url-match' => 'http://(?:vids\.myspace|myspacetv)\.com/index\.cfm\?(?:[^"]*?)?VideoID=([0-9]{1,10})',
@@ -973,14 +931,6 @@ $stubs = [
 		'embed-height' => '320',
 	],
 	[
-		'name' => 'Project Playlist',
-		'website' => 'http://www.playlist.com',
-		'url-match' => 'http://(?:www\.)?playlist\.com/(?:standalone|node)/([0-9]{1,10})',
-		'embed-src' => 'http://www.playlist.com/media/mp3player-standalone.swf?playlist_url=http://www.playlist.com/node/$2/playlist/xspf&config=http://www.musiclist.us/mc/config/config_black.xml&mywidth=435',
-		'embed-width' => '435',
-		'embed-height' => '270',
-	],
-	[
 		'name' => 'Putfile',
 		'website' => 'http://www.putfile.com',
 		'url-match' => 'http://(?:www\.|media\.|feat\.)?putfile\.com/(?:flow/putfile\.swf\?videoFile=|)?([a-z0-9-_]*)(?:\?)?',
@@ -1030,14 +980,6 @@ $stubs = [
 		'embed-width' => '425',
 		'embed-height' => '344',
 		'flashvars' => 'video=$2',
-	],
-	[
-		'name' => 'SevenLoad',
-		'website' => 'http://www.sevenload.com',
-		'url-match' => 'http://((?:en|tr|de|www)\.)?sevenload\.com/(?:videos|videolar)/([0-9a-z]{1,8})',
-		'embed-src' => 'http://$2sevenload.com/pl/$3/425x350/swf',
-		'embed-width' => '425',
-		'embed-height' => '350',
 	],
 	[
 		'name' => 'ShareView',

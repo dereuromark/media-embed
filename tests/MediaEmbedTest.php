@@ -28,7 +28,6 @@ class MediaEmbedTest extends TestCase {
 		'https://www.facebook.com/SkySports/videos/vb.10911153761/10153310275743762/?type=2&theater' => '10153310275743762',
 		'https://www.facebook.com/demotivateurFood/videos/vl.184872862011827/1034411179983244/?type=1' => '1034411179983244',
 		// Not yet possible
-		//'https://www.youtube.com/playlist?list=PLD1FA4687572EDB23' => 'PLD1FA4687572EDB23',
 		'http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy' => '7645001',
 		'http://www.metacafe.com/watch/1417475/try_it_yourself_episode_2_hacks_and_tricks_in_google/' => '1417475',
 		'http://vimeo.com/19570639' => '19570639',
