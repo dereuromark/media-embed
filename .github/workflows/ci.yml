@@ -96,3 +96,9 @@ jobs:
 
       - name: Run phpcs
         run: composer cs-check
+
+      - name: Run link checker
+        run: |
+          sudo npm install -g markdown-link-check
+          markdown-link-check README.md
+          markdown-link-check docs/supported.md -p -c tests/link-check-config.json
