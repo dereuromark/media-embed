@@ -25,8 +25,6 @@ https://sandbox.dereuromark.de/sandbox/media-embed
 
 ## Requirements
 
-- PHP 7.2+ since 0.6
-- Composer
 - [jbroadway/urlify](https://github.com/jbroadway/urlify) for slugging
 
 ### Note
