@@ -12,11 +12,12 @@
 		}
 	],
 	"require": {
-		"php": ">=7.2",
+		"php": ">=7.3",
 		"jbroadway/urlify": "^1.0.0"
 	},
 	"require-dev":{
 		"sebastian/diff": "@stable",
+		"phpunit/phpunit": "^9.5",
 		"fig-r/psr2r-sniffer": "dev-master"
 	},
 	"autoload": {
@@ -33,11 +34,10 @@
 		"bin/generate-docs"
 	],
 	"scripts": {
-		"test": "php phpunit.phar",
-		"test-coverage": "php phpunit.phar --log-junit tmp/coverage/unitreport.xml --coverage-html tmp/coverage --coverage-clover tmp/coverage/coverage.xml",
-		"test-setup": "[ ! -f phpunit.phar ] && wget https://phar.phpunit.de/phpunit.phar || true",
+		"test": "phpunit",
+		"test-coverage": "phpunit --log-junit tmp/coverage/unitreport.xml --coverage-html tmp/coverage --coverage-clover tmp/coverage/coverage.xml",
 		"stan": "phpstan analyse -c tests/phpstan.neon -l 8 src/",
-		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^0.12 && mv composer.backup composer.json",
+		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.0.0 && mv composer.backup composer.json",
 		"cs-check": "phpcs -s -p --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --extensions=php src/ tests/",
 		"cs-fix": "phpcbf -p --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --extensions=php src/ tests/"
 	}

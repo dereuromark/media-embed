@@ -188,7 +188,6 @@ Please provide a simple test URL and test case for any new service.
 
 Run tests with
 ```
-composer test-setup
 composer test
 ```
 

@@ -238,7 +238,7 @@ class MediaEmbed {
 	}
 
 	/**
-	 * @param string|array $stub
+	 * @param array|string $stub
 	 * @param array $config
 	 *
 	 * @return \MediaEmbed\Object\MediaObject|null

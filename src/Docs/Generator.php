@@ -11,7 +11,14 @@ class Generator {
 
 	use DiffTrait;
 
+	/**
+	 * @var int
+	 */
 	public const CODE_SUCCESS = 0;
+
+	/**
+	 * @var int
+	 */
 	public const CODE_ERROR = 1;
 
 	/**
@@ -20,7 +27,7 @@ class Generator {
 	protected $dryRun = false;
 
 	/**
-	 * @param string[] $args
+	 * @param array<string> $args
 	 */
 	public function __construct(array $args) {
 		if (in_array('-d', $args, true)) {
