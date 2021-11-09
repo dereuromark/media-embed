@@ -1,6 +1,6 @@
 # Supported Media Services
 
-168 services
+165 services
 
  - [123video](http://www.123video.nl)
  - [AdultSwim](http://video.adultswim.com)
@@ -28,6 +28,7 @@
  - [CNetTV](http://cnettv.cnet.com)
  - [ColbertNation](http://www.colbertnation.com)
  - [CollegeHumor](http://www.collegehumour.com)
+ - [Coub](https://coub.com)
  - [Crackle](http://www.crackle.com)
  - [CrunchyRoll](http://www.crunchyroll.com)
  - [Current](http://www.current.com)
@@ -43,7 +44,6 @@
  - [EbaumsWorld](http://www.ebaumsworld.com)
  - [ESPN](http://www.espn.com)
  - [Facebook](https://www.facebook.com)
- - [Fandome](http://www.fandome.com)
  - [Flickr](http://www.flickr.com)
  - [Foxhead](http://www.foxhead.com)
  - [FunMansion](http://www.funmansion.com)
