@@ -41,4 +41,6 @@ phpunit.xml.dist export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
 .editorconfig export-ignore
-tests/phpstan.neon
+phpstan.neon export-ignore
+.github/ export-ignore
+tests/link-check-config.json export-ignore
