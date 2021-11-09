@@ -107,14 +107,6 @@ $stubs = [
 		'embed-height' => '339',
 	],
 	[
-		'name' => 'AniBoom',
-		'website' => 'https://www.aniboom.com',
-		'url-match' => 'https?://(?:www\.|api\.)?aniboom\.com/animation-video/([0-9]{1,10})',
-		'embed-src' => 'https://api.aniboom.com/shapeshifterEmbed.swf?videoar=$2',
-		'embed-width' => '594',
-		'embed-height' => '334',
-	],
-	[
 		'name' => 'AOL Video (Old)',
 		'website' => 'https://video.aol.com',
 		'url-match' => 'https?://video\.aol\.com/video/([a-z0-9-_]+)/([a-z0-9:\.]+)',
@@ -214,14 +206,6 @@ $stubs = [
 		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2'
 	],
 	[
-		'name' => 'ClipJunkie',
-		'website' => 'https://www.clipjunkie.com',
-		'url-match' => 'https?://(?:www\.)?clipjunkie\.com/((?:[^"]*?)-vid(?:[0-9]{1,10}))\.html',
-		'embed-src' => 'https://www.clipjunkie.com/flvplayer/flvplayer.swf?flv=https://videos.clipjunkie.com/videos/$2.flv&themes=https://www.clipjunkie.com/flvplayer/themes.xml&playList=https://www.clipjunkie.com/playlist.php&config=https://www.clipjunkie.com/skin/config.xml',
-		'embed-width' => '460',
-		'embed-height' => '357',
-	],
-	[
 		'name' => 'ClipMoon',
 		'website' => 'https://www.clipmoon.com',
 		'url-match' => 'https?://(?:www\.)?clipmoon\.com/(?:videos/|(?:[^"]*?)viewkey=)([0-9a-z]{1,10})',
@@ -294,14 +278,6 @@ $stubs = [
 		'embed-src' => 'https://www.dailyhaha.com/_vids/Whohah.swf?Vid=$2.flv',
 		'embed-width' => '425',
 		'embed-height' => '350',
-	],
-	[
-		'name' => 'Dave.tv',
-		'website' => 'https://www.dave.tv',
-		'url-match' => 'https?://(?:www\.)?dave\.tv/MediaPlayer.aspx\?(?:[^"]*?)?contentItemId=([0-9]{1,10})',
-		'embed-src' => 'https://dave.tv/dbox/dbox_small.swf?configURI=https://dave.tv/dbox/config.ashx&volume=50&channelContentId=$2',
-		'embed-width' => '300',
-		'embed-height' => '260',
 	],
 	[
 		'name' => 'DotSub (w/o Captions)',
@@ -418,14 +394,6 @@ $stubs = [
 		'embed-height' => '392',
 	],
 	[
-		'name' => 'GameTube',
-		'website' => 'https://www.gametube.org',
-		'url-match' => 'https?://(?:www\.)?gametube\.org/(?:\#/video/|htmlVideo\.jsp\?id=|miniPlayer\.swf\?vidId=)([A-z0-9=_-]{28})',
-		'embed-src' => 'https://www.gametube.org/miniPlayer.swf?vidId=$2',
-		'embed-width' => '425',
-		'embed-height' => '335',
-	],
-	[
 		'name' => 'GarageTv',
 		'website' => 'https://www.garagetv.be',
 		'url-match' => '(https://www\.garagetv\.be/v/(?:[0-9a-z-\!_]*?)/v\.aspx)',
@@ -450,14 +418,6 @@ $stubs = [
 		'embed-width' => '416',
 		'embed-height' => '264',
 		'flashvars' => '$2',
-	],
-	[
-		'name' => 'Glumbert',
-		'website' => 'https://www.glumbert.com',
-		'url-match' => 'https?://(?:www\.)?glumbert\.com/(?:embed|media)/([a-z0-9_-]{1,30})',
-		'embed-src' => 'https://www.glumbert.com/embed/$2',
-		'embed-width' => '425',
-		'embed-height' => '335',
 	],
 	[
 		'name' => 'GodTube',
@@ -509,14 +469,6 @@ $stubs = [
 		'embed-height' => '360',
 	],
 	[
-		'name' => 'iJigg',
-		'website' => 'https://www.ijigg.com',
-		'url-match' => 'https?://(?:www\.)?ijigg\.com/(?:jiggPlayer\.swf\?songID=|songs/|trackback/)([0-9A-Z]{9,12})',
-		'embed-src' => 'https://www.ijigg.com/jiggPlayer.swf?songID=$2&Autoplay=0',
-		'embed-width' => '315',
-		'embed-height' => '80',
-	],
-	[
 		'name' => 'IMDB',
 		'website' => 'https://www.imdb.com',
 		'url-match' => 'https?://(?:www\.)?totaleclips\.com/Player/Bounce\.aspx\?eclipid=([0-9a-z]{1,12})&(?:amp;)?bitrateid=([0-9]{1,10})&(?:amp;)?vendorid=([0-9]{1,10})&(?:amp;)?type=\.flv',
@@ -531,14 +483,6 @@ $stubs = [
 		'embed-src' => 'https://img$2.imageshack.us/flvplayer.swf?f=T$3&autostart=false',
 		'embed-width' => '424',
 		'embed-height' => '338',
-	],
-	[
-		'name' => 'IndyaRocks',
-		'website' => 'https://www.indyarocks.com',
-		'url-match' => 'https?://(?:www\.)?indyarocks\.com/videos/(?:(?:(?:(?:[^-"]*?)-){1,10})|embed-)([0-9]{1,8})',
-		'embed-src' => 'https://www.indyarocks.com/videos/embed-$2',
-		'embed-width' => '425',
-		'embed-height' => '350',
 	],
 	[
 		'name' => 'Izlesene',
@@ -579,14 +523,6 @@ $stubs = [
 		'embed-src' => 'https://www.jujunation.com/player.swf?configXmlPath=https://www.jujunation.com/musicConfigXmlCode.php?pg=music_$2&playListXmlPath=https://www.jujunation.com/musicPlaylistXmlCode.php?pg=music_$2',
 		'embed-width' => '220',
 		'embed-height' => '66',
-	],
-	[
-		'name' => 'JustinTV',
-		'website' => 'https://www.justin.tv',
-		'url-match' => 'https?://(?:\w{0,3}\.)?justin\.tv/(\w*)',
-		'embed-src' => 'https://www.justin.tv/widgets/jtv_player.swf?channel=$2&auto_play=false',
-		'embed-width' => '353',
-		'embed-height' => '295',
 	],
 	[
 		'name' => 'Kewego',
@@ -727,14 +663,6 @@ $stubs = [
 		'flashvars' => 'audioUrl=$2'
 	],
 	[
-		'name' => 'MySpaceTv',
-		'website' => 'https://www.myspacetv.com',
-		'url-match' => 'https?://(?:vids\.myspace|myspacetv)\.com/index\.cfm\?(?:[^"]*?)?VideoID=([0-9]{1,10})',
-		'embed-src' => 'https://mediaservices.myspace.com/services/media/embed.aspx/m=$2',
-		'embed-width' => '425',
-		'embed-height' => '360',
-	],
-	[
 		'name' => 'MyVideo',
 		'website' => 'https://www.myvideo.de',
 		'url-match' => 'https?://(?:www\.)?myvideo\.(at|be|ch|de|nl)/(?:watch|movie)/([0-9]{1,8})',
@@ -746,7 +674,7 @@ $stubs = [
 	],
 	[
 		'name' => 'MyVi',
-		'website' => 'https://myvi.ru',
+		'website' => 'https://www.myvi.ru',
 		'url-match' => '(https://(?:www\.)?myvi\.ru/ru/flash/player/(?:[0-9a-z_-]{45}))',
 		'embed-src' => '$2',
 		'embed-width' => '450',
@@ -777,14 +705,6 @@ $stubs = [
 		'embed-height' => '374',
 	],
 	[
-		'name' => 'Orb',
-		'website' => 'https://www.orb.com',
-		'url-match' => 'https?://mycast\.orb\.com/orb/html/qs\?mediumId=([0-9a-z]{8})&(?:amp;)?l=([0-9a-z_-]{1,20})',
-		'embed-src' => 'https://mycast.orb.com/orb/resources/common/videoplayer.swf?file=http%3A%2F%2Fmycast.orb.com%2Forb%2Fxml%2Fstream%3FstreamFormat%3Dswf%26mediumId%3D$2%26l%3D$3&showdigits=true&autostart=false&shuffle=false&showeq=true&showfsbutton=true',
-		'embed-width' => '439',
-		'embed-height' => '350',
-	],
-	[
 		'name' => 'Photobucket',
 		'website' => 'https://www.photobucket.com',
 		'url-match' => 'https?://media\.photobucket\.com\/video\/.*\/videos',
@@ -792,14 +712,6 @@ $stubs = [
 		'embed-src' => 'https://media.photobucket.com/flash/player.swf?file=$2',
 		'embed-width' => '448',
 		'embed-height' => '361',
-	],
-	[
-		'name' => 'PikNikTube',
-		'website' => 'https://www.pikniktube.com',
-		'url-match' => 'https?://(?:www\.)?pikniktube\.com/(?:v/|(?:(?:[^"]*?)\?q=))([0-9a-f]{32})',
-		'embed-src' => 'https://www.pikniktube.com/player/videoplayer2.swf?linktarget=_blank&embedded=1&xmlsrc=https://www.pikniktube.com/getxmle.asp?q=$2&a=1&c=0',
-		'embed-width' => '340',
-		'embed-height' => '320',
 	],
 	[
 		'name' => 'Rambler',
@@ -991,17 +903,6 @@ $stubs = [
 		'embed-height' => '299',
 		'iframe-player' => 'https://www.ustream.tv/embed/$2?mode=direct',
 		'flashvars' => 'cid=$2&amp;autoplay=false&amp;locale=de_DE'
-	],
-	[
-		'name' => 'VideoJug',
-		'website' => 'https://www.videojug.com',
-		'url-match' => 'https?://(?:www\.)videojug\.com/film/',
-		'fetch-match' => 'data-videoid="((?:[0-9a-f]{1,12}-?){5})"',
-		'embed-src' => 'https://www.videojug.com/views/player/Player.swf', //https://www.videojug.com/player?id=
-		'embed-width' => '400',
-		'embed-height' => '345',
-		'flashvars' => 'embedded=true&amp;ClientType=0&amp;id=$2&amp;type=film&amp;host=http%3a%2f%2fwww.videojug.com&amp;ar=16_9',
-		'iframe-player' => 'https://www.videojug.com/embed/$2'
 	],
 	[
 		'name' => 'videos.sapo',

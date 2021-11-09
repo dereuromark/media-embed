@@ -38,7 +38,6 @@ class MediaEmbedTest extends TestCase {
 		'http://www.foxhead.com/us/mx/videos/id/23798' => '23798',
 		'http://foxhead.com/us/mx/videos/id/23798' => '23798',
 		'http://video.aol.com/video/defining-moments-sarah-chalke/711269187' => '711269187',
-		'http://www.aniboom.com/animation-video/364332/israel/' => '364332',
 		'http://www.xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
 		'http://xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
 		// errors
