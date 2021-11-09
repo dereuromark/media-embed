@@ -10,37 +10,37 @@ namespace MediaEmbed\Object;
 class MediaObject implements ObjectInterface {
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $_stub;
 
 	/**
-	 * @var array
+	 * @var array<string>
 	 */
 	protected $_match;
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $_objectAttributes = [];
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $_objectParams = [];
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $_iframeAttributes = [];
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $_iframeParams = [];
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public $config = [
 		'prefer' => 'iframe', // Type object or iframe (only available for few, fallback will be object)
@@ -49,8 +49,8 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * MediaObject::__construct()
 	 *
-	 * @param array $stub
-	 * @param array $config
+	 * @param array<string, mixed> $stub
+	 * @param array<string, mixed> $config
 	 */
 	public function __construct(array $stub, array $config) {
 		$this->config = $config + $this->config;
@@ -103,7 +103,7 @@ class MediaObject implements ObjectInterface {
 	 *     omitted, array of all properties are returned.
 	 * @param string|null $value
 	 *
-	 * @return $this|array|string
+	 * @return $this|array<string, mixed>|string
 	 */
 	public function stub($property = null, $value = null) {
 		if ($property === null) {
@@ -243,7 +243,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Override a default object param value
 	 *
-	 * @param mixed $param The name of the param to be set
+	 * @param array<string, mixed>|string $param The name of the param to be set
 	 *                                           or an array of multiple params to set
 	 * @param string|null $value (optional) the value to set the param to
 	 *                                              if only one param is being set
@@ -277,7 +277,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Override a default object attribute value
 	 *
-	 * @param mixed $param The name of the attribute to be set
+	 * @param array<string, mixed>|string $param The name of the attribute to be set
 	 *   or an array of multiple attribs to be set
 	 * @param string|int|null $value (optional) the value to set the param to
 	 *   if only one param is being set
@@ -359,7 +359,7 @@ class MediaObject implements ObjectInterface {
 	 * Return object params about the video metadata
 	 *
 	 * @param string|null $key
-	 * @return array|string|null Object params
+	 * @return array<string, mixed>|string|null Object params
 	 */
 	public function getParams($key = null) {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
@@ -607,7 +607,7 @@ class MediaObject implements ObjectInterface {
 	 * Set the default params for the type of
 	 * stub we are working with
 	 *
-	 * @param array $stub
+	 * @param array<string, mixed> $stub
 	 * @return void
 	 */
 	protected function _setDefaultParams($stub) {
@@ -666,7 +666,7 @@ class MediaObject implements ObjectInterface {
 	 * Returns an array that can be used to describe the internal state of this
 	 * object.
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 */
 	public function __debugInfo() {
 		return [

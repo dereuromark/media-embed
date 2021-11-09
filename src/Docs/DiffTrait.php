@@ -40,7 +40,7 @@ trait DiffTrait {
 	}
 
 	/**
-	 * @param array $array
+	 * @param array<mixed> $array
 	 *
 	 * @return string
 	 */

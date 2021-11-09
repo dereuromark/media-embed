@@ -90,7 +90,7 @@ TEXT;
 	}
 
 	/**
-	 * @param array $array
+	 * @param array<string, mixed> $array
 	 *
 	 * @return string
 	 */

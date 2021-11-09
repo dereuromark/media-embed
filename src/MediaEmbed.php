@@ -19,26 +19,26 @@ if (!defined('DS')) {
 class MediaEmbed {
 
 	/**
-	 * @var array
+	 * @var array<string>
 	 */
 	protected $_match;
 
 	/**
-	 * @var array
+	 * @var array<string, array<string, mixed>>
 	 */
 	protected $_hosts = [];
 
 	/**
 	 * See MediaObject for details
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public $config = [];
 
 	/**
 	 * Loads stubs
 	 *
-	 * @param array $config
+	 * @param array<string, mixed> $config
 	 * @param string|null $stubsPath
 	 */
 	public function __construct(array $config = [], $stubsPath = null) {
@@ -55,7 +55,7 @@ class MediaEmbed {
 	 *
 	 * @param string $id
 	 * @param string $host
-	 * @param array $config
+	 * @param array<string, mixed> $config
 	 *
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
@@ -99,7 +99,7 @@ class MediaEmbed {
 	 * It will return an object if the url contains valid/supported video.
 	 *
 	 * @param string $url Href to check for embedded video
-	 * @param array $config
+	 * @param array<string, mixed> $config
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
 	public function parseUrl($url, $config = []) {
@@ -130,8 +130,8 @@ class MediaEmbed {
 	 * MediaEmbed::_match()
 	 *
 	 * @param string $url
-	 * @param array $regexRules
-	 * @return array
+	 * @param array<string> $regexRules
+	 * @return array<string>
 	 */
 	protected function _matchUrl($url, array $regexRules) {
 		foreach ($regexRules as $regexRule) {
@@ -177,7 +177,7 @@ class MediaEmbed {
 	/**
 	 * Set custom stubs overwriting the default ones.
 	 *
-	 * @param array $stubs Same format as in the stubs.php file.
+	 * @param array<string, array<string, mixed>> $stubs Same format as in the stubs.php file.
 	 * @param bool $reset If default ones should be resetted/removed.
 	 * @return $this
 	 */
@@ -194,8 +194,8 @@ class MediaEmbed {
 	}
 
 	/**
-	 * @param array $whitelist (alias/keys)
-	 * @return array Host info
+	 * @param array<string> $whitelist (alias/keys)
+	 * @return array<string, array<string, mixed>> Host info
 	 */
 	public function getHosts($whitelist = []) {
 		if ($whitelist) {
@@ -215,7 +215,7 @@ class MediaEmbed {
 
 	/**
 	 * @param string $alias
-	 * @return array|null Host info or null on failure
+	 * @return array<string, mixed>|null Host info or null on failure
 	 */
 	public function getHost($alias) {
 		if (!$this->_hosts) {
@@ -232,15 +232,15 @@ class MediaEmbed {
 	 * Create the embed code for a local file
 	 *
 	 * @param string $file The file we are wanting to embed
-	 * @return bool Whether or not the url contains valid/supported video
+	 * @return bool Whether the URL contains valid/supported video
 	 */
 	public function embedLocal($file) {
 		return false;
 	}
 
 	/**
-	 * @param array|string $stub
-	 * @param array $config
+	 * @param array<string, mixed>|string $stub
+	 * @param array<string, mixed> $config
 	 *
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
@@ -273,7 +273,7 @@ class MediaEmbed {
 	 * Contains the preg info
 	 * DOES NOT contain width/height etc
 	 *
-	 * @var array
+	 * @var array<string, array<string, mixed>>
 	 */
 	public $availableTypes = [
 		'youtube' => [
@@ -303,7 +303,7 @@ class MediaEmbed {
 	];
 
 	/**
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public $availableNonJSTypes = [
 		'youtube' => '<iframe src="http://www.youtube.com/embed/{id}" width="100%" height="385" frameborder="0"></iframe>',
@@ -320,7 +320,7 @@ class MediaEmbed {
 	];
 
 	/**
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public $_ojectParamAttr = [
 		'allowscriptaccess' => 'always',
@@ -328,11 +328,10 @@ class MediaEmbed {
 	];
 
 	/**
-	 * @var array
+	 * @var array<string, string>
 	 */
 	public $_embedAttr = [
 		'allowfullscreen' => 'true',
-		'',
 	];
 
 }
