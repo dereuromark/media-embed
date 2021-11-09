@@ -204,7 +204,8 @@ class MediaObject implements ObjectInterface {
 		$icon .= $url;
 
 		$context = stream_context_create(
-			['http' => ['header' => 'Connection: close']]);
+            ['http' => ['header' => 'Connection: close']],
+        );
 		// E.g. http://www.google.com/s2/favicons?domain=xyz.com
 		$file = file_get_contents($icon, false, $context);
 		if ($file === false) {
