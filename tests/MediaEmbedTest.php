@@ -15,7 +15,6 @@ class MediaEmbedTest extends TestCase {
 	 * @var array
 	 */
 	protected $_stubs = [
-		'http://bnqt.com/videos/detail/Tuesdays-with-Miles-Dallas-Session-San-Diego/782337671001' => '782337671001',
 		'http://www.clipmoon.com/videos/91464f/dog-cat-and-printer.html' => '91464f',
 		'https://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music' => 'x2bqyl6',
 		'https://dai.ly/x2bqyl6' => 'x2bqyl6',
@@ -40,13 +39,10 @@ class MediaEmbedTest extends TestCase {
 		'http://foxhead.com/us/mx/videos/id/23798' => '23798',
 		'http://video.aol.com/video/defining-moments-sarah-chalke/711269187' => '711269187',
 		'http://www.aniboom.com/animation-video/364332/israel/' => '364332',
-		'http://video.adultswim.com/king-of-the-hill/you-there-god-its-me-margaret-hill.html' => 'king-of-the-hill',
 		'http://www.xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
 		'http://xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
 		// errors
 		//'http://www.spike.com/video-clips/g4539c/1000-ways-to-die-gangsta-trapped' => 'g4539c',
-		'http://en.vidivodo.com/549248/girlie-slumber-party-with-michelle-rodriguez-' => '549248',
-		'http://www.vidivodo.com/549248/girlie-slumber-party-with-michelle-rodriguez-' => '549248',
 		'http://www.crackle.com/c/comedians-in-cars-getting-coffee/jon-stewart-the-sound-of-virginity/2493123' => '2493123',
 		// errors
 		//'http://www.theonion.com/video/american-dream-declared-dead-as-final-believer-giv,19846/' => '19846',
