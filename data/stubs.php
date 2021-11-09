@@ -436,16 +436,6 @@ $stubs = [
 		'flashvars' => 'id=$2',
 	],
 	[
-		'name' => 'Fandome',
-		'website' => 'http://www.fandome.com',
-		'url-match' => 'http://[a-z]*\.fandome\.com/video/([0-9]{3,6})/[a-z0-9\-_]*/',
-		'embed-src' => 'http://www.kaltura.com/index.php/kwidget/wid/_35168/uiconf_id/1070752',
-		'embed-width' => '480',
-		'embed-height' => '380',
-		'flashvars' => 'entryId=http://s3.amazonaws.com/lazyjock/$2.flv&amp;autoplay=false',
-	],
-	# not working...
-	[
 		'name' => 'Flickr',
 		'website' => 'http://www.flickr.com',
 		'url-match' => 'http://(?:www\.|www2\.)?flickr\.com/photos/[A-Za-z0-9-_@]*/([0-9]{8,12})',
