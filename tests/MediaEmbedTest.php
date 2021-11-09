@@ -15,7 +15,6 @@ class MediaEmbedTest extends TestCase {
 	 * @var array
 	 */
 	protected $_stubs = [
-		'http://bnqt.com/videos/detail/Tuesdays-with-Miles-Dallas-Session-San-Diego/782337671001' => '782337671001',
 		'http://www.clipmoon.com/videos/91464f/dog-cat-and-printer.html' => '91464f',
 		'https://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music' => 'x2bqyl6',
 		'https://dai.ly/x2bqyl6' => 'x2bqyl6',
@@ -28,7 +27,6 @@ class MediaEmbedTest extends TestCase {
 		'https://www.facebook.com/SkySports/videos/vb.10911153761/10153310275743762/?type=2&theater' => '10153310275743762',
 		'https://www.facebook.com/demotivateurFood/videos/vl.184872862011827/1034411179983244/?type=1' => '1034411179983244',
 		// Not yet possible
-		//'https://www.youtube.com/playlist?list=PLD1FA4687572EDB23' => 'PLD1FA4687572EDB23',
 		'http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy' => '7645001',
 		'http://www.metacafe.com/watch/1417475/try_it_yourself_episode_2_hacks_and_tricks_in_google/' => '1417475',
 		'http://vimeo.com/19570639' => '19570639',
@@ -40,14 +38,10 @@ class MediaEmbedTest extends TestCase {
 		'http://www.foxhead.com/us/mx/videos/id/23798' => '23798',
 		'http://foxhead.com/us/mx/videos/id/23798' => '23798',
 		'http://video.aol.com/video/defining-moments-sarah-chalke/711269187' => '711269187',
-		'http://www.aniboom.com/animation-video/364332/israel/' => '364332',
-		'http://video.adultswim.com/king-of-the-hill/you-there-god-its-me-margaret-hill.html' => 'king-of-the-hill',
 		'http://www.xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
 		'http://xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
 		// errors
 		//'http://www.spike.com/video-clips/g4539c/1000-ways-to-die-gangsta-trapped' => 'g4539c',
-		'http://en.vidivodo.com/549248/girlie-slumber-party-with-michelle-rodriguez-' => '549248',
-		'http://www.vidivodo.com/549248/girlie-slumber-party-with-michelle-rodriguez-' => '549248',
 		'http://www.crackle.com/c/comedians-in-cars-getting-coffee/jon-stewart-the-sound-of-virginity/2493123' => '2493123',
 		// errors
 		//'http://www.theonion.com/video/american-dream-declared-dead-as-final-believer-giv,19846/' => '19846',

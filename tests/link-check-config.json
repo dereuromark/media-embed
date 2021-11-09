@@ -1,0 +1,4 @@
+{
+	"_comment": "For now we accept 3xx too, but we should try to find the 2xx for them",
+	"aliveStatusCodes": [200, 206, 302, 301]
+}
