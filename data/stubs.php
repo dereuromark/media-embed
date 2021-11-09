@@ -107,15 +107,6 @@ $stubs = [
 		'embed-height' => '339',
 	],
 	[
-		'name' => 'AdultSwim',
-		'website' => 'http://video.adultswim.com',
-		'url-match' => 'http://video\.adultswim\.com/([0-9a-z-_]+)/',
-		'embed-src' => 'http://i.adultswim.com/adultswim/video2/tools/swf/viralplayer.swf',
-		'flashvars' => 'id=8a250ba12ed8cc2d012eed9639bc0134',
-		'embed-width' => '425',
-		'embed-height' => '350',
-	],
-	[
 		'name' => 'AniBoom',
 		'website' => 'http://www.aniboom.com',
 		'url-match' => 'http://(?:www\.|api\.)?aniboom\.com/animation-video/([0-9]{1,10})',
@@ -147,45 +138,6 @@ $stubs = [
 		'embed-src' => 'http://www.archive.org/flow/FlowPlayerLight.swf?config=%7Bembedded%3Atrue%2CshowFullScreenButton%3Atrue%2CshowMuteVolumeButton%3Atrue%2CshowMenu%3Atrue%2CautoBuffering%3Afalse%2CautoPlay%3Afalse%2CinitialScale%3A%27fit%27%2CmenuItems%3A%5Bfalse%2Cfalse%2Cfalse%2Cfalse%2Ctrue%2Ctrue%2Cfalse%5D%2CusePlayOverlay%3Afalse%2CshowPlayListButtons%3Atrue%2CplayList%3A%5B%7Burl%3A%27$2%27%7D%5D%2CcontrolBarGloss%3A%27high%27%2CshowVolumeSlider%3Atrue%2CbaseURL%3A%27http%3A%2F%2Fwww%2Earchive%2Eorg%2Fdownload%2F%27%2Cloop%3Afalse%2CcontrolBarBackgroundColor%3A%270x000000%27%7D',
 		'embed-width' => '480',
 		'embed-height' => '360',
-	],
-	[
-		'name' => 'Blastro',
-		'website' => 'http://www.blastro.com',
-		'url-match' => 'http://(?:www\.)?blastro\.com/player/([a-z0-9-_]*)\.html',
-		'embed-src' => 'http://images.blastro.com/images/flashplayer/flvPlayer.swf?site=www.blastro.com&amp;filename=$2',
-		'embed-width' => '512',
-		'embed-height' => '408',
-	],
-	# <object width="480" height="294"><param name="movie" value="http://www.bnqt.com/bnqtPlayer/vid_782337671001" /><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="wmode" value="opaque" /><param name="flashvars" value=""	/><embed src="http://www.bnqt.com/bnqtPlayer/vid_782337671001" width="480" height="294" allowfullscreen="true" allowscriptaccess="always" wmode="opaque" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="" scale="noscale"></embed></object>
-	# http://www.bnqt.com/videos/detail/Tuesdays-with-Miles-Dallas-Session-San-Diego/782337671001
-	# 2011-02-15 ms
-	[
-		'name' => 'BNQT',
-		'website' => 'http://www.bnqt.com',
-		'url-match' => 'http://(?:www\.)?bnqt\.com/videos/detail/([0-9A-Za-z-]+)/([0-9]{12})',
-		'embed-src' => 'http://www.bnqt.com/bnqtPlayer/vid_$3',
-		//'embed-src' => 'http://www.bnqt.com/public/shared/swf/bnqtPlayer.swf?pid=$3',
-		'embed-width' => '480',
-		'embed-height' => '294',
-		'id' => '$3',
-	],
-	[
-		'name' => 'BoFunk',
-		'website' => 'http://www.bofunk.com',
-		'url-match' => 'http://(?:www\.)?bofunk\.com/video/[0-9]{2,7}/',
-		'fetch-match' => '<embed src="/[a-z]/([a-z:/\.0-9-_=?%]*)"',
-		'embed-src' => 'http://www.bofunk.com/e/$2',
-		'embed-width' => '446',
-		'embed-height' => '370',
-	],
-	[
-		'name' => 'Break',
-		'website' => 'http://www.break.com/',
-		'url-match' => 'http://(?:www\.)?break\.com/(?:index|usercontent)/',
-		'fetch-match' => 'http://embed\.break\.com/([0-9a-z]{1,8})',
-		'embed-src' => '$1',
-		'embed-width' => '464',
-		'embed-height' => '383',
 	],
 	[
 		'name' => 'Brightcove.com',
@@ -295,14 +247,6 @@ $stubs = [
 		'flashvars' => 'playerType=embedded&type=id&value=$2',
 	],
 	[
-		'name' => 'CollegeHumor',
-		'website' => 'http://www.collegehumour.com',
-		'url-match' => 'http://(?:www\.)?collegehumor\.com/video:([0-9]{1,12})',
-		'embed-src' => 'http://www.collegehumor.com/moogaloop/moogaloop.swf?clip_id=$2',
-		'embed-width' => '480',
-		'embed-height' => '360',
-	],
-	[
 		'name' => 'TheDailyShow',
 		'website' => 'http://www.thedailyshow.com',
 		'url-match' => 'http://(?:www\.)?thedailyshow\.com/(?:watch|full\-episodes)',
@@ -384,14 +328,6 @@ $stubs = [
 		'embed-height' => '385',
 	],
 	[
-		'name' => 'Dv.ouou',
-		'website' => 'http://dv.ouou.com',
-		'url-match' => 'http://dv\.ouou\.com/(?:play/v_|v/)([a-f0-9]{14})',
-		'embed-src' => 'http://dv.ouou.com/v/$2',
-		'embed-width' => '480',
-		'embed-height' => '385',
-	],
-	[
 		'name' => 'Divshare',
 		'website' => 'http://www.divshare.com',
 		'url-match' => 'http://www\.divshare\.com/download/([^"]*)',
@@ -457,15 +393,6 @@ $stubs = [
 		'flashvars' => 'key=$2',
 	],
 	[
-		'name' => 'FunMansion',
-		'website' => 'http://www.funmansion.com',
-		'url-match' => 'http://www\.funmansion\.com/videos/[a-z0-9-_]*\.html',
-		'fetch-match' => '<iframe src="http://media\.funmansion\.com/funmansion/player/player\.php\?url=([a-z0-9:/\.-_]*\.flv)',
-		'embed-src' => 'http://media.funmansion.com/funmansion/player/flvplayer.swf?flv=$2',
-		'embed-width' => '446',
-		'embed-height' => '350',
-	],
-	[
 		'name' => 'G4TV',
 		'website' => 'http://www.g4tv.com',
 		'url-match' => 'http://(?:www\.)?g4tv\.com/(?:xplay/videos/|lv3/|sv3/)([0-9]{1,10})',
@@ -507,14 +434,6 @@ $stubs = [
 		'embed-height' => '335',
 	],
 	[
-		'name' => 'GameVideos.1up',
-		'website' => 'http://www.gamevideos.1up.com',
-		'url-match' => 'http://(?:www\.)?gamevideos(?:\.1up)?\.com/(?:video/id/|video/embed\?(?:[^"]*?)?video=)([0-9]{1,8})',
-		'embed-src' => 'http://gamevideos.1up.com/swf/gamevideos11.swf?embedded=1&fullscreen=1&autoplay=0&src=http://gamevideos.1up.com/video/videoListXML%3Fid%3D$2%26adPlay%3Dfalse',
-		'embed-width' => '500',
-		'embed-height' => '319',
-	],
-	[
 		'name' => 'GarageTv',
 		'website' => 'http://www.garagetv.be',
 		'url-match' => '(http://www\.garagetv\.be/v/(?:[0-9a-z-\!_]*?)/v\.aspx)',
@@ -529,14 +448,6 @@ $stubs = [
 		'embed-src' => 'http://www.gloria.tv/flvplayer.swf?file=http%3A%2F%2Fwww.gloria.tv%2F%3Fembed%26video%3D$2%26width%3D512%26height%3D288&type=flv&image=http%3A%2F%2Fwww.gloria.tv%2F%3Fembed%26image%3D$2%26width%3D512%26height%3D288&autostart=false&showdigits=true&usefullscreen=false&logo=http%3A%2F%2Fwww.gloria.tv%2Fimage%2Flogo_embed.png&link=http%3A%2F%2Fwww.gloria.tv%2F%3Fvideo%3Dddexrl6eelym3gaabxmz%26amp%3Bview%3Dflash&linktarget=_blank&volume=100&backcolor=0xe0e0e0&frontcolor=0x000000&lightcolor=0xf00000',
 		'embed-width' => '512',
 		'embed-height' => '404',
-	],
-	[
-		'name' => 'GoEar',
-		'website' => 'http://www.goear.com',
-		'url-match' => 'http://(?:www\.)?goear\.com/listen\.php\?v=([a-z0-9]{7})',
-		'embed-src' => 'http://www.goear.com/files/external.swf?file=$2',
-		'embed-width' => '353',
-		'embed-height' => '132',
 	],
 	[
 		'name' => 'Good.IS',
@@ -798,22 +709,6 @@ $stubs = [
 		'iframe-player' => 'http://www.metatube.com/$2/videos/$3/embed/',
 	],
 	[
-		'name' => 'MotionBox',
-		'website' => 'http://www.motionbox.com',
-		'url-match' => 'http://(?:www\.)?motionbox\.com/videos/([0-9a-f]{14})',
-		'embed-src' => 'http://www.motionbox.com/external/hd_player/type%3Dsd%2Cvideo_uid%3D$2',
-		'embed-width' => '416',
-		'embed-height' => '312',
-	],
-	[
-		'name' => 'Mpora',
-		'website' => 'http://video.mpora.com',
-		'url-match' => 'http://video\.mpora\.com/watch/(\w{9})',
-		'embed-src' => 'http://video.mpora.com/ep/$2/',
-		'embed-width' => '425',
-		'embed-height' => '350',
-	],
-	[
 		'name' => 'Mp3tube',
 		'website' => 'http://www.mp3tube.net',
 		'url-match' => '(http://(?:www\.)?mp3tube\.net\/play\.swf\?id=(?:[0-9a-f]{32}))',
@@ -838,14 +733,6 @@ $stubs = [
 		'embed-width' => '400',
 		'embed-height' => '27',
 		'flashvars' => 'audioUrl=$2'
-	],
-	[
-		'name' => 'MyNet',
-		'website' => 'http://video.eksenim.mynet.com/',
-		'url-match' => 'http://video\.eksenim\.mynet\.com/(?:[0-9a-z_-]*?)/(?:[0-9a-z_-]*?)/([0-9]{1,12})/',
-		'embed-src' => 'http://video.eksenim.mynet.com/flvplayers/vplayer9.swf?videolist=http://video.eksenim.mynet.com/batch/video_xml_embed.php?video_id=$2',
-		'embed-width' => '400',
-		'embed-height' => '334',
 	],
 	[
 		'name' => 'MySpaceTv',
@@ -931,14 +818,6 @@ $stubs = [
 		'embed-height' => '320',
 	],
 	[
-		'name' => 'Putfile',
-		'website' => 'http://www.putfile.com',
-		'url-match' => 'http://(?:www\.|media\.|feat\.)?putfile\.com/(?:flow/putfile\.swf\?videoFile=|)?([a-z0-9-_]*)(?:\?)?',
-		'embed-src' => 'http://feat.putfile.com/flow/putfile.swf?videoFile=$2',
-		'embed-width' => '425',
-		'embed-height' => '345',
-	],
-	[
 		'name' => 'Rambler',
 		'website' => 'http://vision.rambler.ru',
 		'url-match' => 'http://vision\.rambler\.ru/(?:i/e\.swf\?id=|users/)((?:[0-9a-z_-]*?)/(?:[0-9]*?)/(?:[0-9]*))',
@@ -1021,14 +900,6 @@ $stubs = [
 		'embed-width' => '480',
 		'embed-height' => '360',
 	],
-	[
-		'name' => 'Space.tv.cctv.com',
-		'website' => 'http://space.tv.cctv.com',
-		'url-match' => 'http://((?:(?:[a-z0-9]{1,10})\.){0,2})?cctv\.com/act/video\.jsp\?videoId=VIDE([0-9]{16})',
-		'embed-src' => 'http://$2cctv.com/playcfg/player_new.swf?id=VIDE$3&site=http://$2cctv.com&method=http',
-		'embed-width' => '500',
-		'embed-height' => '400',
-	],
 	# errors.. ex: http://www.spike.com/full-episodes/4l230e/1000-ways-to-die-stupid-as-death-does-season-3-ep-322 => http://media.mtvnservices.com/mgid:arc:video:spike.com:5fade703-67f5-4228-893b-b8afe49a6867
 	[
 		'name' => 'Spike',
@@ -1101,15 +972,6 @@ $stubs = [
 		'embed-height' => '420',
 	],
 	[
-		'name' => 'Todays Big Thing',
-		'website' => 'http://www.todaysbigthing.com',
-		'url-match' => 'http://(?:www|entertainment|sports|technology|music|funnyvideos)\.todaysbigthing\.com/[0-9]{4}(?:/[0-9]{2}){2}',
-		'fetch-match' => 'http://(?:www|entertainment|sports|technology|music|funnyvideos)\.todaysbigthing\.com/betamax/betamax\.internal\.swf\?item_id=([0-9]{1,6})',
-		'embed-src' => 'http://www.todaysbigthing.com/betamax/betamax.swf?item_id=$2&fullscreen=1',
-		'embed-width' => '480',
-		'embed-height' => '360',
-	],
-	[
 		'name' => 'TrailerAddict',
 		'website' => 'http://www.traileraddict.com',
 		'url-match' => 'http://(?:www\.)?traileraddict\.com/trailer/',
@@ -1159,30 +1021,6 @@ $stubs = [
 		'embed-src' => '$2&amp;color=e4e4e4',
 		'embed-width' => '207',
 		'embed-height' => '27',
-	],
-	[
-		'name' => 'Twitvid',
-		'website' => 'http://www.twitvid.com/',
-		'url-match' => 'http://(?:www\.)?twitvid\.com/([0-9a-z]{1,10})',
-		'embed-src' => 'http://www.twitvid.com/player/$2',
-		'embed-width' => '425',
-		'embed-height' => '344',
-	],
-	[
-		'name' => 'UOL VideoLog',
-		'website' => 'http://videolog.uol.com.br',
-		'url-match' => 'http://videolog\.uol\.com\.br/video(?:\?|\.php\?id=)([0-9]{1,9})',
-		'embed-src' => 'http://www.videolog.tv/swfs/externo_api.swf?v=$2&amp;id_video=$2',
-		'embed-width' => '512',
-		'embed-height' => '384',
-	],
-	[
-		'name' => 'u-Tube',
-		'website' => 'http://www.u-tube.ru',
-		'url-match' => 'http://(?:www\.)?u-tube\.ru/(?:playlist\.php\?id=|pages/video/)([0-9]{1,12})',
-		'embed-src' => 'http://www.u-tube.ru/upload/others/flvplayer.swf?file=http://www.u-tube.ru/playlist.php?id=$2&width=400&height=300',
-		'embed-width' => '400',
-		'embed-height' => '300',
 	],
 	[
 		'name' => 'Ustream',
@@ -1256,14 +1094,6 @@ $stubs = [
 		'embed-width' => '400',
 		'embed-height' => '300',
 		'flashvars' => 'file=http://www.vidmax.com/media/video/$3.flv&amp;streamer=lighttpd&amp;autostart=false&amp;stretching=fill'
-	],
-	[
-		'name' => 'Vidivodo',
-		'website' => 'http://www.vidivodo.com',
-		'url-match' => 'http://(www|en)\.vidivodo\.com/([0-9]*?)/[a-z0-9\-_]*',
-		'embed-src' => 'http://www.vidivodo.com/VideoPlayerShare.swf?lang=$2&vidID=$3&vCode=v$4&dura=$5&File=$6',
-		'embed-width' => '480',
-		'embed-height' => '300',
 	],
 	[
 		'name' => 'VoiceThread',

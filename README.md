@@ -8,7 +8,7 @@
 A utility library that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
 
-It currently works with [160+ services](docs/supported.md), including the most important ones like
+It currently works with [130+ services](docs/supported.md), including the most important ones like
 
 - YouTube
 - Dailymotion
