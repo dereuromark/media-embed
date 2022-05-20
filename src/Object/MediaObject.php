@@ -617,7 +617,7 @@ class MediaObject implements ObjectInterface {
 
 		for ($i = 1; $i <= $count; $i++) {
 			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
-			$flashvars = str_ireplace('$' . $i, $this->_match[$i - 1], $flashvars);
+			$flashvars = str_ireplace('$'.$i, $this->_match[$i - 1], $flashvars ?? '');
 		}
 
 		$source = $this->_esc($source);
