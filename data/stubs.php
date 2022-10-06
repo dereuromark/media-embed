@@ -37,7 +37,9 @@ $stubs = [
 		'website' => 'https://www.youtube.com',
 		'url-match' => [
 			'https?://youtu\.be/([0-9a-z-_]{11})',
-			'https?://(?:video\.google\.(?:com|com\.au|co\.uk|de|es|fr|it|nl|pl|ca|cn)/(?:[^"]*?))?(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com(?:[^"]*?)?(?:&|&amp;|/|\?|;|\%3F|\%2F)(?:video_id=|v(?:/|=|\%3D|\%2F)|embed(?:/|=|\%3D|\%2F))([0-9a-z-_]{11})'],
+			'https?://(?:video\.google\.(?:com|com\.au|co\.uk|de|es|fr|it|nl|pl|ca|cn)/(?:[^"]*?))?(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com(?:[^"]*?)?(?:&|&amp;|/|\?|;|\%3F|\%2F)(?:video_id=|v(?:/|=|\%3D|\%2F)|embed(?:/|=|\%3D|\%2F))([0-9a-z-_]{11})',
+			'https?://www\.youtube\.com/shorts/([0-9a-z-_]{11})'
+		],
 		'embed-src' => 'https://www.youtube.com/v/$2&rel=0&fs=1',
 		'embed-width' => '480',
 		'embed-height' => '295',
