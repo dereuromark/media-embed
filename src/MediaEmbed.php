@@ -279,7 +279,7 @@ class MediaEmbed {
 		'youtube' => [
 			'iframe' => 'http://www.youtube.com/embed/{id}',
 			'swf' => 'http://www.youtube.com/v/{id}',
-			'url' => 'http://www.youtube.com/watch?v={id}&t={t}',
+			'url' => ['http://www.youtube.com/watch?v={id}&t={t}', 'http://www.youtube.com/shorts/{id}'],
 		],
 		'google' => [
 		],
