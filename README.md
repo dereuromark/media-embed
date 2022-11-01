@@ -44,3 +44,4 @@ For detailed documentation see **[/docs](docs/README.md)**.
 
 ## Credits
 Inspired by autoembed.com which already included most of the supported services and laid the foundation of this OOP approach here.
+There is also [this](https://github.com/oscarotero/Embed).
