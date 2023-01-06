@@ -1,6 +1,6 @@
 # MediaEmbed
 [![CI](https://github.com/dereuromark/media-embed/workflows/CI/badge.svg)](https://github.com/dereuromark/media-embed/actions?query=workflow%3ACI+branch%3Amaster)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.3-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.4-8892BF.svg)](https://php.net/)
 [![License](https://poser.pugx.org/dereuromark/media-embed/license.svg)](https://packagist.org/packages/dereuromark/media-embed)
 [![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.svg)](https://packagist.org/packages/dereuromark/media-embed)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)

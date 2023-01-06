@@ -15,7 +15,7 @@ trait DiffTrait {
 	 *
 	 * @return string|null
 	 */
-	protected function getDiff($before, $after) {
+	protected function getDiff(string $before, string $after): ?string {
 		$beforeArray = $this->toSimpleArray($before);
 		$afterArray = $this->toSimpleArray($after);
 
@@ -35,7 +35,7 @@ trait DiffTrait {
 	 *
 	 * @return array<string>
 	 */
-	protected function toSimpleArray($content) {
+	protected function toSimpleArray(string $content): array {
 		return explode(PHP_EOL, $content);
 	}
 
@@ -44,7 +44,7 @@ trait DiffTrait {
 	 *
 	 * @return string
 	 */
-	protected function generateDiff(array $array) {
+	protected function generateDiff(array $array): string {
 		$out = [];
 
 		$begin = null;

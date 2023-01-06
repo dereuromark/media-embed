@@ -12,7 +12,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected $_stub;
+	protected array $_stub;
 
 	/**
 	 * @var array<string>
@@ -22,27 +22,27 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected $_objectAttributes = [];
+	protected array $_objectAttributes = [];
 
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected $_objectParams = [];
+	protected array $_objectParams = [];
 
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected $_iframeAttributes = [];
+	protected array $_iframeAttributes = [];
 
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected $_iframeParams = [];
+	protected array $_iframeParams = [];
 
 	/**
 	 * @var array<string, mixed>
 	 */
-	public $config = [
+	public array $config = [
 		'prefer' => 'iframe', // Type object or iframe (only available for few, fallback will be object)
 	];
 
@@ -595,7 +595,7 @@ class MediaObject implements ObjectInterface {
 			//if === true, is an attribute without value
 			//if === false, remove the attribute
 			if ($val !== false) {
-				$attributes .= ' ' . $key . ($val !== true ? '="' . $this->_esc($val) . '"' : '');
+				$attributes .= ' ' . $key . ($val !== true ? '="' . $this->_esc((string)$val) . '"' : '');
 			}
 		}
 
@@ -620,8 +620,12 @@ class MediaObject implements ObjectInterface {
 			$flashvars = str_ireplace('$' . $i, $this->_match[$i - 1], $flashvars ?? '');
 		}
 
-		$source = $this->_esc($source);
-		$flashvars = $this->_esc($flashvars);
+		if ($source) {
+			$source = $this->_esc($source);
+		}
+		if ($flashvars) {
+			$flashvars = $this->_esc($flashvars);
+		}
 
 		$this->_objectParams = [
 			'movie' => $source,
@@ -658,7 +662,7 @@ class MediaObject implements ObjectInterface {
 	 * @param string $text
 	 * @return string
 	 */
-	protected function _esc($text) {
+	protected function _esc(string $text): string {
 		return htmlspecialchars($text, ENT_QUOTES, '', false);
 	}
 

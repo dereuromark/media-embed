@@ -21,10 +21,7 @@ class Generator {
 	 */
 	public const CODE_ERROR = 1;
 
-	/**
-	 * @var bool
-	 */
-	protected $dryRun = false;
+	protected bool $dryRun = false;
 
 	/**
 	 * @param array<string> $args
