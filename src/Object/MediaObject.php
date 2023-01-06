@@ -87,7 +87,7 @@ class MediaObject implements ObjectInterface {
 			return;
 		}
 
-		$flashvars = $this->_objectParams['flashvars'];
+		$flashvars = (string)$this->_objectParams['flashvars'];
 		if (strpos($flashvars, '$r2') !== false) {
 			$this->_objectParams['flashvars'] = str_replace('$r2', $this->_stub['id'], $flashvars);
 		} else {
