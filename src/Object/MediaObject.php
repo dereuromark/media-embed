@@ -595,7 +595,7 @@ class MediaObject implements ObjectInterface {
 			//if === true, is an attribute without value
 			//if === false, remove the attribute
 			if ($val !== false) {
-				$attributes .= ' ' . $key . ($val !== true ? '="' . $this->_esc($val) . '"' : '');
+				$attributes .= ' ' . $key . ($val !== true ? '="' . $this->_esc((string)$val) . '"' : '');
 			}
 		}
 
@@ -621,7 +621,7 @@ class MediaObject implements ObjectInterface {
 		}
 
 		$source = $this->_esc($source);
-		$flashvars = $this->_esc($flashvars);
+		$flashvars = $this->_esc((string)$flashvars);
 
 		$this->_objectParams = [
 			'movie' => $source,
