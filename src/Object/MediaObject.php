@@ -17,7 +17,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * @var array<string>
 	 */
-	protected $_match;
+	protected array $_match;
 
 	/**
 	 * @var array<string, mixed>
@@ -96,35 +96,11 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Getter/setter for stub
-	 *
-	 * @param string|null $property - (optional) the specific
-	 *     property of the stub to be returned. If
-	 *     omitted, array of all properties are returned.
-	 * @param string|null $value
-	 *
-	 * @return $this|array<string, mixed>|string
-	 */
-	public function stub($property = null, $value = null) {
-		if ($property === null) {
-			return $this->_stub;
-		}
-		if ($value === null) {
-			return $this->_stub[$property] ?? null;
-		}
-		if (!empty($property) && !empty($value)) {
-			$this->_stub[$property] = $value;
-		}
-
-		return $this;
-	}
-
-	/**
 	 * {@inheritdoc}
 	 *
 	 * @return string
 	 */
-	public function id() {
+	public function id(): string {
 		$res = $this->_match;
 		$count = count($res);
 
@@ -148,7 +124,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function slug() {
+	public function slug(): string {
 		return $this->_stub['slug'];
 	}
 
@@ -157,7 +133,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function name() {
+	public function name(): string {
 		$res = $this->_match;
 		$count = count($res);
 
@@ -178,7 +154,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function website() {
+	public function website(): string {
 		return !empty($this->_stub['website']) ? $this->_stub['website'] : '';
 	}
 
@@ -187,7 +163,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string|null Resource content or null if not available
 	 */
-	public function icon() {
+	public function icon(): ?string {
 		$url = $this->_stub['website'];
 		if (!$url) {
 			return null;
@@ -221,7 +197,7 @@ class MediaObject implements ObjectInterface {
 	 * @param string|null $icon Icon data
 	 * @return string|null Filename
 	 */
-	public function saveIcon($location, $icon = null) {
+	public function saveIcon(string $location, ?string $icon = null): ?string {
 		if ($icon === null) {
 			$icon = $this->icon();
 		}
@@ -250,7 +226,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return $this
 	 */
-	public function setParam($param, $value = null) {
+	public function setParam($param, ?string $value = null) {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
 			if (is_array($param)) {
 				foreach ($param as $p => $v) {
@@ -314,8 +290,8 @@ class MediaObject implements ObjectInterface {
 	 * @param bool $adjustWidth
 	 * @return $this
 	 */
-	public function setHeight($height, $adjustWidth = false) {
-		if ($adjustWidth && is_numeric($height)) {
+	public function setHeight(int $height, bool $adjustWidth = false) {
+		if ($adjustWidth) {
 			$this->_adjustDimensions('width', 'height', $height);
 		}
 
@@ -329,8 +305,8 @@ class MediaObject implements ObjectInterface {
 	 * @param bool $adjustHeight
 	 * @return $this
 	 */
-	public function setWidth($width, $adjustHeight = false) {
-		if ($adjustHeight && is_numeric($width)) {
+	public function setWidth(int $width, bool $adjustHeight = false) {
+		if ($adjustHeight) {
 			$this->_adjustDimensions('height', 'width', $width);
 		}
 
@@ -345,7 +321,7 @@ class MediaObject implements ObjectInterface {
 	 * @param int $fromLength
 	 * @return void
 	 */
-	protected function _adjustDimensions($type, $fromType, $fromLength) {
+	protected function _adjustDimensions(string $type, string $fromType, int $fromLength): void {
 		$currentLength = $this->getAttributes($type);
 		$currentFromLength = $this->getAttributes($fromType);
 
@@ -361,7 +337,7 @@ class MediaObject implements ObjectInterface {
 	 * @param string|null $key
 	 * @return array<string, mixed>|string|null Object params
 	 */
-	public function getParams($key = null) {
+	public function getParams(?string $key = null) {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
 			if ($key === null) {
 				return $this->_iframeParams;
@@ -389,7 +365,7 @@ class MediaObject implements ObjectInterface {
 	 * @param string|null $key
 	 * @return mixed Object attribute
 	 */
-	public function getAttributes($key = null) {
+	public function getAttributes(?string $key = null) {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
 			if ($key === null) {
 				return $this->_iframeAttributes;
@@ -416,7 +392,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string The embed HTML
 	 */
-	public function getEmbedCode() {
+	public function getEmbedCode(): string {
 		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
 			return $this->_buildIframe();
 		}
@@ -429,7 +405,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string The src attribute
 	 */
-	public function getEmbedSrc() {
+	public function getEmbedSrc(): string {
 		$source = $this->_stub['iframe-player'];
 		$count = count($this->_match);
 
@@ -450,32 +426,12 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Getter/setter of what this Object currently prefers as output type
-	 *
-	 * @param string|null $type
-	 * @return $this|string
-	 */
-	protected function prefers($type = null) {
-		if ($type === null) {
-			$prefers = 'object';
-			if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
-				$prefers = 'iframe';
-			}
-
-			return $prefers;
-		}
-		$this->config['prefer'] = $type;
-
-		return $this;
-	}
-
-	/**
 	 * Get final src
 	 *
 	 * @param string $type
 	 * @return string|null
 	 */
-	protected function _getObjectSrc($type = 'embed-src') {
+	protected function _getObjectSrc(string $type = 'embed-src'): ?string {
 		if (empty($this->_stub['id']) || empty($this->_stub['slug'])) {
 			return null;
 		}
@@ -498,7 +454,7 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * @return string|null
 	 */
-	public function getImageSrc() {
+	public function getImageSrc(): ?string {
 		if (empty($this->_stub['id'])) {
 			return null;
 		}
@@ -521,7 +477,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string - the thumbnail href
 	 */
-	public function image() {
+	public function image(): string {
 		if (empty($this->_stub['image-src'])) {
 			return '';
 		}
@@ -540,7 +496,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->getEmbedCode();
 	}
 
@@ -549,7 +505,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string
 	 */
-	protected function _buildObject() {
+	protected function _buildObject(): string {
 		$objectAttributes = $objectParams = '';
 
 		foreach ($this->_objectAttributes as $param => $value) {
@@ -572,7 +528,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return string
 	 */
-	protected function _buildIframe() {
+	protected function _buildIframe(): string {
 		$source = $this->_stub['iframe-player'];
 		$count = count($this->_match);
 
@@ -610,7 +566,7 @@ class MediaObject implements ObjectInterface {
 	 * @param array<string, mixed> $stub
 	 * @return void
 	 */
-	protected function _setDefaultParams($stub) {
+	protected function _setDefaultParams(array $stub): void {
 		$source = $stub['embed-src'];
 		$flashvars = (isset($stub['flashvars'])) ? $stub['flashvars'] : null;
 		$count = count($this->_match);
@@ -672,7 +628,7 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function __debugInfo() {
+	public function __debugInfo(): array {
 		return [
 			'stub' => $this->_stub,
 			'objectAttributes' => $this->_objectAttributes,

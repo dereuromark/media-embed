@@ -41,7 +41,7 @@ class MediaEmbed {
 	 * @param array<string, mixed> $config
 	 * @param string|null $stubsPath
 	 */
-	public function __construct(array $config = [], $stubsPath = null) {
+	public function __construct(array $config = [], ?string $stubsPath = null) {
 		if ($stubsPath === null) {
 			$stubsPath = dirname(__DIR__) . DS . 'data' . DS . 'stubs.php';
 		}
@@ -102,7 +102,7 @@ class MediaEmbed {
 	 * @param array<string, mixed> $config
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
-	public function parseUrl(string $url, array $config = []) {
+	public function parseUrl(string $url, array $config = []): ?MediaObject {
 		foreach ($this->_hosts as $stub) {
 			$match = $this->_matchUrl($url, (array)$stub['url-match']);
 			if (!$match) {

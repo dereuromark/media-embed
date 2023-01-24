@@ -35,7 +35,7 @@ class Generator {
 	/**
 	 * @return int
 	 */
-	public function generate() {
+	public function generate(): int {
 		$content = $this->build();
 		$path = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'supported.md';
 
@@ -61,7 +61,7 @@ class Generator {
 	/**
 	 * @return string
 	 */
-	protected function build() {
+	protected function build(): string {
 		$services = [];
 		$hosts = (new MediaEmbed())->getHosts();
 		ksort($hosts);
@@ -91,7 +91,7 @@ TEXT;
 	 *
 	 * @return string
 	 */
-	protected function name($array) {
+	protected function name(array $array): string {
 		if (!empty($array['website']) && preg_match('#^http#', $array['website'])) {
 			return '[' . $array['name'] . '](' . $array['website'] . ')';
 		}

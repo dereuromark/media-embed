@@ -14,7 +14,7 @@ interface ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function id();
+	public function id(): string;
 
 	/**
 	 * Returns the host as slugged string.
@@ -23,7 +23,7 @@ interface ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function slug();
+	public function slug(): string;
 
 	/**
 	 * Returns the name of this media host type.
@@ -32,7 +32,7 @@ interface ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function name();
+	public function name(): string;
 
 	/**
 	 * Returns the final HTML code for display.
@@ -41,7 +41,7 @@ interface ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function getEmbedCode();
+	public function getEmbedCode(): string;
 
 	/**
 	 * Returns the embed src. Useful for iframes where you only need the src attribute
@@ -50,6 +50,6 @@ interface ObjectInterface {
 	 *
 	 * @return string
 	 */
-	public function getEmbedSrc();
+	public function getEmbedSrc(): string;
 
 }

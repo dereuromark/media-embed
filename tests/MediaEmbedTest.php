@@ -14,7 +14,7 @@ class MediaEmbedTest extends TestCase {
 	/**
 	 * @var array
 	 */
-	protected $_stubs = [
+	protected array $_stubs = [
 		'http://www.clipmoon.com/videos/91464f/dog-cat-and-printer.html' => '91464f',
 		'https://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music' => 'x2bqyl6',
 		'https://dai.ly/x2bqyl6' => 'x2bqyl6',
@@ -88,7 +88,7 @@ class MediaEmbedTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testObject() {
+	public function testObject(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->object('youtube');
 		$this->assertTrue($Object !== null);
@@ -104,7 +104,7 @@ class MediaEmbedTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testParseUrlInvalid() {
+	public function testParseUrlInvalid(): void {
 		$MediaEmbed = new MediaEmbed();
 		$result = $MediaEmbed->parseUrl('http://www.youtube.com/foobar');
 		$this->assertNull($result);
@@ -118,7 +118,7 @@ class MediaEmbedTest extends TestCase {
 	 * @param string $id
 	 * @return void
 	 */
-	public function testParseUrl($url, $id) {
+	public function testParseUrl(string $url, string $id): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl($url);
 		$this->assertInstanceOf(MediaObject::class, $Object);
@@ -132,7 +132,7 @@ class MediaEmbedTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function getUrls() {
+	public function getUrls(): array {
 		$urls = [];
 		foreach ($this->_stubs as $k => $v) {
 			$urls[] = [$k, $v];
@@ -146,7 +146,7 @@ class MediaEmbedTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testParseId() {
+	public function testParseId(): void {
 		$test = [
 			'dailymotion' => 'x2bqyl6',
 			'youtube' => 'yiSjHJnc9CY',
@@ -169,7 +169,7 @@ class MediaEmbedTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testYoutube() {
+	public function testYoutube(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('http://www.youtube.com/watch?v=h9Pu4bZqWyg');
 		$this->assertInstanceOf(MediaObject::class, $Object);
@@ -197,7 +197,7 @@ class MediaEmbedTest extends TestCase {
 	/**
 	 * @return void
 	 */
-	public function testYoutubeWithoutIframe() {
+	public function testYoutubeWithoutIframe(): void {
 		$MediaEmbed = new MediaEmbed(['prefer' => 'object']);
 		$Object = $MediaEmbed->parseUrl('http://www.youtube.com/watch?v=h9Pu4bZqWyg');
 		$this->assertInstanceOf(MediaObject::class, $Object);
@@ -209,7 +209,7 @@ class MediaEmbedTest extends TestCase {
 	/**
 	 * @return void
 	 */
-	public function testDailymotion() {
+	public function testDailymotion(): void {
 		$MediaEmbed = new MediaEmbed();
 
 		$url = 'https://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music#hp-sc-p-1';
@@ -237,7 +237,7 @@ class MediaEmbedTest extends TestCase {
 	/**
 	 * @return void
 	 */
-	public function testMatterport() {
+	public function testMatterport(): void {
 		$mediaEmbed = new MediaEmbed();
 
 		$url = 'https://my.matterport.com/show/?m=Zh14WDtkjdC&st=2000';
@@ -256,7 +256,7 @@ class MediaEmbedTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testGetHosts() {
+	public function testGetHosts(): void {
 		$MediaEmbed = new MediaEmbed();
 
 		$hosts = $MediaEmbed->getHosts();
