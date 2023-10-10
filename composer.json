@@ -2,7 +2,14 @@
 	"name": "dereuromark/media-embed",
 	"type": "library",
 	"description": "A PHP library to deal with all those media services around, parsing their URLs and embedding their audio/video content in websites.",
-	"keywords": ["media", "embed", "PHP", "iframe", "video", "audio"],
+	"keywords": [
+		"media",
+		"embed",
+		"PHP",
+		"iframe",
+		"video",
+		"audio"
+	],
 	"license": "MIT",
 	"authors": [
 		{
@@ -15,7 +22,7 @@
 		"php": ">=7.4",
 		"jbroadway/urlify": "^1.0.0"
 	},
-	"require-dev":{
+	"require-dev": {
 		"sebastian/diff": "@stable",
 		"phpunit/phpunit": "^9.5",
 		"fig-r/psr2r-sniffer": "dev-master"
@@ -47,5 +54,7 @@
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
-	}
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true
 }
