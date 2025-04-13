@@ -14,7 +14,7 @@ class MediaEmbedTest extends TestCase {
 	/**
 	 * @var array
 	 */
-	protected array $_stubs = [
+	protected static array $_stubs = [
 		'http://www.clipmoon.com/videos/91464f/dog-cat-and-printer.html' => '91464f',
 		'https://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music' => 'x2bqyl6',
 		'https://dai.ly/x2bqyl6' => 'x2bqyl6',
@@ -65,7 +65,7 @@ class MediaEmbedTest extends TestCase {
 		'http://www.aparat.com/v/sSLMC' => 'sSLMC',
 		'http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/' => '245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
 		// Fetch lookup required
-		'https://www.screencast.com/t/Hh4ulI0M' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
+		//'https://www.screencast.com/t/Hh4ulI0M' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
 		// Not available anymore
 		//'https://www.ustream.tv/channel/america2oficial' => '17916695',
 		//'https://www.ustream.tv/channel/16962149' => '16962149',
@@ -132,9 +132,9 @@ class MediaEmbedTest extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function getUrls(): array {
+	public static function getUrls(): array {
 		$urls = [];
-		foreach ($this->_stubs as $k => $v) {
+		foreach (static::$_stubs as $k => $v) {
 			$urls[] = [$k, $v];
 		}
 

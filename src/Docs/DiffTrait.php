@@ -3,6 +3,7 @@
 namespace MediaEmbed\Docs;
 
 use SebastianBergmann\Diff\Differ;
+use SebastianBergmann\Diff\Output\DiffOnlyOutputBuilder;
 
 /**
  * @internal Only for internal docs generation.
@@ -19,7 +20,7 @@ trait DiffTrait {
 		$beforeArray = $this->toSimpleArray($before);
 		$afterArray = $this->toSimpleArray($after);
 
-		$differ = new Differ(null);
+		$differ = new Differ(new DiffOnlyOutputBuilder());
 		$array = $differ->diffToArray($beforeArray, $afterArray);
 
 		$diff = $this->generateDiff($array);
