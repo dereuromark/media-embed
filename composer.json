@@ -23,7 +23,7 @@
 		"jbroadway/urlify": "^1.0.0"
 	},
 	"require-dev": {
-		"fig-r/psr2r-sniffer": "dev-master",
+		"fig-r/psr2r-sniffer": "@stable",
 		"phpunit/phpunit": "^9.5",
 		"sebastian/diff": "@stable"
 	},
