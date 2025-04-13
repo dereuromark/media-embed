@@ -111,13 +111,12 @@ class MediaEmbedTest extends TestCase {
 	}
 
 	/**
-	 * MediaEmbedTest::testParseUrl()
-	 *
 	 * @dataProvider getUrls
 	 * @param string $url
 	 * @param string $id
 	 * @return void
 	 */
+	#[\PHPUnit\Framework\Attributes\DataProvider('getUrls')]
 	public function testParseUrl(string $url, string $id): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl($url);

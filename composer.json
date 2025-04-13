@@ -24,7 +24,7 @@
 	},
 	"require-dev": {
 		"fig-r/psr2r-sniffer": "@stable",
-		"phpunit/phpunit": "^10.5 || ^11.5",
+		"phpunit/phpunit": "^10.5 || ^11.5 || ^12.1",
 		"sebastian/diff": "@stable"
 	},
 	"minimum-stability": "stable",
