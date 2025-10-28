@@ -739,6 +739,7 @@ $stubs = [
 		'embed-src' => 'https://video.rutube.ru/$2',
 		'embed-width' => '470',
 		'embed-height' => '353',
+		'iframe-player' => 'https://rutube.ru/play/embed/$2',
 	],
 	[
 		'name' => 'Screencast',
