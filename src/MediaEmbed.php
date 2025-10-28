@@ -281,8 +281,7 @@ class MediaEmbed {
 			'swf' => 'http://www.youtube.com/v/{id}',
 			'url' => ['http://www.youtube.com/watch?v={id}&t={t}', 'http://www.youtube.com/shorts/{id}', 'http://www.youtube.com/shorts/{id}?feature=share'],
 		],
-		'google' => [
-		],
+		'google' => [],
 		'myvideo' => [
 			'swf' => 'http://www.myvideo.de/movie/',
 			'url' => ['http://www.myvideo.de/watch/', 'http://www.myvideo.ch/watch/', 'http://www.myvideo.at/watch/'],
@@ -296,10 +295,8 @@ class MediaEmbed {
 			'swf' => 'http://www.dailymotion.com/embed/video/{id}',
 		//'url' => 'http://www.dailymotion.com'
 		],
-		'videojug' => [
-		],
-		'revver' => [
-		],
+		'videojug' => [],
+		'revver' => [],
 	];
 
 	/**

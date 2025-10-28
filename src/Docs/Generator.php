@@ -37,7 +37,7 @@ class Generator {
 	 */
 	public function generate(): int {
 		$content = $this->build();
-		$path = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'supported.md';
+		$path = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'supported.md';
 
 		if (!$this->dryRun) {
 			file_put_contents($path, $content);
