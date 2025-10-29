@@ -48,6 +48,18 @@ class MediaEmbed {
 		$stubs = include $stubsPath;
 		$this->setHosts($stubs);
 		$this->config = $config + $this->config;
+
+		// Load custom providers from config file if specified
+		if (!empty($config['providers_config'])) {
+			$this->loadProvidersFromFile($config['providers_config']);
+		}
+
+		// Add custom providers from config array
+		if (!empty($config['custom_providers']) && is_array($config['custom_providers'])) {
+			foreach ($config['custom_providers'] as $provider) {
+				$this->addProvider($provider);
+			}
+		}
 	}
 
 	/**
@@ -188,6 +200,69 @@ class MediaEmbed {
 		foreach ($stubs as $stub) {
 			$slug = $this->_slug($stub['name']);
 			$this->_hosts[$slug] = $stub;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Add a single provider dynamically.
+	 *
+	 * @param array<string, mixed> $provider Provider configuration array.
+	 * @param bool $override Whether to override existing provider with same name.
+	 * @return $this
+	 */
+	public function addProvider(array $provider, bool $override = false) {
+		if (empty($provider['name'])) {
+			return $this;
+		}
+
+		$slug = !empty($provider['slug']) ? $provider['slug'] : $this->_slug($provider['name']);
+
+		if (!$override && isset($this->_hosts[$slug])) {
+			return $this;
+		}
+
+		if (empty($provider['slug'])) {
+			$provider['slug'] = $slug;
+		}
+
+		$this->_hosts[$slug] = $provider;
+
+		return $this;
+	}
+
+	/**
+	 * Load providers from a configuration file.
+	 *
+	 * Supports PHP, JSON, or serialized array formats.
+	 *
+	 * @param string $path Path to configuration file.
+	 * @return $this
+	 */
+	public function loadProvidersFromFile(string $path) {
+		if (!file_exists($path)) {
+			return $this;
+		}
+
+		$providers = [];
+		$extension = pathinfo($path, PATHINFO_EXTENSION);
+
+		if ($extension === 'php') {
+			$providers = include $path;
+		} elseif ($extension === 'json') {
+			$content = file_get_contents($path);
+			if ($content) {
+				$providers = json_decode($content, true);
+			}
+		}
+
+		if (is_array($providers)) {
+			foreach ($providers as $provider) {
+				if (is_array($provider)) {
+					$this->addProvider($provider);
+				}
+			}
 		}
 
 		return $this;
