@@ -39,7 +39,7 @@ $stubs = [
 			'https?://youtu\.be/([0-9a-z-_]{11})',
 			'https?://(?:video\.google\.(?:com|com\.au|co\.uk|de|es|fr|it|nl|pl|ca|cn)/(?:[^"]*?))?(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com(?:[^"]*?)?(?:&|&amp;|/|\?|;|\%3F|\%2F)(?:video_id=|v(?:/|=|\%3D|\%2F)|embed(?:/|=|\%3D|\%2F))([0-9a-z-_]{11})',
 			'https?://(www\.)?youtube\.com/shorts/([0-9a-z-_A-Z]{11})',
-			'https?://(www\.)?youtube\.com/shorts/([0-9a-z-_A-Z]{11})\?feature=share'
+			'https?://(www\.)?youtube\.com/shorts/([0-9a-z-_A-Z]{11})\?feature=share',
 		],
 		'embed-src' => 'https://www.youtube.com/v/$2&rel=0&fs=1',
 		'embed-width' => '480',
@@ -64,7 +64,7 @@ $stubs = [
 		'url-match' => [
 			'https://www.facebook.com/[0-9a-z-_.]+/videos/([0-9]+)/',
 			'https://www.facebook.com/[0-9a-zA-Z-_.]+/videos/(?:vb.\d+)/(\d+)/',
-			'https://www.facebook.com/[0-9a-zA-Z-_.]+/videos/(?:vl.\d+)/(\d+)/'
+			'https://www.facebook.com/[0-9a-zA-Z-_.]+/videos/(?:vl.\d+)/(\d+)/',
 		],
 		'embed-src' => '//www.facebook.com/video/embed?video_id=$2',
 		'embed-width' => '480',
@@ -82,7 +82,7 @@ $stubs = [
 		'embed-width' => '420',
 		'embed-height' => '339',
 		'image-src' => 'https://www.dailymotion.com/thumbnail/160x120/video/$2',
-		'iframe-player' => '//www.dailymotion.com/embed/video/$2'
+		'iframe-player' => '//www.dailymotion.com/embed/video/$2',
 	],
 	[
 		'name' => 'MetaCafe',
@@ -95,7 +95,10 @@ $stubs = [
 	[
 		'name' => 'Vimeo',
 		'website' => 'https://www.vimeo.com',
-		'url-match' => 'https?:\/\/(www\.)?vimeo.com\/(channels\/[a-zA-Z0-9]*\/)?([0-9]*)(?:\/[a-zA-Z0-9]+)?(\#t=(\d+)s)?',
+		'url-match' => [
+			'https?:\/\/player\.vimeo\.com\/video\/([0-9]+(?:\/[a-zA-Z0-9]+)?)',
+			'https?:\/\/(?:www\.)?vimeo\.com\/(?:channels\/[a-zA-Z0-9]+\/)?([0-9]+(?:\/[a-zA-Z0-9]+)?)',
+		],
 		'embed-src' => 'https://vimeo.com/moogaloop.swf?clip_id=$2&server=vimeo.com&fullscreen=1&show_title=1&show_byline=1&show_portrait=0&color=01AAEA',
 		'embed-width' => '400',
 		'embed-height' => '302',
@@ -124,7 +127,7 @@ $stubs = [
 		'embed-src' => '',
 		'embed-width' => '425',
 		'embed-height' => '354',
-		'iframe-player' => 'https://www.aparat.com/video/video/embed/videohash/$2/vt/frame/'
+		'iframe-player' => 'https://www.aparat.com/video/video/embed/videohash/$2/vt/frame/',
 	],
 	[
 		'name' => 'Archive.org',
@@ -150,7 +153,7 @@ $stubs = [
 		'embed-src' => 'https://cnettv.cnet.com/av/video/cbsnews/atlantis2/player-dest.swf',
 		'embed-width' => '425',
 		'embed-height' => '324',
-		'flashvars' => 'tag=contentBody;housing&releaseURL=https://cnettv.cnet.com/av/video/cbsnews/atlantis2/player-dest.swf&videoId=$2&partner=news&vert=News&autoPlayVid=false&name=cbsPlayer&allowScriptAccess=always&wmode=transparent&embedded=y&scale=noscale&rv=n&salign=tl'
+		'flashvars' => 'tag=contentBody;housing&releaseURL=https://cnettv.cnet.com/av/video/cbsnews/atlantis2/player-dest.swf&videoId=$2&partner=news&vert=News&autoPlayVid=false&name=cbsPlayer&allowScriptAccess=always&wmode=transparent&embedded=y&scale=noscale&rv=n&salign=tl',
 	],
 	[
 		'name' => 'Cellfish',
@@ -186,7 +189,7 @@ $stubs = [
 		'embed-src' => 'https://www.clipfish.de/videoplayer.swf?as=0&vid=$2&r=1',
 		'embed-width' => '464',
 		'embed-height' => '380',
-		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2'
+		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2',
 	],
 	[
 		'slug' => 'clipfish-special',
@@ -196,7 +199,7 @@ $stubs = [
 		'embed-src' => 'https://www.clipfish.de/videoplayer.swf?as=0&videoid=$2%3D%3D&r=1',
 		'embed-width' => '464',
 		'embed-height' => '380',
-		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2'
+		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2',
 	],
 	[
 		'slug' => 'clipfish',
@@ -206,7 +209,7 @@ $stubs = [
 		'embed-src' => 'https://www.clipfish.de/videoplayer.swf?as=0&videoid=$2%3D%3D&r=1',
 		'embed-width' => '464',
 		'embed-height' => '380',
-		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2'
+		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2',
 	],
 	[
 		'name' => 'ClipMoon',
@@ -534,7 +537,7 @@ $stubs = [
 		'embed-src' => 'https://www.kewego.com/swf/p3/epix.swf',
 		'embed-width' => '400',
 		'embed-height' => '300',
-		'flashvars' => 'language_code=en&playerKey=$2&skinKey=71703ed5cea1&sig=iLyROoaftv7I&autostart=false'
+		'flashvars' => 'language_code=en&playerKey=$2&skinKey=71703ed5cea1&sig=iLyROoaftv7I&autostart=false',
 	],
 	[
 		'name' => 'Koreus',
@@ -560,7 +563,7 @@ $stubs = [
 		'embed-src' => 'https://cdn.last.fm/videoplayer/l/17/VideoPlayer.swf',
 		'embed-width' => '340',
 		'embed-height' => '289',
-		'flashvars' => 'uniqueName=$3&amp;FSSupport=true&amp;'
+		'flashvars' => 'uniqueName=$3&amp;FSSupport=true&amp;',
 	],
 	[
 		'name' => 'Libero',
@@ -654,7 +657,7 @@ $stubs = [
 		'embed-src' => 'https://media.mtvu.com/player/embed/AS3/site/',
 		'embed-width' => '423',
 		'embed-height' => '318',
-		'flashvars' => 'CONFIG_URL=https://media.mtvu.com/player/embed/AS3/site/configuration.jhtml%3fid%3D$2%26vid%3D$3%26autoPlay%3Dfalse&amp;allowFullScreen=true'
+		'flashvars' => 'CONFIG_URL=https://media.mtvu.com/player/embed/AS3/site/configuration.jhtml%3fid%3D$2%26vid%3D$3%26autoPlay%3Dfalse&amp;allowFullScreen=true',
 	],
 	[
 		'name' => 'MP3 Audio',
@@ -663,7 +666,7 @@ $stubs = [
 		'embed-src' => 'https://www.google.com/reader/ui/3523697345-audio-player.swf',
 		'embed-width' => '400',
 		'embed-height' => '27',
-		'flashvars' => 'audioUrl=$2'
+		'flashvars' => 'audioUrl=$2',
 	],
 	[
 		'name' => 'MyVideo',
@@ -749,7 +752,7 @@ $stubs = [
 		'embed-src' => 'https://content.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/1d44810a-01f4-4c60-a862-6d114bed50c7/tscplayer.swf',
 		'embed-width' => '425',
 		'embed-height' => '344',
-		'iframe-player' => 'https://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/$2/embed'
+		'iframe-player' => 'https://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/$2/embed',
 	],
 	[
 		'name' => 'ScreenToaster',
@@ -906,7 +909,7 @@ $stubs = [
 		'embed-width' => '480',
 		'embed-height' => '299',
 		'iframe-player' => 'https://www.ustream.tv/embed/$2?mode=direct',
-		'flashvars' => 'cid=$2&amp;autoplay=false&amp;locale=de_DE'
+		'flashvars' => 'cid=$2&amp;autoplay=false&amp;locale=de_DE',
 	],
 	[
 		'name' => 'videos.sapo',
@@ -957,7 +960,7 @@ $stubs = [
 		'embed-src' => 'https://www.vidmax.com/player.swf',
 		'embed-width' => '400',
 		'embed-height' => '300',
-		'flashvars' => 'file=https://www.vidmax.com/media/video/$3.flv&amp;streamer=lighttpd&amp;autostart=false&amp;stretching=fill'
+		'flashvars' => 'file=https://www.vidmax.com/media/video/$3.flv&amp;streamer=lighttpd&amp;autostart=false&amp;stretching=fill',
 	],
 	[
 		'name' => 'VoiceThread',
@@ -1010,7 +1013,7 @@ $stubs = [
 		'embed-src' => 'https://d.yimg.com/nl/vyc/site/player.swf',
 		'embed-width' => '630',
 		'embed-height' => '354',
-		'flashvars' => 'id=$3&vid=$2&lang=en-us&intl=us&embed=1'
+		'flashvars' => 'id=$3&vid=$2&lang=en-us&intl=us&embed=1',
 	],
 	[
 		'name' => 'Yahoo Music Videos',
@@ -1063,7 +1066,7 @@ $stubs = [
 		'embed-src' => 'https://player.twitch.tv/?video=v$2',
 		'embed-width' => '620',
 		'embed-height' => '378',
-		'iframe-player' => 'https://player.twitch.tv/?video=v$2'
+		'iframe-player' => 'https://player.twitch.tv/?video=v$2',
 	],
 	[
 		'name' => 'Twitch Clip',
@@ -1072,7 +1075,7 @@ $stubs = [
 		'embed-src' => 'https://clips.twitch.tv/embed?clip=$2',
 		'embed-width' => '620',
 		'embed-height' => '378',
-		'iframe-player' => 'https://clips.twitch.tv/embed?clip=$2'
+		'iframe-player' => 'https://clips.twitch.tv/embed?clip=$2',
 	],
 	[
 		'name' => 'Bit.Tube',
@@ -1096,7 +1099,7 @@ $stubs = [
 		'name' => 'SoundCloud',
 		'website' => 'https://soundcloud.com',
 		'url-match' => [
-			'https://soundcloud\.com/([0-9a-zA-Z-_\/]+)'
+			'https://soundcloud\.com/([0-9a-zA-Z-_\/]+)',
 		],
 		'embed-src' => '',
 		'embed-width' => '100%',
@@ -1104,18 +1107,30 @@ $stubs = [
 		'iframe-player' => 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2F$2',
 		'id' => '$2',
 	],
-    [
-        'name' => 'Loom',
-        'website' => 'https://loom.com',
-        'url-match' => [
-            'https:\/\/www\.loom\.com\/(share|embed)?\/([0-9a-z-]+)'
-        ],
-        'embed-src' => '',
-        'embed-width' => '640',
-        'embed-height' => '400',
-        'iframe-player' => 'https://www.loom.com/embed/$3',
-        'id' => '$3',
-    ]
+	[
+		'name' => 'Mixcloud',
+		'website' => 'https://www.mixcloud.com',
+		'url-match' => [
+			'https?://(?:www\.)?mixcloud\.com/([^/]+)/([^/]+)/?',
+		],
+		'embed-src' => '',
+		'embed-width' => '100%',
+		'embed-height' => '120',
+		'iframe-player' => '//www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2F$2%2F$3%2F',
+		'id' => '$2/$3',
+	],
+	[
+		'name' => 'Loom',
+		'website' => 'https://loom.com',
+		'url-match' => [
+			'https:\/\/www\.loom\.com\/(share|embed)?\/([0-9a-z-]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '640',
+		'embed-height' => '400',
+		'iframe-player' => 'https://www.loom.com/embed/$3',
+		'id' => '$3',
+	],
 ];
 
 /**
