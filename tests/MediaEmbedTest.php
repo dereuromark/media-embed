@@ -268,4 +268,181 @@ class MediaEmbedTest extends TestCase {
 		$this->assertTrue(count($hosts) === 2);
 	}
 
+	/**
+	 * Test addProvider() method
+	 *
+	 * @return void
+	 */
+	public function testAddProvider(): void {
+		$MediaEmbed = new MediaEmbed();
+
+		$customProvider = [
+			'name' => 'CustomProvider',
+			'website' => 'https://custom.example.com',
+			'url-match' => [
+				'https?://(?:www\.)?custom\.example\.com/video/([0-9]+)',
+			],
+			'embed-src' => '',
+			'embed-width' => '640',
+			'embed-height' => '360',
+			'iframe-player' => '//custom.example.com/embed/$2',
+		];
+
+		$MediaEmbed->addProvider($customProvider);
+
+		$host = $MediaEmbed->getHost('customprovider');
+		$this->assertNotNull($host);
+		$this->assertSame('CustomProvider', $host['name']);
+		$this->assertSame('https://custom.example.com', $host['website']);
+
+		// Test parsing a URL with the custom provider
+		$Object = $MediaEmbed->parseUrl('https://custom.example.com/video/12345');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+		$this->assertSame('12345', $Object->id());
+	}
+
+	/**
+	 * Test custom_providers config option
+	 *
+	 * @return void
+	 */
+	public function testCustomProvidersConfig(): void {
+		$customProviders = [
+			[
+				'name' => 'TestProvider1',
+				'website' => 'https://test1.example.com',
+				'url-match' => [
+					'https?://test1\.example\.com/v/([a-z0-9]+)',
+				],
+				'embed-src' => '',
+				'embed-width' => '500',
+				'embed-height' => '300',
+				'iframe-player' => '//test1.example.com/embed/$2',
+			],
+			[
+				'name' => 'TestProvider2',
+				'website' => 'https://test2.example.com',
+				'url-match' => [
+					'https?://test2\.example\.com/watch/([0-9]+)',
+				],
+				'embed-src' => '',
+				'embed-width' => '600',
+				'embed-height' => '400',
+				'iframe-player' => '//test2.example.com/player/$2',
+			],
+		];
+
+		$MediaEmbed = new MediaEmbed(['custom_providers' => $customProviders]);
+
+		$host1 = $MediaEmbed->getHost('testprovider1');
+		$this->assertNotNull($host1);
+		$this->assertSame('TestProvider1', $host1['name']);
+
+		$host2 = $MediaEmbed->getHost('testprovider2');
+		$this->assertNotNull($host2);
+		$this->assertSame('TestProvider2', $host2['name']);
+
+		// Test parsing URLs
+		$Object1 = $MediaEmbed->parseUrl('https://test1.example.com/v/abc123');
+		$this->assertInstanceOf(MediaObject::class, $Object1);
+		$this->assertSame('abc123', $Object1->id());
+
+		$Object2 = $MediaEmbed->parseUrl('https://test2.example.com/watch/98765');
+		$this->assertInstanceOf(MediaObject::class, $Object2);
+		$this->assertSame('98765', $Object2->id());
+	}
+
+	/**
+	 * Test provider override functionality
+	 *
+	 * @return void
+	 */
+	public function testProviderOverride(): void {
+		$MediaEmbed = new MediaEmbed();
+
+		// Try to add without override - should not replace existing
+		$customYouTube = [
+			'name' => 'YouTube',
+			'website' => 'https://custom-youtube.example.com',
+			'url-match' => ['https?://custom-youtube\.example\.com/watch/([0-9]+)'],
+			'embed-src' => '',
+			'embed-width' => '800',
+			'embed-height' => '600',
+			'iframe-player' => '//custom-youtube.example.com/embed/$2',
+		];
+
+		$MediaEmbed->addProvider($customYouTube, false);
+		$host = $MediaEmbed->getHost('youtube');
+		$this->assertSame('https://www.youtube.com', $host['website']); // Should still be original
+
+		// Now with override
+		$MediaEmbed->addProvider($customYouTube, true);
+		$host = $MediaEmbed->getHost('youtube');
+		$this->assertSame('https://custom-youtube.example.com', $host['website']); // Should be overridden
+	}
+
+	/**
+	 * Test loadProvidersFromFile() with PHP file
+	 *
+	 * @return void
+	 */
+	public function testLoadProvidersFromPhpFile(): void {
+		$tempFile = sys_get_temp_dir() . '/test_providers.php';
+		$providers = [
+			[
+				'name' => 'FileProvider',
+				'website' => 'https://file.example.com',
+				'url-match' => [
+					'https?://file\.example\.com/video/([0-9]+)',
+				],
+				'embed-src' => '',
+				'embed-width' => '700',
+				'embed-height' => '400',
+				'iframe-player' => '//file.example.com/embed/$2',
+			],
+		];
+
+		file_put_contents($tempFile, '<?php return ' . var_export($providers, true) . ';');
+
+		$MediaEmbed = new MediaEmbed(['providers_config' => $tempFile]);
+
+		$host = $MediaEmbed->getHost('fileprovider');
+		$this->assertNotNull($host);
+		$this->assertSame('FileProvider', $host['name']);
+
+		unlink($tempFile);
+	}
+
+	/**
+	 * Test loadProvidersFromFile() with JSON file
+	 *
+	 * @return void
+	 */
+	public function testLoadProvidersFromJsonFile(): void {
+		$tempFile = sys_get_temp_dir() . '/test_providers.json';
+		$providers = [
+			[
+				'name' => 'JsonProvider',
+				'website' => 'https://json.example.com',
+				'url-match' => [
+					'https?://json\.example\.com/video/([0-9]+)',
+				],
+				'embed-src' => '',
+				'embed-width' => '800',
+				'embed-height' => '450',
+				'iframe-player' => '//json.example.com/embed/$2',
+			],
+		];
+
+		file_put_contents($tempFile, json_encode($providers));
+
+		$MediaEmbed = new MediaEmbed(['providers_config' => $tempFile]);
+
+		$host = $MediaEmbed->getHost('jsonprovider');
+		$this->assertNotNull($host);
+		$this->assertSame('JsonProvider', $host['name']);
+
+		unlink($tempFile);
+	}
+
 }

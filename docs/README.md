@@ -101,6 +101,142 @@ This should return and embed code like:
 <embed src="https://www.youtube.com/embed/111111?autoplay=1&amp;loop=1" class="iframe-class" data-html5-parameter></iframe>
 ```
 
+### Adding Custom Providers
+
+You can add your own custom providers in several ways:
+
+#### 1. Via Configuration Array
+
+Pass custom providers through the constructor config:
+
+```php
+$customProviders = [
+    [
+        'name' => 'MyCustomService',
+        'website' => 'https://custom.example.com',
+        'url-match' => [
+            'https?://(?:www\.)?custom\.example\.com/video/([0-9]+)',
+        ],
+        'embed-src' => '',
+        'embed-width' => '640',
+        'embed-height' => '360',
+        'iframe-player' => '//custom.example.com/embed/$2',
+    ],
+];
+
+$MediaEmbed = new MediaEmbed(['custom_providers' => $customProviders]);
+
+// Now you can parse URLs from your custom provider
+$MediaObject = $MediaEmbed->parseUrl('https://custom.example.com/video/12345');
+```
+
+#### 2. Dynamically with addProvider()
+
+Add providers at runtime:
+
+```php
+$MediaEmbed = new MediaEmbed();
+
+$customProvider = [
+    'name' => 'AnotherService',
+    'website' => 'https://another.example.com',
+    'url-match' => [
+        'https?://another\.example\.com/watch/([a-z0-9]+)',
+    ],
+    'embed-src' => '',
+    'embed-width' => '560',
+    'embed-height' => '315',
+    'iframe-player' => '//another.example.com/player/$2',
+];
+
+$MediaEmbed->addProvider($customProvider);
+```
+
+#### 3. From a Configuration File
+
+You can load providers from a PHP or JSON file:
+
+**PHP File (custom-providers.php):**
+```php
+<?php
+return [
+    [
+        'name' => 'FileBasedProvider',
+        'website' => 'https://file.example.com',
+        'url-match' => [
+            'https?://file\.example\.com/v/([0-9]+)',
+        ],
+        'embed-src' => '',
+        'embed-width' => '640',
+        'embed-height' => '360',
+        'iframe-player' => '//file.example.com/embed/$2',
+    ],
+];
+```
+
+**JSON File (custom-providers.json):**
+```json
+[
+    {
+        "name": "JsonProvider",
+        "website": "https://json.example.com",
+        "url-match": [
+            "https?://json\\.example\\.com/video/([0-9]+)"
+        ],
+        "embed-src": "",
+        "embed-width": "640",
+        "embed-height": "360",
+        "iframe-player": "//json.example.com/embed/$2"
+    }
+]
+```
+
+**Usage:**
+```php
+$MediaEmbed = new MediaEmbed(['providers_config' => '/path/to/custom-providers.php']);
+// or
+$MediaEmbed = new MediaEmbed(['providers_config' => '/path/to/custom-providers.json']);
+```
+
+#### 4. Overriding Built-in Providers
+
+By default, custom providers won't override existing ones. To override:
+
+```php
+$MediaEmbed = new MediaEmbed();
+
+$customYouTube = [
+    'name' => 'YouTube',
+    'website' => 'https://www.youtube.com',
+    'url-match' => [
+        'https?://youtu\.be/([0-9a-z-_]{11})',
+    ],
+    'embed-src' => '',
+    'embed-width' => '800',  // Custom width
+    'embed-height' => '600', // Custom height
+    'iframe-player' => '//www.youtube.com/embed/$2?custom=param',
+];
+
+$MediaEmbed->addProvider($customYouTube, true); // Pass true to override
+```
+
+#### Provider Configuration Format
+
+Each provider is an array with these properties:
+
+- **name** (required): Display name of the provider
+- **website**: Homepage URL of the service
+- **url-match** (required): Array of regex patterns to match URLs (use $2, $3, etc. for capture groups)
+- **embed-src**: Legacy embed source (for older Flash-based embeds)
+- **embed-width**: Default width in pixels or percentage
+- **embed-height**: Default height in pixels or percentage
+- **iframe-player** (recommended): URL template for iframe embedding (use $2, $3, etc. for matched groups)
+- **slug**: Optional custom slug (auto-generated from name if not provided)
+- **id**: Optional ID extraction pattern (defaults to $2)
+- **image-src**: Optional thumbnail image URL template
+
+**Note:** In regex patterns and templates, `$1` is the full matched URL, `$2` is the first capture group, `$3` is the second, etc.
+
 ### Example with BBCode
 
 #### Parse video content upon save (db input)
