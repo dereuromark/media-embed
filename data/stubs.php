@@ -36,15 +36,24 @@ $stubs = [
 		'name' => 'YouTube',
 		'website' => 'https://www.youtube.com',
 		'url-match' => [
+			// youtu.be short links - video ID is the only capture, timestamps ignored for now
 			'https?://youtu\.be/([0-9a-z-_]{11})',
+			// YouTube live URLs - video ID is the only capture
+			'https?://(?:www\.)?youtube\.com/live/([0-9a-z-_A-Z]{11})',
+			// Standard watch URLs - video ID is the only capture
+			'https?://(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com/watch\?(?:[^&]*&)*v=([0-9a-z-_]{11})',
+			// General YouTube URLs (for other formats)
 			'https?://(?:video\.google\.(?:com|com\.au|co\.uk|de|es|fr|it|nl|pl|ca|cn)/(?:[^"]*?))?(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com(?:[^"]*?)?(?:&|&amp;|/|\?|;|\%3F|\%2F)(?:video_id=|v(?:/|=|\%3D|\%2F)|embed(?:/|=|\%3D|\%2F))([0-9a-z-_]{11})',
-			'https?://(www\.)?youtube\.com/shorts/([0-9a-z-_A-Z]{11})',
-			'https?://(www\.)?youtube\.com/shorts/([0-9a-z-_A-Z]{11})\?feature=share',
+			// Shorts URLs
+			'https?://(?:www\.)?youtube\.com/shorts/([0-9a-z-_A-Z]{11})',
 		],
 		'embed-src' => 'https://www.youtube.com/v/$2&rel=0&fs=1',
 		'embed-width' => '480',
 		'embed-height' => '295',
 		'image-src' => '//img.youtube.com/vi/$2/0.jpg',
+		// NOTE: Timestamp support is not included in this update
+		// The current stub system doesn't support conditional query parameters
+		// Future enhancement needed to capture and pass timestamp as ?start= parameter
 		'iframe-player' => '//www.youtube.com/embed/$2',
 	],
 	[

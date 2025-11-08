@@ -84,6 +84,10 @@ class MediaEmbedTest extends TestCase {
 		'https://www.loom.com/share/bdb8f2009224416ca642a50296430b8f' => 'bdb8f2009224416ca642a50296430b8f',
 		'https://www.loom.com/embed/bdb8f2009224416ca642a50296430b8f?referrer=https%3A%2F%2Fwww.loom.com%2Fuse-cases%2Fengineering' => 'bdb8f2009224416ca642a50296430b8f',
 		'https://www.loom.com/embed/bdb8f2009224416ca642a50296430b8f' => 'bdb8f2009224416ca642a50296430b8f',
+		// YouTube live URLs
+		'https://www.youtube.com/live/_L3nFAGwXdQ' => '_L3nFAGwXdQ',
+		'https://www.youtube.com/live/_L3nFAGwXdQ?si=8LzqZPR1EHqULhg7&t=6372' => '_L3nFAGwXdQ',
+		'https://youtube.com/live/dQw4w9WgXcQ' => 'dQw4w9WgXcQ',
 	];
 
 	/**
@@ -206,6 +210,41 @@ class MediaEmbedTest extends TestCase {
 
 		$code = $Object->getEmbedCode();
 		$this->assertStringNotContainsString('<iframe', $code);
+	}
+
+	/**
+	 * Test YouTube /live/ URL format
+	 *
+	 * @return void
+	 */
+	public function testYoutubeLive(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/live/_L3nFAGwXdQ');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$id = $Object->id();
+		$this->assertSame('_L3nFAGwXdQ', $id);
+
+		$code = $Object->getEmbedCode();
+		$this->assertStringContainsString('<iframe', $code);
+		$this->assertStringContainsString('_L3nFAGwXdQ', $code);
+	}
+
+	/**
+	 * Test YouTube /live/ URL with timestamp and other parameters
+	 *
+	 * @return void
+	 */
+	public function testYoutubeLiveWithTimestamp(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/live/_L3nFAGwXdQ?si=8LzqZPR1EHqULhg7&t=6372');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$id = $Object->id();
+		$this->assertSame('_L3nFAGwXdQ', $id);
+
+		$code = $Object->getEmbedCode();
+		$this->assertStringContainsString('<iframe', $code);
 	}
 
 	/**
