@@ -81,6 +81,9 @@ class MediaObject implements ObjectInterface {
 
 			$this->_objectParams['movie'] = $src;
 			$this->_objectAttributes['data'] = $src;
+
+			// Handle timestamps for providers that support them (e.g., YouTube)
+			$this->_handleTimestampSupport();
 		}
 
 		if (empty($this->_stub['reverse'])) {
@@ -114,6 +117,11 @@ class MediaObject implements ObjectInterface {
 
 		for ($i = 1; $i <= $count; $i++) {
 			$id = str_ireplace('$' . $i, $res[$i - 1], $id);
+		}
+
+		// If the ID is still a placeholder (no matches were provided), return empty string
+		if (preg_match('/^\$\d+$/', $id)) {
+			return '';
 		}
 
 		return $id;
@@ -620,6 +628,34 @@ class MediaObject implements ObjectInterface {
 	 */
 	protected function _esc(string $text): string {
 		return htmlspecialchars($text, ENT_QUOTES, '', false);
+	}
+
+	/**
+	 * Handle timestamp support for providers that support it (e.g., YouTube)
+	 *
+	 * @return void
+	 */
+	protected function _handleTimestampSupport(): void {
+		// Only process if the provider supports timestamps
+		if (empty($this->_stub['supports-timestamp'])) {
+			return;
+		}
+
+		// Check if we have a timestamp in the matches (capture group 2, which is index 2 in array)
+		if (empty($this->_match[2])) {
+			return;
+		}
+
+		$timestamp = $this->_match[2];
+
+		// For YouTube, convert 't' parameter to 'start' parameter for embed URLs
+		if ($this->_stub['slug'] === 'youtube') {
+			// Remove 's' suffix if present (e.g., "3724s" -> "3724")
+			$timestamp = rtrim($timestamp, 's');
+
+			// Add as iframe parameter
+			$this->_iframeParams['start'] = $timestamp;
+		}
 	}
 
 	/**

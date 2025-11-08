@@ -36,12 +36,12 @@ $stubs = [
 		'name' => 'YouTube',
 		'website' => 'https://www.youtube.com',
 		'url-match' => [
-			// youtu.be short links - video ID is the only capture, timestamps ignored for now
-			'https?://youtu\.be/([0-9a-z-_]{11})',
-			// YouTube live URLs - video ID is the only capture
-			'https?://(?:www\.)?youtube\.com/live/([0-9a-z-_A-Z]{11})',
-			// Standard watch URLs - video ID is the only capture
-			'https?://(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com/watch\?(?:[^&]*&)*v=([0-9a-z-_]{11})',
+			// youtu.be short links with optional timestamp
+			'https?://youtu\.be/([0-9a-z-_]{11})(?:[?&](?:t|start)=([0-9]+))?',
+			// YouTube live URLs with optional timestamp
+			'https?://(?:www\.)?youtube\.com/live/([0-9a-z-_A-Z]{11})(?:.*?[?&](?:t|start)=([0-9]+))?',
+			// Standard watch URLs with optional timestamp
+			'https?://(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com/watch\?(?:[^&]*&)*v=([0-9a-z-_]{11})(?:&(?:[^&]*&)*(?:t|start)=([0-9]+))?',
 			// General YouTube URLs (for other formats)
 			'https?://(?:video\.google\.(?:com|com\.au|co\.uk|de|es|fr|it|nl|pl|ca|cn)/(?:[^"]*?))?(?:(?:m|www|au|br|ca|es|fr|de|hk|ie|in|il|it|jp|kr|mx|nl|nz|pl|ru|tw|uk)\.)?youtube\.com(?:[^"]*?)?(?:&|&amp;|/|\?|;|\%3F|\%2F)(?:video_id=|v(?:/|=|\%3D|\%2F)|embed(?:/|=|\%3D|\%2F))([0-9a-z-_]{11})',
 			// Shorts URLs
@@ -51,10 +51,11 @@ $stubs = [
 		'embed-width' => '480',
 		'embed-height' => '295',
 		'image-src' => '//img.youtube.com/vi/$2/0.jpg',
-		// NOTE: Timestamp support is not included in this update
-		// The current stub system doesn't support conditional query parameters
-		// Future enhancement needed to capture and pass timestamp as ?start= parameter
 		'iframe-player' => '//www.youtube.com/embed/$2',
+		// Video ID is always in the first capture group (index 1 in matches, $2 in stub notation)
+		'id' => '$2',
+		// Mark this provider as supporting timestamps (captured in second group, index 2 in matches)
+		'supports-timestamp' => true,
 	],
 	[
 		'name' => 'Coub',

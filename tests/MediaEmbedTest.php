@@ -245,6 +245,46 @@ class MediaEmbedTest extends TestCase {
 
 		$code = $Object->getEmbedCode();
 		$this->assertStringContainsString('<iframe', $code);
+		// Verify timestamp is included as start parameter
+		$this->assertStringContainsString('start=6372', $code);
+	}
+
+	/**
+	 * Test YouTube watch URL with timestamp parameter
+	 *
+	 * @return void
+	 */
+	public function testYoutubeWatchWithTimestamp(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=NLIbe47YWiQ&t=3724s');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$id = $Object->id();
+		$this->assertSame('NLIbe47YWiQ', $id);
+
+		$code = $Object->getEmbedCode();
+		$this->assertStringContainsString('<iframe', $code);
+		// Verify timestamp is included as start parameter (with 's' suffix removed)
+		$this->assertStringContainsString('start=3724', $code);
+	}
+
+	/**
+	 * Test YouTube short URL with timestamp
+	 *
+	 * @return void
+	 */
+	public function testYoutubeShortUrlWithTimestamp(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://youtu.be/dQw4w9WgXcQ?t=42');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$id = $Object->id();
+		$this->assertSame('dQw4w9WgXcQ', $id);
+
+		$code = $Object->getEmbedCode();
+		$this->assertStringContainsString('<iframe', $code);
+		// Verify timestamp is included
+		$this->assertStringContainsString('start=42', $code);
 	}
 
 	/**
