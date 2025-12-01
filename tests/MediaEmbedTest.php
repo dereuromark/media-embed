@@ -4,6 +4,7 @@ namespace MediaEmbed\Test;
 
 use MediaEmbed\MediaEmbed;
 use MediaEmbed\Object\MediaObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -123,7 +124,7 @@ class MediaEmbedTest extends TestCase {
 	 * @param string $id
 	 * @return void
 	 */
-	#[\PHPUnit\Framework\Attributes\DataProvider('getUrls')]
+	#[DataProvider('getUrls')]
 	public function testParseUrl(string $url, string $id): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl($url);
