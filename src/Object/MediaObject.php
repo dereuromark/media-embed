@@ -2,6 +2,8 @@
 
 namespace MediaEmbed\Object;
 
+use MediaEmbed\Template\TemplateResolver;
+
 /**
  * A generic object - for now.
  *
@@ -18,6 +20,11 @@ class MediaObject implements ObjectInterface {
 	 * @var array<string>
 	 */
 	protected array $_match;
+
+	/**
+	 * Template resolver for URL interpolation.
+	 */
+	protected TemplateResolver $templateResolver;
 
 	/**
 	 * @var array<string, mixed>
@@ -53,6 +60,7 @@ class MediaObject implements ObjectInterface {
 	 * @param array<string, mixed> $config
 	 */
 	public function __construct(array $stub, array $config) {
+		$this->templateResolver = new TemplateResolver();
 		$this->config = $config + $this->config;
 
 		$stubDefaults = [
@@ -91,11 +99,7 @@ class MediaObject implements ObjectInterface {
 		}
 
 		$flashvars = (string)$this->_objectParams['flashvars'];
-		if (strpos($flashvars, '$r2') !== false) {
-			$this->_objectParams['flashvars'] = str_replace('$r2', $this->_stub['id'], $flashvars);
-		} else {
-			$this->_objectParams['flashvars'] = str_replace('$2', $this->_stub['id'], $flashvars);
-		}
+		$this->_objectParams['flashvars'] = $this->templateResolver->resolveReverse($flashvars, $this->_stub['id']);
 	}
 
 	/**
@@ -113,14 +117,11 @@ class MediaObject implements ObjectInterface {
 			}
 			$this->_stub['id'] = $res[$count - 1];
 		}
-		$id = $this->_stub['id'];
 
-		for ($i = 1; $i <= $count; $i++) {
-			$id = str_ireplace('$' . $i, $res[$i - 1], $id);
-		}
+		$id = $this->templateResolver->resolve($this->_stub['id'], $res);
 
 		// If the ID is still a placeholder (no matches were provided), return empty string
-		if (preg_match('/^\$\d+$/', $id)) {
+		if ($this->templateResolver->hasUnresolvedPlaceholders($id)) {
 			return '';
 		}
 
@@ -142,19 +143,11 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	public function name(): string {
-		$res = $this->_match;
-		$count = count($res);
-
 		if (empty($this->_stub['name'])) {
 			return '';
 		}
-		$name = $this->_stub['name'];
 
-		for ($i = 1; $i <= $count; $i++) {
-			$name = str_ireplace('$' . $i, $res[$i - 1], $name);
-		}
-
-		return $name;
+		return $this->templateResolver->resolve($this->_stub['name'], $this->_match);
 	}
 
 	/**
@@ -187,7 +180,7 @@ class MediaObject implements ObjectInterface {
 		}
 
 		$pieces = parse_url($url);
-		if (!$pieces) {
+		if (!$pieces || empty($pieces['host'])) {
 			return null;
 		}
 
@@ -375,12 +368,7 @@ class MediaObject implements ObjectInterface {
 	 * @return string The src attribute
 	 */
 	public function getEmbedSrc(): string {
-		$source = $this->_stub['iframe-player'];
-		$count = count($this->_match);
-
-		for ($i = 1; $i <= $count; $i++) {
-			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
-		}
+		$source = $this->templateResolver->resolve($this->_stub['iframe-player'], $this->_match);
 
 		//add custom params
 		if ($this->_iframeParams) {
@@ -406,15 +394,10 @@ class MediaObject implements ObjectInterface {
 		}
 
 		$stubSrc = $this->_stub[$type];
-		if (strpos($stubSrc, '$r2') !== false) {
-			$src = str_replace('$r2', $this->_stub['id'], $stubSrc);
-		} else {
-			$src = str_replace('$2', $this->_stub['id'], $stubSrc);
-		}
+		$src = $this->templateResolver->resolveReverse($stubSrc, $this->_stub['id']);
+
 		if (!empty($this->_stub['replace'])) {
-			foreach ((array)$this->_stub['replace'] as $placeholder => $replacement) {
-				$src = str_replace($placeholder, $replacement, $src);
-			}
+			$src = $this->templateResolver->resolveReplacements($src, (array)$this->_stub['replace']);
 		}
 
 		return $src;
@@ -431,14 +414,7 @@ class MediaObject implements ObjectInterface {
 			return null;
 		}
 
-		$stubImgSrc = $this->_stub['image-src'];
-		if (strpos($stubImgSrc, '$r2') !== false) {
-			$src = str_replace('$r2', $this->_stub['id'], $stubImgSrc);
-		} else {
-			$src = str_replace('$2', $this->_stub['id'], $stubImgSrc);
-		}
-
-		return $src;
+		return $this->templateResolver->resolveReverse($this->_stub['image-src'], $this->_stub['id']);
 	}
 
 	/**
@@ -450,14 +426,8 @@ class MediaObject implements ObjectInterface {
 		if (empty($this->_stub['image-src'])) {
 			return '';
 		}
-		$thumb = $this->_stub['image-src'];
 
-		$count = count($this->_match);
-		for ($i = 1; $i <= $count; $i++) {
-			$thumb = str_ireplace('$' . $i, $this->_match[$i - 1], $thumb);
-		}
-
-		return $thumb;
+		return $this->templateResolver->resolve($this->_stub['image-src'], $this->_match);
 	}
 
 	/**
@@ -498,12 +468,7 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	protected function _buildIframe(): string {
-		$source = $this->_stub['iframe-player'];
-		$count = count($this->_match);
-
-		for ($i = 1; $i <= $count; $i++) {
-			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
-		}
+		$source = $this->templateResolver->resolve($this->_stub['iframe-player'], $this->_match);
 
 		//add custom params
 		if ($this->_iframeParams) {
@@ -536,14 +501,10 @@ class MediaObject implements ObjectInterface {
 	 * @return void
 	 */
 	protected function _setDefaultParams(array $stub): void {
-		$source = $stub['embed-src'];
-		$flashvars = (isset($stub['flashvars'])) ? $stub['flashvars'] : null;
-		$count = count($this->_match);
-
-		for ($i = 1; $i <= $count; $i++) {
-			$source = str_ireplace('$' . $i, $this->_match[$i - 1], $source);
-			$flashvars = str_ireplace('$' . $i, $this->_match[$i - 1], $flashvars ?? '');
-		}
+		$source = $this->templateResolver->resolve($stub['embed-src'], $this->_match);
+		$flashvars = isset($stub['flashvars'])
+			? $this->templateResolver->resolve($stub['flashvars'], $this->_match)
+			: null;
 
 		if ($source) {
 			$source = $this->_esc($source);

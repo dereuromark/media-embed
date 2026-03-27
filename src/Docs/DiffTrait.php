@@ -34,7 +34,7 @@ trait DiffTrait {
 	/**
 	 * @param string $content
 	 *
-	 * @return array<string>
+	 * @return list<string>
 	 */
 	protected function toSimpleArray(string $content): array {
 		return explode(PHP_EOL, $content);
