@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Matcher;
 
+use MediaEmbed\Cache\CacheInterface;
+
 /**
  * URL matcher with optional domain-based caching for faster lookups.
  *
@@ -11,6 +13,12 @@ namespace MediaEmbed\Matcher;
  * to reduce the number of regex patterns that need to be tested.
  */
 final class UrlMatcher {
+
+	/**
+	 * Cache key for the domain index.
+     * @var string
+	 */
+	private const CACHE_KEY = 'media_embed_domain_index';
 
 	/**
 	 * Domain-to-providers index for fast path matching.
@@ -32,10 +40,24 @@ final class UrlMatcher {
 	private bool $indexBuilt = false;
 
 	/**
-	 * @param array<string, array<string, mixed>> $providers Providers keyed by slug.
+	 * Optional cache for persisting the domain index.
 	 */
-	public function __construct(array $providers = []) {
+	private ?CacheInterface $cache = null;
+
+	/**
+	 * Cache TTL in seconds (default: 1 hour).
+	 */
+	private int $cacheTtl = 3600;
+
+	/**
+	 * @param array<string, array<string, mixed>> $providers Providers keyed by slug.
+	 * @param \MediaEmbed\Cache\CacheInterface|null $cache Optional cache for persisting domain index.
+	 * @param int $cacheTtl Cache TTL in seconds.
+	 */
+	public function __construct(array $providers = [], ?CacheInterface $cache = null, int $cacheTtl = 3600) {
 		$this->providers = $providers;
+		$this->cache = $cache;
+		$this->cacheTtl = $cacheTtl;
 	}
 
 	/**
@@ -48,6 +70,25 @@ final class UrlMatcher {
 		$this->providers = $providers;
 		$this->indexBuilt = false;
 		$this->domainIndex = [];
+
+		// Clear cached index when providers change
+		if ($this->cache !== null) {
+			$this->cache->delete(static::CACHE_KEY);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Set the cache implementation.
+	 *
+	 * @param \MediaEmbed\Cache\CacheInterface|null $cache Cache implementation.
+	 * @param int $ttl Cache TTL in seconds.
+	 * @return $this
+	 */
+	public function setCache(?CacheInterface $cache, int $ttl = 3600) {
+		$this->cache = $cache;
+		$this->cacheTtl = $ttl;
 
 		return $this;
 	}
@@ -118,6 +159,17 @@ final class UrlMatcher {
 			return;
 		}
 
+		// Try to load from cache first
+		if ($this->cache !== null) {
+			$cached = $this->cache->get(static::CACHE_KEY);
+			if (is_array($cached)) {
+				$this->domainIndex = $cached;
+				$this->indexBuilt = true;
+
+				return;
+			}
+		}
+
 		$this->domainIndex = [];
 
 		foreach ($this->providers as $slug => $provider) {
@@ -134,6 +186,11 @@ final class UrlMatcher {
 					}
 				}
 			}
+		}
+
+		// Store in cache
+		if ($this->cache !== null) {
+			$this->cache->set(static::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
 		}
 
 		$this->indexBuilt = true;

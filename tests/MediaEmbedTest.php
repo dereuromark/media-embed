@@ -535,4 +535,32 @@ class MediaEmbedTest extends TestCase {
 		unlink($tempFile);
 	}
 
+	/**
+	 * Test getProviders() returning ProviderCollection
+	 *
+	 * @return void
+	 */
+	public function testGetProviders(): void {
+		$MediaEmbed = new MediaEmbed();
+
+		$providers = $MediaEmbed->getProviders();
+		$this->assertGreaterThan(30, count($providers));
+		$this->assertTrue($providers->has('youtube'));
+		$this->assertTrue($providers->has('vimeo'));
+
+		// Test whitelist
+		$filtered = $MediaEmbed->getProviders(['youtube', 'vimeo']);
+		$this->assertCount(2, $filtered);
+		$this->assertTrue($filtered->has('youtube'));
+		$this->assertTrue($filtered->has('vimeo'));
+		$this->assertFalse($filtered->has('dailymotion'));
+
+		// Test collection methods
+		$withIframe = $providers->withIframeSupport();
+		$this->assertGreaterThan(0, count($withIframe));
+
+		$withThumbnail = $providers->withThumbnailSupport();
+		$this->assertGreaterThan(0, count($withThumbnail));
+	}
+
 }
