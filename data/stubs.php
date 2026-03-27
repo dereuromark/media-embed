@@ -58,17 +58,6 @@ $stubs = [
 		'supports-timestamp' => true,
 	],
 	[
-		'name' => 'Coub',
-		'website' => 'https://coub.com',
-		'url-match' => [
-			'https?://coub.com/view/([0-9a-z-_]{4,7})',
-		],
-		'embed-src' => 'https://coub.com/view/$2',
-		'embed-width' => '640',
-		'embed-height' => '360',
-		'iframe-player' => '//coub.com/embed/$2',
-	],
-	[
 		'name' => 'Facebook',
 		'website' => 'https://www.facebook.com',
 		'url-match' => [
@@ -93,14 +82,6 @@ $stubs = [
 		'embed-height' => '339',
 		'image-src' => 'https://www.dailymotion.com/thumbnail/160x120/video/$2',
 		'iframe-player' => '//www.dailymotion.com/embed/video/$2',
-	],
-	[
-		'name' => 'MetaCafe',
-		'website' => 'https://www.metacafe.com',
-		'url-match' => 'https?://(?:www\.)?metacafe\.com/(?:watch|fplayer)/(\w{1,10})/',
-		'embed-src' => 'https://www.metacafe.com/fplayer/$2/metacafe.swf',
-		'embed-width' => '400',
-		'embed-height' => '345',
 	],
 	[
 		'name' => 'Vimeo',
@@ -173,23 +154,6 @@ $stubs = [
 		'embed-width' => '420',
 		'embed-height' => '315',
 	],
-	[
-		'name' => 'Clarin',
-		'website' => 'https://www.videos.clarin.com',
-		'url-match' => 'https?://(?:www\.)videos\.clarin\.com/index\.html\?id=([0-9]{1,12})',
-		'embed-src' => 'https://www.clarin.com/shared/v9/swf/clarinvideos/player.swf',
-		'embed-width' => '533',
-		'embed-height' => '438',
-		'flashvars' => 'autoplay=false&amp;SEARCH=https://www.videos.clarin.com/decoder/buscador_getMtmYRelacionados/$2|CLARIN_VIDEOS|VIDEO|EMBEDDED|10|1|10|null.xml&amp;RUTAS=https://www.clarin.com/shared/v9/swf/clarinvideos/rutas.xml',
-	],
-	[
-		'name' => 'Clip.vn',
-		'website' => 'https://www.clip.vn',
-		'url-match' => 'https?://(?:www\.)?clip\.vn/w(?:atch/(?:[a-z0-9-_]*?))?/([a-z0-9_-]{1,5}),vn',
-		'embed-src' => 'https://www.clip.vn/w/$2,vn,0,,hq',
-		'embed-width' => '448',
-		'embed-height' => '361',
-	],
 	//TODO: combine these three
 	[
 		'slug' => 'clipfish-old',
@@ -230,14 +194,6 @@ $stubs = [
 		'embed-height' => '357',
 	],
 	[
-		'name' => 'ClipShack',
-		'website' => 'https://www.clipshack.com',
-		'url-match' => 'https?://(?:www\.)?clipshack\.com/Clip\.aspx\?key=([0-9a-f]{16})',
-		'embed-src' => 'https://www.clipshack.com/player.swf?key=$2',
-		'embed-width' => '430',
-		'embed-height' => '370',
-	],
-	[
 		'name' => 'CNetTV',
 		'website' => 'https://cnettv.cnet.com',
 		'url-match' => 'https?://cnettv\.cnet\.com/[a-z0-9\-]*\/[0-9]{4}-[0-9]_[0-9]{2}-([0-9]{5,9})\.html',
@@ -264,14 +220,6 @@ $stubs = [
 		'embed-height' => '301',
 	],
 	[
-		'name' => 'Crackle',
-		'website' => 'https://www.crackle.com',
-		'url-match' => 'https?://(?:www\.)?crackle\.com/c/([a-z0-9_-]*?)/([a-z0-9_-]*?)/([0-9]{1,10})',
-		'embed-src' => 'https://www.crackle.com/p/$2/$3.swf?id=$4',
-		'embed-width' => '400',
-		'embed-height' => '328',
-	],
-	[
 		'name' => 'CrunchyRoll',
 		'website' => 'https://www.crunchyroll.com',
 		'url-match' => 'https?://(?:www\.)?crunchyroll\.com/[a-z0-9\-_]+/[a-z0-9\-_]+-([0-9]{1,12})',
@@ -296,14 +244,6 @@ $stubs = [
 		'embed-height' => '350',
 	],
 	[
-		'name' => 'DotSub (w/o Captions)',
-		'website' => 'https://www.dotsub.com',
-		'url-match' => 'https?://(?:www\.)?dotsub\.com/(?:media/|view/)((?:[0-9a-z]{8})(?:(?:-(?:[0-9a-z]{4})){3})-(?:[0-9a-z]{12}))',
-		'embed-src' => 'https://dotsub.com/static/players/embed8l.swf?mediauri=https://dotsub.com/media/$2/em/flv/en',
-		'embed-width' => '480',
-		'embed-height' => '392',
-	],
-	[
 		'name' => 'Dropshots',
 		'website' => 'https://www.dropshots.com',
 		'url-match' => '(https://media(?:[0-9]{0,2})\.dropshots\.com/photos(?:(?:/(?:[0-9]{1,10})){1,3})\.flv)',
@@ -318,14 +258,6 @@ $stubs = [
 		'embed-src' => 'https://www.divshare.com/flash/playlist?myId=$2',
 		'embed-width' => '335',
 		'embed-height' => '28',
-	],
-	[
-		'name' => 'EASportsWorld',
-		'website' => 'https://www.easportsworld.com',
-		'url-match' => '(https://videocdn\.easw\.easports\.com/easportsworld/media/(?:[0-9]{1,12})/(?:[0-9a-z-_]*?)\.flv)',
-		'embed-src' => 'https://ll-999.ea.com/sonet-easw/2.2.4.0/flash/sw/videos/mediaplayer.swf?file=$2&image=https://ll-999.ea.com/sonet-easw/2.2.4.0/images/sw/videos/preview.jpg&backcolor=0x000000&frontcolor=0x006BCC&lightcolor=0x006BCC',
-		'embed-width' => '566',
-		'embed-height' => '355',
 	],
 	[
 		'name' => 'EbaumsWorld',
@@ -356,17 +288,6 @@ $stubs = [
 		'embed-height' => '300',
 		'flashvars' => 'intl_lang=en-us&amp;photo_id=$2',
 	],
-	# 2011-02-09 ms - TODO: https://www.foxhead.com/us/mx/videos/id/23798
-	[
-		'name' => 'Foxhead',
-		'website' => 'https://www.foxhead.com',
-		'url-match' => 'https?://(?:www\.)?foxhead\.com/(?:[^"]*?)/videos/id/([0-9]{4,8})',
-		'embed-src' => 'https://www.foxhead.com/videos/player.swf',
-		'embed-width' => '425',
-		'embed-height' => '285',
-		'flashvars' => 'id=$2',
-		'id' => '$2',
-	],
 	[
 		'name' => 'FunnyOrDie',
 		'website' => 'https://www.funnyordie.com',
@@ -375,14 +296,6 @@ $stubs = [
 		'embed-width' => '464',
 		'embed-height' => '388',
 		'flashvars' => 'key=$2',
-	],
-	[
-		'name' => 'G4TV',
-		'website' => 'https://www.g4tv.com',
-		'url-match' => 'https?://(?:www\.)?g4tv\.com/(?:xplay/videos/|lv3/|sv3/)([0-9]{1,10})',
-		'embed-src' => 'https://www.g4tv.com/lv3/$2',
-		'embed-width' => '480',
-		'embed-height' => '418',
 	],
 	[
 		'name' => 'GameKyo',
@@ -400,22 +313,6 @@ $stubs = [
 		'embed-width' => '432',
 		'embed-height' => '362',
 		'flashvars' => 'skin=https://image.com.com/gamespot/images/cne_flash/production/media_player/proteus/one/skins/gamespot.png&paramsURI=http%3A%2F%2Fwww.gamespot.com%2Fpages%2Fvideo_player%2Fxml.php%3Fid%3D$2%26mode%3Dembedded%26width%3D432%26height%3D362%2F',
-	],
-	[
-		'name' => 'GameTrailers (Inc. User Movies)',
-		'website' => 'https://www.gametrailers.com',
-		'url-match' => 'https?://(?:www\.)?gametrailers\.com/(?:player/(u)?(?:sermovies/)?|remote_wrap\.php\?(u)?mid=)([0-9]{1,10})',
-		'embed-src' => 'https://www.gametrailers.com/remote_wrap.php?$2$3mid=$4', //Either $2 or $3 will be empty
-		'embed-width' => '480',
-		'embed-height' => '392',
-	],
-	[
-		'name' => 'GarageTv',
-		'website' => 'https://www.garagetv.be',
-		'url-match' => '(https://www\.garagetv\.be/v/(?:[0-9a-z-\!_]*?)/v\.aspx)',
-		'embed-src' => '$2',
-		'embed-width' => '430',
-		'embed-height' => '369',
 	],
 	[
 		'name' => 'Gloria',
@@ -469,14 +366,6 @@ $stubs = [
 		'embed-height' => '355',
 	],
 	[
-		'name' => 'Video.i.ua',
-		'website' => 'https://video.i.ua',
-		'url-match' => '(https://i1\.i\.ua/video/vp3\.swf\?9&(?:amp;)?userID=(?:[0-9]{1,20})&(?:amp;)?videoID=(?:[0-9]{1,20})&(?:amp;)?playTime=(?:[0-9]{1,20})&(?:amp;)?repeat=0&(?:amp;)?autostart=0&(?:amp;)?videoSize=(?:[0-9]{1,20})&(?:amp;)?userStatus=(?:[0-9]{1,2})&(?:amp;)?notPreview=(?:[0-9]{1,2})&(?:amp;)?mID=m?(?:[0-9]{1,2}))',
-		'embed-src' => '$2',
-		'embed-width' => '450',
-		'embed-height' => '349',
-	],
-	[
 		'name' => 'IGN',
 		'website' => 'https://www.ign.com',
 		'url-match' => 'https?://(?:(?:(?:[a-z0-9]*?)\.){0,3})ign\.com/(?:[a-z0-9-_]*?)?/objects/([0-9]{1,10})/(?:(?:[a-z0-9-_]*?)/)?videos/',
@@ -501,28 +390,12 @@ $stubs = [
 		'embed-height' => '338',
 	],
 	[
-		'name' => 'Izlesene',
-		'website' => 'https://www.izlesene.com',
-		'url-match' => 'https?://(?:www\.)?izlesene\.com/(?:player2\.swf\?video=|video/(?:[a-z0-9-_]*?)/)([0-9]{1,10})',
-		'embed-src' => 'https://www.izlesene.com/player2.swf?video=$2',
-		'embed-width' => '425',
-		'embed-height' => '355',
-	],
-	[
 		'name' => 'Jamendo',
 		'website' => 'https://www.jamendo.com',
 		'url-match' => 'https?://(?:www\.|widgets\.)?jamendo\.com/(?:[a-z0-9]*?)/album/(?:\?album_id=)?([0-9]{1,10})',
 		'embed-src' => 'https://widgets.jamendo.com/en/album/?album_id=$2&playertype=2008',
 		'embed-width' => '200',
 		'embed-height' => '300',
-	],
-	[
-		'name' => 'Jokeroo',
-		'website' => 'https://www.jokeroo.com',
-		'url-match' => 'https?://(?:www\.)?jokeroo\.com/(auto|educational|financial|health|howto|lawyers|politics|travel|extremesports|funnyvideos)/((?:(?:[0-9a-z]*?)/){0,3})?([0-9a-z_]*?)\.htm',
-		'embed-src' => 'https://www.jokeroo.com/promotional_player2.swf?channel&vid=https://uploads.filecabin.com/flash/$4.flv&vid_url=https://www.jokeroo.com/$2/$3$4.html&adv_url',
-		'embed-width' => '490',
-		'embed-height' => '425',
 	],
 	[
 		'name' => 'JujuNation Video',
@@ -539,15 +412,6 @@ $stubs = [
 		'embed-src' => 'https://www.jujunation.com/player.swf?configXmlPath=https://www.jujunation.com/musicConfigXmlCode.php?pg=music_$2&playListXmlPath=https://www.jujunation.com/musicPlaylistXmlCode.php?pg=music_$2',
 		'embed-width' => '220',
 		'embed-height' => '66',
-	],
-	[
-		'name' => 'Kewego',
-		'website' => 'https://www.kewego.co.uk',
-		'url-match' => 'https?://(?:www\.)?kewego(?:\.co\.uk|\.com)/video/([0-9a-z]*)\.html',
-		'embed-src' => 'https://www.kewego.com/swf/p3/epix.swf',
-		'embed-width' => '400',
-		'embed-height' => '300',
-		'flashvars' => 'language_code=en&playerKey=$2&skinKey=71703ed5cea1&sig=iLyROoaftv7I&autostart=false',
 	],
 	[
 		'name' => 'Koreus',
@@ -583,14 +447,6 @@ $stubs = [
 		'embed-width' => '400',
 		'embed-height' => '333',
 	],
-	[
-		'name' => 'LiveLeak',
-		'website' => 'https://www.liveleak.com',
-		'url-match' => 'https?://(?:www\.)?liveleak\.com/(?:player.swf?autostart=false&(?:amp;)?token=|view\?(?:[^"]*?)?i=|e/)((?:[0-9a-z]{3})_(?:[a-z0-9]{10}))',
-		'embed-src' => 'https://www.liveleak.com/e/$2',
-		'embed-width' => '450',
-		'embed-height' => '370',
-	],
 	/*
 	  # no videos
 	  array(
@@ -625,14 +481,6 @@ $stubs = [
 		'embed-src' => 'https://img.mail.ru/r/video2/player_v2.swf?par=https://content.video.mail.ru/mail/$2/$3/\$$4&page=1&username=$2&albumid=$3&id=$4',
 		'embed-width' => '452',
 		'embed-height' => '385',
-	],
-	[
-		'name' => 'MadnessVideo',
-		'website' => 'https://www.madnessvideo.net',
-		'url-match' => 'https?://(?:www\.)?madnessvideo\.net/(.*)',
-		'embed-src' => 'https://www.madnessvideo.net/emb.aspx/$2',
-		'embed-width' => '400',
-		'embed-height' => '320',
 	],
 	[
 		'name' => 'Matterport',
@@ -765,15 +613,6 @@ $stubs = [
 		'iframe-player' => 'https://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/$2/embed',
 	],
 	[
-		'name' => 'ScreenToaster',
-		'website' => 'https://www.screentoaster.com',
-		'url-match' => 'https?://(?:www\.)?screentoaster\.com/watch/([0-9a-zA-Z]+)',
-		'embed-src' => 'https://www.screentoaster.com/swf/STPlayer.swf?video=$2',
-		'embed-width' => '425',
-		'embed-height' => '344',
-		'flashvars' => 'video=$2',
-	],
-	[
 		'name' => 'ShareView',
 		'website' => 'https://www.shareview.us',
 		'url-match' => 'https?://(?:www\.)?shareview\.us/video/([0-9]{1,10})/',
@@ -790,14 +629,6 @@ $stubs = [
 		'embed-height' => '310',
 	],
 	[
-		'name' => 'Smotri',
-		'website' => 'https://www.smotri.com',
-		'url-match' => 'https?://(?:www\.)?smotri\.com/video/view/\?id=v([0-9a-f]{10})',
-		'embed-src' => 'https://pics.smotri.com/scrubber_custom8.swf?file=$2&bufferTime=3&autoStart=false&str_lang=eng&xmlsource=http%3A%2F%2Fpics.smotri.com%2Fcskins%2Fblue%2Fskin_color_lightaqua.xml&xmldatasource=http%3A%2F%2Fpics.smotri.com%2Fskin_ng.xml',
-		'embed-width' => '400',
-		'embed-height' => '330',
-	],
-	[
 		'name' => 'Snotr',
 		'website' => 'https://www.snotr.com',
 		'url-match' => 'https?://(?:www\.|videos\.)?snotr\.com/(?:player\.swf\?video=|)?(?:video|embed)/([0-9]{1,8})',
@@ -812,14 +643,6 @@ $stubs = [
 		'embed-src' => 'https://media.mtvnservices.com/mgid:cms:item:southparkstudios.com:$2:',
 		'embed-width' => '480',
 		'embed-height' => '360',
-	],
-	[
-		'name' => 'Songza',
-		'website' => 'https://www.songza.com',
-		'url-match' => '(https://(?:www\.)?songza\.com/e/listen\?(?:zName=(?:[0-9a-z_\%-]*?)&(?:amp;)?)?zId=(?:[0-9a-z_-]{16}))',
-		'embed-src' => '$2&zAutostart=false&zType=flv',
-		'embed-width' => '425',
-		'embed-height' => '114',
 	],
 	[
 		'name' => 'TagTélé',
@@ -902,14 +725,6 @@ $stubs = [
 		'flashvars' => 'cid=$2&amp;autoplay=false&amp;locale=de_DE',
 	],
 	[
-		'name' => 'videos.sapo',
-		'website' => 'https://videos.sapo.pt',
-		'url-match' => 'https?://(www\.|(?:(?:(?:[0-9a-z]{3,12})\.){1,2}))?sapo\.pt/([0-9a-z]{20})',
-		'embed-src' => 'https://$2sapo.pt/play?file=https://$2sapo.pt/$3/mov/1',
-		'embed-width' => '400',
-		'embed-height' => '322',
-	],
-	[
 		'name' => 'Vidiac',
 		'website' => 'https://www.vidiac.com',
 		'url-match' => 'https?://(?:www\.)?vidiac\.com/video/((?:[0-9a-z]{8})(?:(?:-(?:[0-9a-z]{4})){3})-(?:[0-9a-z]{12}))\.htm',
@@ -924,23 +739,6 @@ $stubs = [
 		'embed-src' => 'https://videa.hu/flvplayer.swf?v=$2',
 		'embed-width' => '434',
 		'embed-height' => '357',
-	],
-	[
-		'name' => 'VidiLife',
-		'website' => 'https://www.vidilife.com',
-		'url-match' => '(https://(?:www\.)?vidilife\.com/flash/flvplayer\.swf\?xml=https://(?:www\.)?vidilife\.com/media/play_flash_xml\.cfm\?id=(?:[0-9a-f]{8})-(?:[0-9a-f]{4})-(?:[0-9a-f]{4})-(?:[0-9a-f]{4})-(?:[0-9a-f]{1}))',
-		'embed-src' => '$2',
-		'embed-width' => '445',
-		'embed-height' => '363',
-	],
-	[
-		'name' => 'VidMax',
-		'website' => 'https://www.vidmax.com',
-		'url-match' => 'https?://(www\.)?vidmax\.com/(?:index\.php/)?videos?/(?:view/)?([0-9]{1,10})',
-		'embed-src' => 'https://www.vidmax.com/player.swf',
-		'embed-width' => '400',
-		'embed-height' => '300',
-		'flashvars' => 'file=https://www.vidmax.com/media/video/$3.flv&amp;streamer=lighttpd&amp;autostart=false&amp;stretching=fill',
 	],
 	[
 		'name' => 'VoiceThread',

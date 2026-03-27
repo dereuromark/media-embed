@@ -1,6 +1,6 @@
 # Supported Media Services
 
-104 services
+105 services
 
  - [123video](https://www.123video.nl)
  - [AOL Video (Old)](https://video.aol.com)
@@ -54,6 +54,7 @@
  - [Loom](https://loom.com)
  - [Matterport](https://matterport.com)
  - [Metatube](https://www.metatube.com)
+ - [Mixcloud](https://www.mixcloud.com)
  - MP3 Audio
  - [Mp3tube](https://www.mp3tube.net)
  - [MSNBC](https://www.msnbc.msn.com/)
@@ -81,8 +82,8 @@
  - [Streamable](https://streamable.com)
  - [TagTélé](https://www.tagtele.com)
  - [Ted.com](https://www.ted.com)
- - [TikTok](https://www.tiktok.com)
  - [TheDailyShow](https://www.thedailyshow.com)
+ - [TikTok](https://www.tiktok.com)
  - [TinyPic](https://www.tinypic.com)
  - [TrailerAddict](https://www.traileraddict.com)
  - [Trilulilu](https://www.trilulilu.ro)

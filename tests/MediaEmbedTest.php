@@ -29,7 +29,6 @@ class MediaEmbedTest extends TestCase {
 		'https://www.facebook.com/demotivateurFood/videos/vl.184872862011827/1034411179983244/?type=1' => '1034411179983244',
 		// Not yet possible
 		'http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy' => '7645001',
-		'http://www.metacafe.com/watch/1417475/try_it_yourself_episode_2_hacks_and_tricks_in_google/' => '1417475',
 		'http://vimeo.com/19570639' => '19570639',
 		'http://vimeo.com/245928033/572c32a20d' => '245928033/572c32a20d',
 		'http://vimeo.com/channels/staffpicks/99585787' => '99585787',
@@ -37,14 +36,11 @@ class MediaEmbedTest extends TestCase {
 		'http://www.clipfish.de/special/dsds/video/3507980/dsds-recall-anna-und-tobias-harmonieren/' => '3507980',
 		'http://www.clipfish.de/special/kino-trailer/video/3495650/serengeti-filmausschnitt-gepardenkinder-und-die-jagd-der-mutter/' => '3495650',
 		'http://www.clipfish.de/musikvideos/video/3486922/nicole-scherzinger-poison/' => '3486922',
-		'http://www.foxhead.com/us/mx/videos/id/23798' => '23798',
-		'http://foxhead.com/us/mx/videos/id/23798' => '23798',
 		'http://video.aol.com/video/defining-moments-sarah-chalke/711269187' => '711269187',
 		'http://www.xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
 		'http://xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
 		// errors
 		//'http://www.spike.com/video-clips/g4539c/1000-ways-to-die-gangsta-trapped' => 'g4539c',
-		'http://www.crackle.com/c/comedians-in-cars-getting-coffee/jon-stewart-the-sound-of-virginity/2493123' => '2493123',
 		// errors
 		//'http://www.theonion.com/video/american-dream-declared-dead-as-final-believer-giv,19846/' => '19846',
 		// errors
