@@ -4,6 +4,7 @@ namespace MediaEmbed\Test;
 
 use MediaEmbed\MediaEmbed;
 use MediaEmbed\Object\MediaObject;
+use MediaEmbed\Provider\ProviderConfig;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -103,19 +104,16 @@ class MediaEmbedTest extends TestCase {
 	];
 
 	/**
-	 * Test Generation of a basic youtube MediaObject (empty)
+	 * Test getting a provider configuration.
 	 *
 	 * @return void
 	 */
-	public function testObject(): void {
+	public function testGetProvider(): void {
 		$MediaEmbed = new MediaEmbed();
-		$Object = $MediaEmbed->object('youtube');
-		$this->assertTrue($Object !== null);
-		$result = $Object->name();
-		$this->assertSame('YouTube', $result);
-
-		$result = $Object->id();
-		$this->assertSame('', $result);
+		$provider = $MediaEmbed->getProvider('youtube');
+		$this->assertNotNull($provider);
+		$this->assertSame('YouTube', $provider->name);
+		$this->assertSame('https://www.youtube.com', $provider->website);
 	}
 
 	/**
@@ -197,7 +195,7 @@ class MediaEmbedTest extends TestCase {
 		$icon = $Object->icon();
 		$this->assertNotEmpty($icon);
 
-		$location = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DS;
+		$location = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 		$filename = $Object->saveIcon($location, $icon);
 		$this->assertSame('youtube.png', $filename);
 
@@ -209,18 +207,6 @@ class MediaEmbedTest extends TestCase {
 
 		$src = $Object->getEmbedSrc();
 		$this->assertStringContainsString('//www.youtube.com/embed/h9Pu4bZqWyg', $src);
-	}
-
-	/**
-	 * @return void
-	 */
-	public function testYoutubeWithoutIframe(): void {
-		$MediaEmbed = new MediaEmbed(['prefer' => 'object']);
-		$Object = $MediaEmbed->parseUrl('http://www.youtube.com/watch?v=h9Pu4bZqWyg');
-		$this->assertInstanceOf(MediaObject::class, $Object);
-
-		$code = $Object->getEmbedCode();
-		$this->assertStringNotContainsString('<iframe', $code);
 	}
 
 	/**
@@ -359,31 +345,28 @@ class MediaEmbedTest extends TestCase {
 	}
 
 	/**
-	 * Test addProvider() method
+	 * Test addProviderConfig() method
 	 *
 	 * @return void
 	 */
-	public function testAddProvider(): void {
+	public function testAddProviderConfig(): void {
 		$MediaEmbed = new MediaEmbed();
 
-		$customProvider = [
-			'name' => 'CustomProvider',
-			'website' => 'https://custom.example.com',
-			'url-match' => [
-				'https?://(?:www\.)?custom\.example\.com/video/([0-9]+)',
-			],
-			'embed-src' => '',
-			'embed-width' => '640',
-			'embed-height' => '360',
-			'iframe-player' => '//custom.example.com/embed/$2',
-		];
+		$customProvider = new ProviderConfig(
+			name: 'CustomProvider',
+			website: 'https://custom.example.com',
+			urlMatch: ['https?://(?:www\.)?custom\.example\.com/video/([0-9]+)'],
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '//custom.example.com/embed/$2',
+		);
 
-		$MediaEmbed->addProvider($customProvider);
+		$MediaEmbed->addProviderConfig($customProvider);
 
-		$host = $MediaEmbed->getHost('customprovider');
-		$this->assertNotNull($host);
-		$this->assertSame('CustomProvider', $host['name']);
-		$this->assertSame('https://custom.example.com', $host['website']);
+		$provider = $MediaEmbed->getProvider('customprovider');
+		$this->assertNotNull($provider);
+		$this->assertSame('CustomProvider', $provider->name);
+		$this->assertSame('https://custom.example.com', $provider->website);
 
 		// Test parsing a URL with the custom provider
 		$Object = $MediaEmbed->parseUrl('https://custom.example.com/video/12345');
@@ -424,13 +407,13 @@ class MediaEmbedTest extends TestCase {
 
 		$MediaEmbed = new MediaEmbed(['custom_providers' => $customProviders]);
 
-		$host1 = $MediaEmbed->getHost('testprovider1');
-		$this->assertNotNull($host1);
-		$this->assertSame('TestProvider1', $host1['name']);
+		$provider1 = $MediaEmbed->getProvider('testprovider1');
+		$this->assertNotNull($provider1);
+		$this->assertSame('TestProvider1', $provider1->name);
 
-		$host2 = $MediaEmbed->getHost('testprovider2');
-		$this->assertNotNull($host2);
-		$this->assertSame('TestProvider2', $host2['name']);
+		$provider2 = $MediaEmbed->getProvider('testprovider2');
+		$this->assertNotNull($provider2);
+		$this->assertSame('TestProvider2', $provider2->name);
 
 		// Test parsing URLs
 		$Object1 = $MediaEmbed->parseUrl('https://test1.example.com/v/abc123');
@@ -451,24 +434,23 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		// Try to add without override - should not replace existing
-		$customYouTube = [
-			'name' => 'YouTube',
-			'website' => 'https://custom-youtube.example.com',
-			'url-match' => ['https?://custom-youtube\.example\.com/watch/([0-9]+)'],
-			'embed-src' => '',
-			'embed-width' => '800',
-			'embed-height' => '600',
-			'iframe-player' => '//custom-youtube.example.com/embed/$2',
-		];
+		$customYouTube = new ProviderConfig(
+			name: 'YouTube',
+			website: 'https://custom-youtube.example.com',
+			urlMatch: ['https?://custom-youtube\.example\.com/watch/([0-9]+)'],
+			embedWidth: 800,
+			embedHeight: 600,
+			iframePlayer: '//custom-youtube.example.com/embed/$2',
+		);
 
-		$MediaEmbed->addProvider($customYouTube, false);
-		$host = $MediaEmbed->getHost('youtube');
-		$this->assertSame('https://www.youtube.com', $host['website']); // Should still be original
+		$MediaEmbed->addProviderConfig($customYouTube, false);
+		$provider = $MediaEmbed->getProvider('youtube');
+		$this->assertSame('https://www.youtube.com', $provider->website); // Should still be original
 
 		// Now with override
-		$MediaEmbed->addProvider($customYouTube, true);
-		$host = $MediaEmbed->getHost('youtube');
-		$this->assertSame('https://custom-youtube.example.com', $host['website']); // Should be overridden
+		$MediaEmbed->addProviderConfig($customYouTube, true);
+		$provider = $MediaEmbed->getProvider('youtube');
+		$this->assertSame('https://custom-youtube.example.com', $provider->website); // Should be overridden
 	}
 
 	/**
@@ -496,9 +478,9 @@ class MediaEmbedTest extends TestCase {
 
 		$MediaEmbed = new MediaEmbed(['providers_config' => $tempFile]);
 
-		$host = $MediaEmbed->getHost('fileprovider');
-		$this->assertNotNull($host);
-		$this->assertSame('FileProvider', $host['name']);
+		$provider = $MediaEmbed->getProvider('fileprovider');
+		$this->assertNotNull($provider);
+		$this->assertSame('FileProvider', $provider->name);
 
 		unlink($tempFile);
 	}
@@ -528,9 +510,9 @@ class MediaEmbedTest extends TestCase {
 
 		$MediaEmbed = new MediaEmbed(['providers_config' => $tempFile]);
 
-		$host = $MediaEmbed->getHost('jsonprovider');
-		$this->assertNotNull($host);
-		$this->assertSame('JsonProvider', $host['name']);
+		$provider = $MediaEmbed->getProvider('jsonprovider');
+		$this->assertNotNull($provider);
+		$this->assertSame('JsonProvider', $provider->name);
 
 		unlink($tempFile);
 	}

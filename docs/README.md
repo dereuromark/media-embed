@@ -121,7 +121,6 @@ $customProviders = [
         'url-match' => [
             'https?://(?:www\.)?custom\.example\.com/video/([0-9]+)',
         ],
-        'embed-src' => '',
         'embed-width' => '640',
         'embed-height' => '360',
         'iframe-player' => '//custom.example.com/embed/$2',
@@ -134,26 +133,25 @@ $MediaEmbed = new MediaEmbed(['custom_providers' => $customProviders]);
 $MediaObject = $MediaEmbed->parseUrl('https://custom.example.com/video/12345');
 ```
 
-#### 2. Dynamically with addProvider()
+#### 2. Dynamically with addProviderConfig()
 
-Add providers at runtime:
+Add providers at runtime using the type-safe ProviderConfig DTO:
 
 ```php
+use MediaEmbed\Provider\ProviderConfig;
+
 $MediaEmbed = new MediaEmbed();
 
-$customProvider = [
-    'name' => 'AnotherService',
-    'website' => 'https://another.example.com',
-    'url-match' => [
-        'https?://another\.example\.com/watch/([a-z0-9]+)',
-    ],
-    'embed-src' => '',
-    'embed-width' => '560',
-    'embed-height' => '315',
-    'iframe-player' => '//another.example.com/player/$2',
-];
+$customProvider = new ProviderConfig(
+    name: 'AnotherService',
+    website: 'https://another.example.com',
+    urlMatch: ['https?://another\.example\.com/watch/([a-z0-9]+)'],
+    embedWidth: 560,
+    embedHeight: 315,
+    iframePlayer: '//another.example.com/player/$2',
+);
 
-$MediaEmbed->addProvider($customProvider);
+$MediaEmbed->addProviderConfig($customProvider);
 ```
 
 #### 3. From a Configuration File
@@ -170,7 +168,6 @@ return [
         'url-match' => [
             'https?://file\.example\.com/v/([0-9]+)',
         ],
-        'embed-src' => '',
         'embed-width' => '640',
         'embed-height' => '360',
         'iframe-player' => '//file.example.com/embed/$2',
@@ -187,7 +184,6 @@ return [
         "url-match": [
             "https?://json\\.example\\.com/video/([0-9]+)"
         ],
-        "embed-src": "",
         "embed-width": "640",
         "embed-height": "360",
         "iframe-player": "//json.example.com/embed/$2"
@@ -207,36 +203,49 @@ $MediaEmbed = new MediaEmbed(['providers_config' => '/path/to/custom-providers.j
 By default, custom providers won't override existing ones. To override:
 
 ```php
+use MediaEmbed\Provider\ProviderConfig;
+
 $MediaEmbed = new MediaEmbed();
 
-$customYouTube = [
-    'name' => 'YouTube',
-    'website' => 'https://www.youtube.com',
-    'url-match' => [
-        'https?://youtu\.be/([0-9a-z-_]{11})',
-    ],
-    'embed-src' => '',
-    'embed-width' => '800',  // Custom width
-    'embed-height' => '600', // Custom height
-    'iframe-player' => '//www.youtube.com/embed/$2?custom=param',
-];
+$customYouTube = new ProviderConfig(
+    name: 'YouTube',
+    website: 'https://www.youtube.com',
+    urlMatch: ['https?://youtu\.be/([0-9a-z-_]{11})'],
+    embedWidth: 800,  // Custom width
+    embedHeight: 600, // Custom height
+    iframePlayer: '//www.youtube.com/embed/$2?custom=param',
+);
 
-$MediaEmbed->addProvider($customYouTube, true); // Pass true to override
+$MediaEmbed->addProviderConfig($customYouTube, override: true);
 ```
 
 #### Provider Configuration Format
 
-Each provider is an array with these properties:
+Using `ProviderConfig` DTO (recommended):
+
+```php
+$config = new ProviderConfig(
+    name: 'MyProvider',           // Required: Display name
+    website: 'https://...',       // Homepage URL
+    urlMatch: ['regex...'],       // Required: URL patterns (array or string)
+    embedWidth: 640,              // Required: Default width
+    embedHeight: 360,             // Required: Default height
+    iframePlayer: '//.../$2',     // Required: Iframe URL template
+    slug: 'myprovider',           // Optional: Custom slug (auto-generated if omitted)
+    imageSrc: '//.../$2.jpg',     // Optional: Thumbnail URL template
+    supportsTimestamp: false,     // Optional: Timestamp support (like YouTube)
+);
+```
+
+For array-based configs (legacy format):
 
 - **name** (required): Display name of the provider
 - **website**: Homepage URL of the service
-- **url-match** (required): Array of regex patterns to match URLs (use $2, $3, etc. for capture groups)
-- **embed-src**: Legacy embed source (for older Flash-based embeds)
-- **embed-width**: Default width in pixels or percentage
-- **embed-height**: Default height in pixels or percentage
-- **iframe-player** (recommended): URL template for iframe embedding (use $2, $3, etc. for matched groups)
+- **url-match** (required): Array of regex patterns to match URLs
+- **embed-width** (required): Default width in pixels
+- **embed-height** (required): Default height in pixels
+- **iframe-player** (required): URL template for iframe embedding
 - **slug**: Optional custom slug (auto-generated from name if not provided)
-- **id**: Optional ID extraction pattern (defaults to $2)
 - **image-src**: Optional thumbnail image URL template
 
 **Note:** In regex patterns and templates, `$1` is the full matched URL, `$2` is the first capture group, `$3` is the second, etc.
@@ -558,7 +567,7 @@ protected function _finalizeVideo($params) {
 }
 ```
 
-So `[video]123[/video]` becomes `<iframe ...>...</iframe>` or `<object ...><embed src="..."</embed></object>`.
+So `[video]123[/video]` becomes `<iframe ...>...</iframe>`.
 
 ### More examples
 You can see live examples when you get this repo running locally and browse to `examples` dir.

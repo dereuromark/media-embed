@@ -22,8 +22,8 @@ class ProviderConfigTest extends TestCase {
 
 		$this->assertSame('TestProvider', $config->name);
 		$this->assertSame('https://test.example.com', $config->website);
-		$this->assertSame('640', $config->embedWidth);
-		$this->assertSame('360', $config->embedHeight);
+		$this->assertSame(640, $config->embedWidth);
+		$this->assertSame(360, $config->embedHeight);
 		$this->assertSame('//test.example.com/embed/$2', $config->iframePlayer);
 	}
 
@@ -35,12 +35,10 @@ class ProviderConfigTest extends TestCase {
 			'url-match' => ['pattern1', 'pattern2'],
 			'embed-width' => '800',
 			'embed-height' => '600',
-			'embed-src' => '//full.example.com/swf/$2',
 			'iframe-player' => '//full.example.com/embed/$2',
 			'image-src' => '//full.example.com/thumb/$2.jpg',
 			'id' => '$2',
 			'fetch-match' => 'data-id="([a-z0-9]+)"',
-			'flashvars' => 'autoplay=0',
 			'supports-timestamp' => true,
 		];
 
@@ -48,11 +46,9 @@ class ProviderConfigTest extends TestCase {
 
 		$this->assertSame('full-provider', $config->slug);
 		$this->assertSame(['pattern1', 'pattern2'], $config->urlMatch);
-		$this->assertSame('//full.example.com/swf/$2', $config->embedSrc);
 		$this->assertSame('//full.example.com/thumb/$2.jpg', $config->imageSrc);
 		$this->assertSame('$2', $config->id);
 		$this->assertSame('data-id="([a-z0-9]+)"', $config->fetchMatch);
-		$this->assertSame('autoplay=0', $config->flashvars);
 		$this->assertTrue($config->supportsTimestamp);
 	}
 
@@ -94,8 +90,8 @@ class ProviderConfigTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 			iframePlayer: '//test.com/embed/$2',
 		);
 
@@ -104,8 +100,8 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('Test', $array['name']);
 		$this->assertSame('https://test.com', $array['website']);
 		$this->assertSame('pattern', $array['url-match']);
-		$this->assertSame('640', $array['embed-width']);
-		$this->assertSame('360', $array['embed-height']);
+		$this->assertSame(640, $array['embed-width']);
+		$this->assertSame(360, $array['embed-height']);
 		$this->assertSame('//test.com/embed/$2', $array['iframe-player']);
 		$this->assertArrayNotHasKey('slug', $array);
 		$this->assertArrayNotHasKey('supports-timestamp', $array);
@@ -116,16 +112,16 @@ class ProviderConfigTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'single-pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 		);
 
 		$configMultiple = new ProviderConfig(
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: ['pattern1', 'pattern2'],
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 		);
 
 		$this->assertSame(['single-pattern'], $configSingle->getUrlMatchPatterns());
@@ -137,8 +133,8 @@ class ProviderConfigTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 			iframePlayer: '//test.com/embed/$2',
 		);
 
@@ -146,8 +142,8 @@ class ProviderConfigTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 		);
 
 		$this->assertTrue($withIframe->hasIframeSupport());
@@ -159,8 +155,8 @@ class ProviderConfigTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 			imageSrc: '//test.com/thumb/$2.jpg',
 		);
 
@@ -168,8 +164,8 @@ class ProviderConfigTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 		);
 
 		$this->assertTrue($withThumb->hasThumbnailSupport());
@@ -181,8 +177,8 @@ class ProviderConfigTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 			fetchMatch: 'data-id="([a-z]+)"',
 		);
 
@@ -190,8 +186,8 @@ class ProviderConfigTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 		);
 
 		$this->assertTrue($withFetch->requiresFetch());

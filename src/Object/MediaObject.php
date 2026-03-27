@@ -1,25 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MediaEmbed\Object;
 
 use MediaEmbed\Template\TemplateResolver;
 
 /**
- * A generic object - for now.
- *
- * TODO: Implement audio, video separatly
+ * A generic media object for iframe embeds.
  */
 class MediaObject implements ObjectInterface {
 
 	/**
-	 * @var array<string, mixed>
+	 * Google favicon service URL.
+	 *
+	 * @var string
 	 */
-	protected array $_stub;
+	protected const FAVICON_SERVICE_URL = 'https://www.google.com/s2/favicons?domain=';
 
 	/**
+	 * Provider stub data.
+	 *
+	 * @var array<string, mixed>
+	 */
+	protected array $stub;
+
+	/**
+	 * URL match results.
+	 *
 	 * @var array<string>
 	 */
-	protected array $_match;
+	protected array $match;
 
 	/**
 	 * Template resolver for URL interpolation.
@@ -27,31 +38,25 @@ class MediaObject implements ObjectInterface {
 	protected TemplateResolver $templateResolver;
 
 	/**
+	 * Iframe attributes (width, height, etc).
+	 *
 	 * @var array<string, mixed>
 	 */
-	protected array $_objectAttributes = [];
+	protected array $iframeAttributes = [];
 
 	/**
+	 * Iframe URL parameters.
+	 *
 	 * @var array<string, mixed>
 	 */
-	protected array $_objectParams = [];
+	protected array $iframeParams = [];
 
 	/**
+	 * Configuration options.
+	 *
 	 * @var array<string, mixed>
 	 */
-	protected array $_iframeAttributes = [];
-
-	/**
-	 * @var array<string, mixed>
-	 */
-	protected array $_iframeParams = [];
-
-	/**
-	 * @var array<string, mixed>
-	 */
-	public array $config = [
-		'prefer' => 'iframe', // Type object or iframe (only available for few, fallback will be object)
-	];
+	protected array $config = [];
 
 	/**
 	 * MediaObject::__construct()
@@ -70,36 +75,19 @@ class MediaObject implements ObjectInterface {
 			'slug' => '',
 			'match' => [],
 		];
-		$this->_stub = $stub + $stubDefaults;
-		$this->_match = $this->_stub['match'];
-		$this->_stub['id'] = $this->id();
+		$this->stub = $stub + $stubDefaults;
+		$this->match = $this->stub['match'];
+		$this->stub['id'] = $this->id();
 
-		$this->_setDefaultParams($stub);
+		$this->setDefaultParams($stub);
 
-		$type = 'embed-src';
-		if (isset($this->_stub['iframe-player'])) {
-			if ($this->config['prefer'] === 'iframe') {
-				$type = 'iframe-player';
-			}
-		}
-
-		if ($type === 'iframe-player') {
-			$src = $this->_getObjectSrc($type);
-			$this->_stub['iframe-player'] = $src;
-
-			$this->_objectParams['movie'] = $src;
-			$this->_objectAttributes['data'] = $src;
+		if (isset($this->stub['iframe-player'])) {
+			$src = $this->getObjectSrc('iframe-player');
+			$this->stub['iframe-player'] = $src;
 
 			// Handle timestamps for providers that support them (e.g., YouTube)
-			$this->_handleTimestampSupport();
+			$this->handleTimestampSupport();
 		}
-
-		if (empty($this->_stub['reverse'])) {
-			return;
-		}
-
-		$flashvars = (string)$this->_objectParams['flashvars'];
-		$this->_objectParams['flashvars'] = $this->templateResolver->resolveReverse($flashvars, $this->_stub['id']);
 	}
 
 	/**
@@ -108,17 +96,17 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	public function id(): string {
-		$res = $this->_match;
+		$res = $this->match;
 		$count = count($res);
 
-		if (empty($this->_stub['id'])) {
+		if (empty($this->stub['id'])) {
 			if (empty($res[$count - 1])) {
 				return '';
 			}
-			$this->_stub['id'] = $res[$count - 1];
+			$this->stub['id'] = $res[$count - 1];
 		}
 
-		$id = $this->templateResolver->resolve($this->_stub['id'], $res);
+		$id = $this->templateResolver->resolve($this->stub['id'], $res);
 
 		// If the ID is still a placeholder (no matches were provided), return empty string
 		if ($this->templateResolver->hasUnresolvedPlaceholders($id)) {
@@ -134,7 +122,7 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	public function slug(): string {
-		return $this->_stub['slug'];
+		return $this->stub['slug'];
 	}
 
 	/**
@@ -143,11 +131,11 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	public function name(): string {
-		if (empty($this->_stub['name'])) {
+		if (empty($this->stub['name'])) {
 			return '';
 		}
 
-		return $this->templateResolver->resolve($this->_stub['name'], $this->_match);
+		return $this->templateResolver->resolve($this->stub['name'], $this->match);
 	}
 
 	/**
@@ -156,16 +144,7 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	public function website(): string {
-		return !empty($this->_stub['website']) ? $this->_stub['website'] : '';
-	}
-
-	/**
-	 * Check if iframe mode should be used.
-	 *
-	 * @return bool
-	 */
-	protected function useIframeMode(): bool {
-		return !empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe';
+		return !empty($this->stub['website']) ? $this->stub['website'] : '';
 	}
 
 	/**
@@ -174,7 +153,7 @@ class MediaObject implements ObjectInterface {
 	 * @return string|null Resource content or null if not available
 	 */
 	public function icon(): ?string {
-		$url = $this->_stub['website'];
+		$url = $this->stub['website'];
 		if (!$url) {
 			return null;
 		}
@@ -185,20 +164,16 @@ class MediaObject implements ObjectInterface {
 		}
 
 		$url = $pieces['host'];
-
-		$icon = 'http://www.google.com/s2/favicons?domain=';
-		$icon .= $url;
+		$icon = static::FAVICON_SERVICE_URL . $url;
 
 		$context = stream_context_create(
 			['http' => ['header' => 'Connection: close']],
 		);
-		// E.g. http://www.google.com/s2/favicons?domain=xyz.com
 		$file = file_get_contents($icon, false, $context);
 		if ($file === false) {
 			return null;
 		}
 
-		// TODO: transform into 16x16 png
 		return $file;
 	}
 
@@ -227,47 +202,40 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Override a default object param value
+	 * Override a default iframe param value.
 	 *
 	 * @param array<string, mixed>|string $param The name of the param to be set
-	 *                                           or an array of multiple params to set
-	 * @param string|null $value (optional) the value to set the param to
-	 *                                              if only one param is being set
-	 *
+	 *   or an array of multiple params to set.
+	 * @param string|null $value The value to set the param to (when $param is string).
 	 * @return $this
 	 */
-	public function setParam($param, ?string $value = null) {
-		$params = $this->useIframeMode() ? '_iframeParams' : '_objectParams';
-
+	public function setParam(array|string $param, ?string $value = null) {
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
-				$this->{$params}[$p] = $v;
+				$this->iframeParams[$p] = $v;
 			}
 		} else {
-			$this->{$params}[$param] = $value;
+			$this->iframeParams[$param] = $value;
 		}
 
 		return $this;
 	}
 
 	/**
-	 * Override a default object attribute value
+	 * Override a default iframe attribute value.
 	 *
 	 * @param array<string, mixed>|string $param The name of the attribute to be set
-	 *   or an array of multiple attribs to be set
-	 * @param string|int|null $value (optional) the value to set the param to
-	 *   if only one param is being set
+	 *   or an array of multiple attributes to set.
+	 * @param string|int|bool|null $value The value to set (when $param is string).
 	 * @return $this
 	 */
-	public function setAttribute($param, $value = null) {
-		$attributes = $this->useIframeMode() ? '_iframeAttributes' : '_objectAttributes';
-
+	public function setAttribute(array|string $param, string|int|bool|null $value = null) {
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
-				$this->{$attributes}[$p] = $v;
+				$this->iframeAttributes[$p] = $v;
 			}
 		} else {
-			$this->{$attributes}[$param] = $value;
+			$this->iframeAttributes[$param] = $value;
 		}
 
 		return $this;
@@ -282,7 +250,7 @@ class MediaObject implements ObjectInterface {
 	 */
 	public function setHeight(int $height, bool $adjustWidth = false) {
 		if ($adjustWidth) {
-			$this->_adjustDimensions('width', 'height', $height);
+			$this->adjustDimensions('width', 'height', $height);
 		}
 
 		return $this->setAttribute('height', $height);
@@ -297,7 +265,7 @@ class MediaObject implements ObjectInterface {
 	 */
 	public function setWidth(int $width, bool $adjustHeight = false) {
 		if ($adjustHeight) {
-			$this->_adjustDimensions('height', 'width', $width);
+			$this->adjustDimensions('height', 'width', $width);
 		}
 
 		return $this->setAttribute('width', $width);
@@ -311,9 +279,9 @@ class MediaObject implements ObjectInterface {
 	 * @param int $fromLength
 	 * @return void
 	 */
-	protected function _adjustDimensions(string $type, string $fromType, int $fromLength): void {
-		$currentLength = $this->getAttributes($type);
-		$currentFromLength = $this->getAttributes($fromType);
+	protected function adjustDimensions(string $type, string $fromType, int $fromLength): void {
+		$currentLength = (int)$this->getAttributes($type);
+		$currentFromLength = (int)$this->getAttributes($fromType);
 
 		$ratio = $fromLength / $currentFromLength;
 		$newLength = $currentLength * $ratio;
@@ -322,82 +290,69 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Return object params about the video metadata
+	 * Return iframe params.
 	 *
 	 * @param string|null $key
-	 * @return array<string, mixed>|string|null Object params
+	 * @return array<string, mixed>|string|null Iframe params
 	 */
-	public function getParams(?string $key = null) {
-		$params = $this->useIframeMode() ? $this->_iframeParams : $this->_objectParams;
-
+	public function getParams(?string $key = null): array|string|null {
 		if ($key === null) {
-			return $params;
+			return $this->iframeParams;
 		}
 
-		return $params[$key] ?? null;
+		return $this->iframeParams[$key] ?? null;
 	}
 
 	/**
-	 * Return object attribute
+	 * Return iframe attributes.
 	 *
 	 * @param string|null $key
-	 * @return mixed Object attribute
+	 * @return array<string, mixed>|string|int|bool|null Iframe attribute
 	 */
-	public function getAttributes(?string $key = null) {
-		$attributes = $this->useIframeMode() ? $this->_iframeAttributes : $this->_objectAttributes;
-
+	public function getAttributes(?string $key = null): mixed {
 		if ($key === null) {
-			return $attributes;
+			return $this->iframeAttributes;
 		}
 
-		return $attributes[$key] ?? null;
+		return $this->iframeAttributes[$key] ?? null;
 	}
 
 	/**
-	 * Convert the url to an embeddable tag
+	 * Convert the url to an embeddable iframe tag
 	 *
 	 * @return string The embed HTML
 	 */
 	public function getEmbedCode(): string {
-		return $this->useIframeMode() ? $this->_buildIframe() : $this->_buildObject();
+		return $this->buildIframe();
 	}
 
 	/**
-	 * Add src getter method
+	 * Get the iframe src URL with parameters.
 	 *
 	 * @return string The src attribute
 	 */
 	public function getEmbedSrc(): string {
-		$source = $this->templateResolver->resolve($this->_stub['iframe-player'], $this->_match);
+		$source = $this->templateResolver->resolve($this->stub['iframe-player'], $this->match);
 
-		//add custom params
-		if ($this->_iframeParams) {
-			$c = '?';
-			if (strpos($source, '?') !== false) {
-				$c = '&amp;';
-			}
-			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
-		}
-
-		return $source;
+		return $this->appendQueryParams($source);
 	}
 
 	/**
-	 * Get final src
+	 * Get final iframe src
 	 *
-	 * @param string $type
+	 * @param string $type The stub key to use for the source URL.
 	 * @return string|null
 	 */
-	protected function _getObjectSrc(string $type = 'embed-src'): ?string {
-		if (empty($this->_stub['id']) || empty($this->_stub['slug'])) {
+	protected function getObjectSrc(string $type = 'iframe-player'): ?string {
+		if (empty($this->stub['id']) || empty($this->stub['slug'])) {
 			return null;
 		}
 
-		$stubSrc = $this->_stub[$type];
-		$src = $this->templateResolver->resolveReverse($stubSrc, $this->_stub['id']);
+		$stubSrc = $this->stub[$type];
+		$src = $this->templateResolver->resolveReverse($stubSrc, $this->stub['id']);
 
-		if (!empty($this->_stub['replace'])) {
-			$src = $this->templateResolver->resolveReplacements($src, (array)$this->_stub['replace']);
+		if (!empty($this->stub['replace'])) {
+			$src = $this->templateResolver->resolveReplacements($src, (array)$this->stub['replace']);
 		}
 
 		return $src;
@@ -407,14 +362,14 @@ class MediaObject implements ObjectInterface {
 	 * @return string|null
 	 */
 	public function getImageSrc(): ?string {
-		if (empty($this->_stub['id'])) {
+		if (empty($this->stub['id'])) {
 			return null;
 		}
-		if (empty($this->_stub['image-src'])) {
+		if (empty($this->stub['image-src'])) {
 			return null;
 		}
 
-		return $this->templateResolver->resolveReverse($this->_stub['image-src'], $this->_stub['id']);
+		return $this->templateResolver->resolveReverse($this->stub['image-src'], $this->stub['id']);
 	}
 
 	/**
@@ -423,11 +378,11 @@ class MediaObject implements ObjectInterface {
 	 * @return string - the thumbnail href
 	 */
 	public function image(): string {
-		if (empty($this->_stub['image-src'])) {
+		if (empty($this->stub['image-src'])) {
 			return '';
 		}
 
-		return $this->templateResolver->resolve($this->_stub['image-src'], $this->_match);
+		return $this->templateResolver->resolve($this->stub['image-src'], $this->match);
 	}
 
 	/**
@@ -440,102 +395,64 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Build a generic object skeleton
+	 * Build an iFrame player.
 	 *
 	 * @return string
 	 */
-	protected function _buildObject(): string {
-		$objectAttributes = $objectParams = '';
+	protected function buildIframe(): string {
+		$source = $this->templateResolver->resolve($this->stub['iframe-player'], $this->match);
+		$source = $this->appendQueryParams($source);
 
-		foreach ($this->_objectAttributes as $param => $value) {
-			$objectAttributes .= ' ' . $param . '="' . $value . '"';
-		}
+		$attributes = $this->buildAttributeString();
 
-		foreach ($this->_objectParams as $param => $value) {
-			$objectParams .= '<param name="' . $param . '" value="' . $value . '" />';
-		}
-
-		if (!$objectAttributes && !$objectParams) {
-			return '';
-		}
-
-		return sprintf('<object %s> %s</object>', $objectAttributes, $objectParams);
-	}
-
-	/**
-	 * Build an iFrame player
-	 *
-	 * @return string
-	 */
-	protected function _buildIframe(): string {
-		$source = $this->templateResolver->resolve($this->_stub['iframe-player'], $this->_match);
-
-		//add custom params
-		if ($this->_iframeParams) {
-			$c = '?';
-			if (strpos($source, '?') !== false) {
-				$c = '&amp;';
-			}
-			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
-		}
-		$attributes = '';
-		//add custom attributes
-
-		foreach ($this->_iframeAttributes as $key => $val) {
-			//if === true, is an attribute without value
-			//if === false, remove the attribute
-			if ($val !== false) {
-				$attributes .= ' ' . $key . ($val !== true ? '="' . $this->_esc((string)$val) . '"' : '');
-			}
-		}
-
-		// Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
 		return sprintf('<iframe src="%s"%s></iframe>', $source, $attributes);
 	}
 
 	/**
-	 * Set the default params for the type of
-	 * stub we are working with
+	 * Append query parameters to a URL.
+	 *
+	 * @param string $url The base URL.
+	 * @return string URL with appended parameters.
+	 */
+	protected function appendQueryParams(string $url): string {
+		if (!$this->iframeParams) {
+			return $url;
+		}
+
+		$separator = str_contains($url, '?') ? '&amp;' : '?';
+
+		return $url . $separator . http_build_query($this->iframeParams, '', '&amp;');
+	}
+
+	/**
+	 * Build HTML attribute string from iframe attributes.
+	 *
+	 * @return string
+	 */
+	protected function buildAttributeString(): string {
+		$attributes = '';
+
+		foreach ($this->iframeAttributes as $key => $val) {
+			if ($val === false) {
+				continue;
+			}
+			$attributes .= ' ' . $key . ($val !== true ? '="' . $this->esc((string)$val) . '"' : '');
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Set the default iframe params and attributes.
 	 *
 	 * @param array<string, mixed> $stub
 	 * @return void
 	 */
-	protected function _setDefaultParams(array $stub): void {
-		$source = $this->templateResolver->resolve($stub['embed-src'], $this->_match);
-		$flashvars = isset($stub['flashvars'])
-			? $this->templateResolver->resolve($stub['flashvars'], $this->_match)
-			: null;
-
-		if ($source) {
-			$source = $this->_esc($source);
-		}
-		if ($flashvars) {
-			$flashvars = $this->_esc($flashvars);
-		}
-
-		$this->_objectParams = [
-			'movie' => $source,
-			'quality' => 'high',
-			'allowFullScreen' => 'true',
-			'allowScriptAccess' => 'always',
-			'pluginspage' => 'http://www.macromedia.com/go/getflashplayer',
-			'autoplay' => 'false',
-			'autostart' => 'false',
-			'flashvars' => $flashvars,
-		];
-
-		$this->_objectAttributes = [
-			'type' => 'application/x-shockwave-flash',
-			'data' => $source,
-			'width' => $stub['embed-width'],
-			'height' => $stub['embed-height'],
-		];
-
-		//separate iframe params and attributes
-		$this->_iframeParams = [
+	protected function setDefaultParams(array $stub): void {
+		$this->iframeParams = [
 			'wmode' => 'transparent',
 		];
-		$this->_iframeAttributes = [
+		$this->iframeAttributes = [
 			'type' => 'text/html',
 			'width' => $stub['embed-width'],
 			'height' => $stub['embed-height'],
@@ -548,7 +465,7 @@ class MediaObject implements ObjectInterface {
 	 * @param string $text
 	 * @return string
 	 */
-	protected function _esc(string $text): string {
+	protected function esc(string $text): string {
 		return htmlspecialchars($text, ENT_QUOTES, '', false);
 	}
 
@@ -557,26 +474,26 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @return void
 	 */
-	protected function _handleTimestampSupport(): void {
+	protected function handleTimestampSupport(): void {
 		// Only process if the provider supports timestamps
-		if (empty($this->_stub['supports-timestamp'])) {
+		if (empty($this->stub['supports-timestamp'])) {
 			return;
 		}
 
 		// Check if we have a timestamp in the matches (capture group 2, which is index 2 in array)
-		if (empty($this->_match[2])) {
+		if (empty($this->match[2])) {
 			return;
 		}
 
-		$timestamp = $this->_match[2];
+		$timestamp = $this->match[2];
 
 		// For YouTube, convert 't' parameter to 'start' parameter for embed URLs
-		if ($this->_stub['slug'] === 'youtube') {
+		if ($this->stub['slug'] === 'youtube') {
 			// Remove 's' suffix if present (e.g., "3724s" -> "3724")
 			$timestamp = rtrim($timestamp, 's');
 
 			// Add as iframe parameter
-			$this->_iframeParams['start'] = $timestamp;
+			$this->iframeParams['start'] = $timestamp;
 		}
 	}
 
@@ -588,11 +505,9 @@ class MediaObject implements ObjectInterface {
 	 */
 	public function __debugInfo(): array {
 		return [
-			'stub' => $this->_stub,
-			'objectAttributes' => $this->_objectAttributes,
-			'objectParams' => $this->_objectParams,
-			'iframeAttributes' => $this->_iframeAttributes,
-			'iframeParams' => $this->_iframeParams,
+			'stub' => $this->stub,
+			'iframeAttributes' => $this->iframeAttributes,
+			'iframeParams' => $this->iframeParams,
 		];
 	}
 

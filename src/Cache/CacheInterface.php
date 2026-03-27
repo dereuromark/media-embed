@@ -47,4 +47,11 @@ interface CacheInterface {
 	 */
 	public function has(string $key): bool;
 
+	/**
+	 * Clear all cached values.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function clear(): bool;
+
 }

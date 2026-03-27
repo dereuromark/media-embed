@@ -86,7 +86,7 @@ final class OEmbedDiscovery {
 		}
 
 		if ($params) {
-			$separator = strpos($endpointUrl, '?') !== false ? '&' : '?';
+			$separator = str_contains($endpointUrl, '?') ? '&' : '?';
 			$endpointUrl .= $separator . http_build_query($params);
 		}
 
