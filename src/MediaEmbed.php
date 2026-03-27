@@ -164,10 +164,13 @@ class MediaEmbed {
 	 * @return bool
 	 */
 	protected function _parseLink(string $url, string $regex): bool {
-		$context = stream_context_create(
-			['http' => ['header' => 'Connection: close']],
-		);
-		$content = file_get_contents($url, false, $context);
+		$context = stream_context_create([
+			'http' => [
+				'header' => 'Connection: close',
+				'timeout' => 5,
+			],
+		]);
+		$content = @file_get_contents($url, false, $context);
 		if (!$content) {
 			return false;
 		}
@@ -343,67 +346,5 @@ class MediaEmbed {
 	protected function _slug(string $text): string {
 		return URLify::filter($text);
 	}
-
-	/**
-	 * Contains the preg info
-	 * DOES NOT contain width/height etc
-	 *
-	 * @var array<string, array<string, mixed>>
-	 */
-	public array $availableTypes = [
-		'youtube' => [
-			'iframe' => 'http://www.youtube.com/embed/{id}',
-			'swf' => 'http://www.youtube.com/v/{id}',
-			'url' => ['http://www.youtube.com/watch?v={id}&t={t}', 'http://www.youtube.com/shorts/{id}', 'http://www.youtube.com/shorts/{id}?feature=share'],
-		],
-		'google' => [],
-		'myvideo' => [
-			'swf' => 'http://www.myvideo.de/movie/',
-			'url' => ['http://www.myvideo.de/watch/', 'http://www.myvideo.ch/watch/', 'http://www.myvideo.at/watch/'],
-		],
-		'vimeo' => [
-			'iframe' => 'http://player.vimeo.com/video/{id}',
-			//'swf' => '',
-			'url' => '',
-		],
-		'dailymotion' => [
-			'swf' => 'http://www.dailymotion.com/embed/video/{id}',
-		//'url' => 'http://www.dailymotion.com'
-		],
-		'videojug' => [],
-		'revver' => [],
-	];
-
-	/**
-	 * @var array<string, string>
-	 */
-	public array $availableNonJSTypes = [
-		'youtube' => '<iframe src="http://www.youtube.com/embed/{id}" width="100%" height="385" frameborder="0"></iframe>',
-		'vimeo' => '<iframe src="http://player.vimeo.com/video/{id}" width="100%" height="385" frameborder="0"></iframe>',
-		'google' => '<embed id="test" src="http://video.google.com/googleplayer.swf?docid={id}&hl=de&fs=true" style="width:100%;height:385px" allowFullScreen="true" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>',
-		'myvideo' => '<embed src="http://www.myvideo.de/movie/{id}" width="100%" height="385" type="application/x-shockwave-flash"></embed>',
-		#'flv' => '',
-		#'mp4' => ''
-		'dailymotion' => '<iframe frameborder="0" width="100%" height="385" src="http://www.dailymotion.com/embed/video/{id}?width=&theme=none&foreground=%23F7FFFD&highlight=%23FFC300&background=%23171D1B&start=&animatedTitle=&iframe=1&additionalInfos=0&autoPlay=0&hideInfos=0"></iframe>',
-		//'dailymotion' => '<object width="480" height="269"><param name="movie" value="http://www.dailymotion.com/swf/video/{id}?additionalInfos=0" width="480" height="269" allowfullscreen="true" allowscriptaccess="always"></embed></object>',
-		'videojug' => '<embed src="http://www.videojug.com/player?id={id}" type="application/x-shockwave-flash" width="100%" height="385" allowFullScreen="true" allowScriptAccess="always"></embed>',
-		'revver' => '<embed type="application/x-shockwave-flash" src="http://flash.revver.com/player/1.0/player.swf?mediaId={id}" pluginspage="http://www.macromedia.com/go/getflashplayer" allowScriptAccess="always" flashvars="allowFullScreen=true" allowfullscreen="true" height="385" width="100%"></embed>',
-		'xvideos' => '<embed src="http://static.xvideos.com/swf/flv_player_site_v4.swf" allowscriptaccess="always" width="100%" height="385" menu="false" quality="high" bgcolor="#000000" allowfullscreen="true" flashvars="id_video={id}" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />',
-	];
-
-	/**
-	 * @var array<string, string>
-	 */
-	public array $_ojectParamAttr = [
-		'allowscriptaccess' => 'always',
-		'allowfullscreen' => 'true',
-	];
-
-	/**
-	 * @var array<string, string>
-	 */
-	public array $_embedAttr = [
-		'allowfullscreen' => 'true',
-	];
 
 }
