@@ -18,8 +18,8 @@ final class ProviderConfig {
 	 * @param string $name Display name of the provider.
 	 * @param string $website Provider's website URL.
 	 * @param array<string>|string $urlMatch URL matching regex pattern(s).
-	 * @param string|int $embedWidth Default embed width.
-	 * @param string|int $embedHeight Default embed height.
+	 * @param int $embedWidth Default embed width in pixels.
+	 * @param int $embedHeight Default embed height in pixels.
 	 * @param string|null $slug URL-safe identifier (auto-generated from name if not provided).
 	 * @param string|null $iframePlayer iframe src template URL.
 	 * @param string|null $imageSrc Thumbnail image URL template.
@@ -31,8 +31,8 @@ final class ProviderConfig {
 		public readonly string $name,
 		public readonly string $website,
 		public readonly array|string $urlMatch,
-		public readonly int|string $embedWidth,
-		public readonly int|string $embedHeight,
+		public readonly int $embedWidth,
+		public readonly int $embedHeight,
 		public readonly ?string $slug = null,
 		public readonly ?string $iframePlayer = null,
 		public readonly ?string $imageSrc = null,
@@ -71,8 +71,8 @@ final class ProviderConfig {
 			name: $data['name'],
 			website: $data['website'],
 			urlMatch: $data['url-match'],
-			embedWidth: $data['embed-width'],
-			embedHeight: $data['embed-height'],
+			embedWidth: (int)$data['embed-width'],
+			embedHeight: (int)$data['embed-height'],
 			slug: $data['slug'] ?? null,
 			iframePlayer: $data['iframe-player'] ?? null,
 			imageSrc: $data['image-src'] ?? null,

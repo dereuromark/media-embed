@@ -74,9 +74,9 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	/**
 	 * Get a provider by slug or throw exception if not found.
 	 *
-     * @param string $slug Provider slug.
-     * @throws \MediaEmbed\Exception\ProviderNotFoundException
-     * @return \MediaEmbed\Provider\ProviderConfig
+	 * @param string $slug Provider slug.
+	 * @throws \MediaEmbed\Exception\ProviderNotFoundException
+	 * @return \MediaEmbed\Provider\ProviderConfig
 	 */
 	public function getOrFail(string $slug): ProviderConfig {
 		if (!isset($this->providers[$slug])) {

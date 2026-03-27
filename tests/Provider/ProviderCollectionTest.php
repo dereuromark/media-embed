@@ -41,8 +41,8 @@ class ProviderCollectionTest extends TestCase {
 			name: 'Test',
 			website: 'https://test.com',
 			urlMatch: 'pattern',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 			slug: 'test-provider',
 		);
 
