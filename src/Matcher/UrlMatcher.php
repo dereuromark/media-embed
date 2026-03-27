@@ -208,14 +208,7 @@ final class UrlMatcher {
 			return null;
 		}
 
-		$host = $parsed['host'];
-
-		// Remove www. prefix for matching
-		if (str_starts_with($host, 'www.')) {
-			$host = substr($host, 4);
-		}
-
-		return strtolower($host);
+		return $this->normalizeHost($parsed['host']);
 	}
 
 	/**
@@ -233,18 +226,27 @@ final class UrlMatcher {
 			foreach ($matches[1] as $match) {
 				// Unescape the domain
 				$domain = str_replace('\\.', '.', $match);
-				$domain = strtolower($domain);
-
-				// Remove www. prefix
-				if (str_starts_with($domain, 'www.')) {
-					$domain = substr($domain, 4);
-				}
-
-				$domains[] = $domain;
+				$domains[] = $this->normalizeHost($domain);
 			}
 		}
 
 		return array_unique($domains);
+	}
+
+	/**
+	 * Normalize a hostname by lowercasing and removing www. prefix.
+	 *
+	 * @param string $host
+	 * @return string
+	 */
+	private function normalizeHost(string $host): string {
+		$host = strtolower($host);
+
+		if (str_starts_with($host, 'www.')) {
+			return substr($host, 4);
+		}
+
+		return $host;
 	}
 
 	/**
