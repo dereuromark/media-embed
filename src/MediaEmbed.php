@@ -10,6 +10,7 @@ use MediaEmbed\Http\StreamHttpClient;
 use MediaEmbed\Matcher\UrlMatcher;
 use MediaEmbed\Object\MediaObject;
 use MediaEmbed\Provider\PhpFileLoader;
+use MediaEmbed\Provider\ProviderCollection;
 use MediaEmbed\Provider\ProviderConfig;
 use MediaEmbed\Provider\ProviderLoaderInterface;
 use URLify;
@@ -506,6 +507,18 @@ class MediaEmbed {
 		$host = $this->getHostOrFail($alias);
 
 		return ProviderConfig::fromArray($host);
+	}
+
+	/**
+	 * Get all providers as a collection.
+	 *
+	 * @param array<string> $whitelist Optional list of slugs to include.
+	 * @return \MediaEmbed\Provider\ProviderCollection
+	 */
+	public function getProviders(array $whitelist = []): ProviderCollection {
+		$hosts = $this->getHosts($whitelist);
+
+		return ProviderCollection::fromArray(array_values($hosts));
 	}
 
 	/**
