@@ -1304,39 +1304,4 @@ $stubs = [
 	],
 ];
 
-/**
- * Those do not work anymore
- */
-$deprecatedStubs = [
-	[
-		'name' => 'MegaVideo',
-		'website' => 'https://www.megavideo.com',
-		'url-match' => 'https?://(?:www\.)?megavideo\.com/(?:\?(?:[^"]*?)?v=|v/)([0-9a-z]{8})',
-		'embed-src' => 'https://www.megavideo.com/v/$2.0.0',
-		'embed-width' => '440',
-		'embed-height' => '359',
-	],
-	[
-		'name' => 'Google Video',
-		'website' => 'https://video.google.com',
-		'url-match' => 'https?://video\.google\.(com|com\.au|co\.uk|de|es|fr|it|nl|pl|ca|cn)/(?:videoplay|url|googleplayer\.swf)\?(?:[^"]*?)?docid=([0-9a-z-_]{1,20})',
-		'embed-src' => 'https://video.google.$2/googleplayer.swf?docId=$3',
-		'embed-width' => '400',
-		'embed-height' => '326',
-		'id' => '$3',
-		'replace' => ['$2' => 'com'],
-	],
-	[
-		'name' => 'MehrSchbass',
-		'website' => 'https://www.mehr-schbass.de',
-		'url-match-plain' => 'https://www.mehr-schbass\.de/videos/([0-9]{4,6})-(?:[^"]*?)',
-		'url-match' => 'https?://www.mehr-schbass\.de/videos/([0-9]{4,6})-([0-9A-Za-z-]{1,100})\.html',
-		'embed-src' => 'https://www.mehr-schbass.de/videos/flv_player/flvplayer.swf',
-		'embed-width' => '400',
-		'embed-height' => '320',
-		'flashvars' => 'config=https://www.mehr-schbass.de/videos/xml-config.php?id=$2-embed',
-		'id' => '$2',
-	],
-];
-
 return $stubs;
