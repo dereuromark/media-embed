@@ -42,6 +42,12 @@
 		},
 		{
 			"pattern": "^https://www.reddit.com"
+		},
+		{
+			"pattern": "^https://kick.com"
+		},
+		{
+			"pattern": "^https://rumble.com"
 		}
 	],
 	"aliveStatusCodes": [200, 202, 206, 429]

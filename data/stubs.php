@@ -1227,6 +1227,69 @@ $stubs = [
 		'iframe-player' => '//player.bilibili.com/player.html?bvid=$2',
 		'id' => '$2',
 	],
+	[
+		'name' => 'Rumble',
+		'website' => 'https://rumble.com',
+		'url-match' => [
+			'https?://(?:www\.)?rumble\.com/embed/([a-z0-9]+)',
+			'https?://(?:www\.)?rumble\.com/(v[a-z0-9]+)-[^/]+\.html',
+		],
+		'embed-src' => '',
+		'embed-width' => '640',
+		'embed-height' => '360',
+		'iframe-player' => 'https://rumble.com/embed/$2/',
+		'id' => '$2',
+	],
+	[
+		'name' => 'Odysee',
+		'website' => 'https://odysee.com',
+		'url-match' => [
+			'https?://(?:www\.)?odysee\.com/(@[^/:]+:[a-z0-9])/([^/:]+:[a-z0-9])',
+			'https?://(?:www\.)?odysee\.com/\$/embed/([^/]+)/([a-z0-9]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '560',
+		'embed-height' => '315',
+		'iframe-player' => 'https://odysee.com/$/embed/$2/$3',
+		'id' => '$3',
+	],
+	[
+		'name' => 'Kick',
+		'website' => 'https://kick.com',
+		'url-match' => [
+			'https?://(?:www\.)?kick\.com/[^/]+/clips/([a-zA-Z0-9_-]+)',
+			'https?://(?:www\.)?kick\.com/video/([a-z0-9-]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '640',
+		'embed-height' => '360',
+		'iframe-player' => 'https://player.kick.com/video/$2',
+		'id' => '$2',
+	],
+	[
+		'name' => 'Bandcamp',
+		'website' => 'https://bandcamp.com',
+		'url-match' => [
+			'https?://([a-z0-9-]+)\.bandcamp\.com/(track|album)/([a-z0-9-]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '350',
+		'embed-height' => '470',
+		'iframe-player' => 'https://bandcamp.com/EmbeddedPlayer/$3=$2/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/',
+		'id' => '$2/$4',
+	],
+	[
+		'name' => 'PeerTube',
+		'website' => 'https://joinpeertube.org',
+		'url-match' => [
+			'https?://([a-z0-9.-]+)/(?:videos/watch|w)/([a-zA-Z0-9-]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '560',
+		'embed-height' => '315',
+		'iframe-player' => 'https://$2/videos/embed/$3',
+		'id' => '$3',
+	],
 ];
 
 /**

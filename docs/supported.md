@@ -1,11 +1,12 @@
 # Supported Media Services
 
-104 services
+109 services
 
  - [123video](https://www.123video.nl)
  - [AOL Video (Old)](https://video.aol.com)
  - [Aparat](https://www.aparat.com)
  - [Archive.org](https://www.archive.org)
+ - [Bandcamp](https://bandcamp.com)
  - [Bilibili](https://www.bilibili.com)
  - [Bit.Tube](https://bit.tube/)
  - [Brightcove.com](https://link.brightcove.com)
@@ -43,6 +44,7 @@
  - [Jamendo](https://www.jamendo.com)
  - [JujuNation Audio](https://www.jujunation.com)
  - [JujuNation Video](https://www.jujunation.com)
+ - [Kick](https://kick.com)
  - [Koreus](https://www.koreus.com)
  - [Last.fm (Audio)](https://www.last.fm)
  - [Last.fm (Video)](https://www.last.fm)
@@ -59,11 +61,14 @@
  - [MyVideo](https://www.myvideo.de)
  - [NewGrounds](https://www.newgrounds.com)
  - [NhacCuaTui](https://www.nhaccuatui.com)
+ - [Odysee](https://odysee.com)
  - [OnSmash](https://www.onsmash.com)
+ - [PeerTube](https://joinpeertube.org)
  - [Photobucket](https://www.photobucket.com)
  - [Rambler](https://vision.rambler.ru)
  - [RawVegas](https://www.rawvegas.tv)
  - [Reddit](https://www.reddit.com)
+ - [Rumble](https://rumble.com)
  - [RuTube](https://www.rutube.ru)
  - [Screencast](https://www.screencast.com)
  - [ShareView](https://www.shareview.us)
