@@ -1,6 +1,6 @@
 # Supported Media Services
 
-104 services
+105 services
 
  - [123video](https://www.123video.nl)
  - [AOL Video (Old)](https://video.aol.com)
@@ -54,6 +54,7 @@
  - [Loom](https://loom.com)
  - [Matterport](https://matterport.com)
  - [Metatube](https://www.metatube.com)
+ - [Mixcloud](https://www.mixcloud.com)
  - MP3 Audio
  - [Mp3tube](https://www.mp3tube.net)
  - [MSNBC](https://www.msnbc.msn.com/)
