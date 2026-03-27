@@ -6,7 +6,11 @@
 You can either use `parseUrl()` (default lookup) or `parseId()` (reverse lookup) of `MediaEmbed`.
 The latter is useful if you only store the "host slug" and "id" in the database instead of the
 complete URL.
-Both methods will return an `MediaObject` object, which will contain the parsed input.
+Both methods will return a `MediaObject` object, which will contain the parsed input.
+
+For stricter error handling, use the `*OrFail()` variants which throw exceptions instead of returning null:
+- `parseUrlOrFail()` - throws `InvalidUrlException` or `FetchException`
+- `parseIdOrFail()` - throws `InvalidUrlException` or `ProviderNotFoundException`
 
 ### Output
 You can then display the HTML code with `getEmbedCode()` or retrieve more information using the getters of `MediaObject`.
@@ -236,6 +240,112 @@ Each provider is an array with these properties:
 - **image-src**: Optional thumbnail image URL template
 
 **Note:** In regex patterns and templates, `$1` is the full matched URL, `$2` is the first capture group, `$3` is the second, etc.
+
+## Advanced Usage
+
+### Exception-Based Error Handling
+
+Instead of checking for `null` returns, you can use the `*OrFail()` methods which throw typed exceptions:
+
+```php
+use MediaEmbed\MediaEmbed;
+use MediaEmbed\Exception\InvalidUrlException;
+use MediaEmbed\Exception\ProviderNotFoundException;
+
+$MediaEmbed = new MediaEmbed();
+
+try {
+    $MediaObject = $MediaEmbed->parseUrlOrFail($url);
+    echo $MediaObject->getEmbedCode();
+} catch (InvalidUrlException $e) {
+    echo "URL not supported: " . $e->getUrl();
+}
+
+try {
+    $MediaObject = $MediaEmbed->parseIdOrFail($id, $host);
+} catch (ProviderNotFoundException $e) {
+    echo "Provider not found: " . $e->getProviderSlug();
+}
+```
+
+### Using ProviderConfig DTO
+
+For type-safe provider access, use the `ProviderConfig` class:
+
+```php
+use MediaEmbed\Provider\ProviderConfig;
+
+// Get provider as typed object
+$config = $MediaEmbed->getProvider('youtube');
+if ($config !== null) {
+    echo $config->name;           // "YouTube"
+    echo $config->website;        // "https://www.youtube.com"
+    echo $config->embedWidth;     // "480"
+
+    if ($config->hasIframeSupport()) {
+        echo $config->iframePlayer;
+    }
+}
+
+// Or use the throwing variant
+$config = $MediaEmbed->getProviderOrFail('youtube');
+```
+
+You can also add providers using the DTO:
+
+```php
+$config = new ProviderConfig(
+    name: 'MyService',
+    website: 'https://myservice.com',
+    urlMatch: 'https://myservice\\.com/v/([a-z0-9]+)',
+    embedWidth: '640',
+    embedHeight: '360',
+    iframePlayer: '//myservice.com/embed/$2',
+);
+
+$MediaEmbed->addProviderConfig($config);
+```
+
+### Custom HTTP Client
+
+For testing or custom HTTP handling, inject your own HTTP client:
+
+```php
+use MediaEmbed\Http\HttpClientInterface;
+
+class MockHttpClient implements HttpClientInterface {
+    public function get(string $url, array $options = []): ?string {
+        // Return mock content or null
+        return '<html>...</html>';
+    }
+}
+
+$MediaEmbed = new MediaEmbed([], null, new MockHttpClient());
+```
+
+### Provider Loaders
+
+Load providers from different sources using the loader interface:
+
+```php
+use MediaEmbed\Provider\ArrayLoader;
+use MediaEmbed\Provider\JsonFileLoader;
+use MediaEmbed\Provider\PhpFileLoader;
+
+// Load from PHP file (default)
+$loader = new PhpFileLoader('/path/to/providers.php');
+$MediaEmbed = new MediaEmbed([], null, null, $loader);
+
+// Load from JSON file
+$loader = new JsonFileLoader('/path/to/providers.json');
+$MediaEmbed->loadProvidersFromLoader($loader);
+
+// Load from array (useful for testing)
+$loader = new ArrayLoader([
+    ['name' => 'Test', 'website' => '...', 'url-match' => '...', 'embed-width' => '640', 'embed-height' => '360'],
+]);
+$MediaEmbed->loadProvidersFromLoader($loader, reset: true);
+```
 
 ### Example with BBCode
 
