@@ -1,6 +1,6 @@
 # Supported Media Services
 
-110 services
+104 services
 
  - [123video](https://www.123video.nl)
  - [AOL Video (Old)](https://video.aol.com)
@@ -74,17 +74,14 @@
  - [Screencast](https://www.screencast.com)
  - [ShareView](https://www.shareview.us)
  - [Sharkle](https://www.sharkle.com)
- - [sina video](https://video.sina.com.cn)
  - [Snotr](https://www.snotr.com)
  - [SoundCloud](https://soundcloud.com)
  - [SouthPark Studios](https://www.southparkstudios.com)
- - [Spike](https://www.spike.com)
  - [Spotify](https://open.spotify.com)
  - [Streamable](https://streamable.com)
  - [TagTélé](https://www.tagtele.com)
  - [Ted.com](https://www.ted.com)
  - [TikTok](https://www.tiktok.com)
- - [The Onion](https://www.theonion.com)
  - [TheDailyShow](https://www.thedailyshow.com)
  - [TinyPic](https://www.tinypic.com)
  - [TrailerAddict](https://www.traileraddict.com)
@@ -96,7 +93,6 @@
  - [Twitch Video](https://www.twitch.tv)
  - [Twitter](https://twitter.com)
  - [Ustream](https://www.ustream.tv)
- - [Viddler](https://www.viddler.com)
  - [Videa](https://www.videa.hu)
  - [Video.mail.ru](https://video.mail.ru)
  - [Vidiac](https://www.vidiac.com)
@@ -108,7 +104,5 @@
  - [Wistia](https://www.wistia.com)
  - [XVideos](https://www.xvideos.com)
  - [Yahoo Music Videos](https://music.yahoo.com)
- - [Yahoo Video](https://video.yahoo.com)
  - [Yahoo Video HK](https://hk.video.yahoo.com)
- - [YouKu](https://www.youku.com)
  - [YouTube](https://www.youtube.com)
