@@ -113,7 +113,7 @@ class MediaEmbed {
 		// Add custom providers from config array
 		if (!empty($config['custom_providers']) && is_array($config['custom_providers'])) {
 			foreach ($config['custom_providers'] as $provider) {
-				$this->addProvider($provider);
+				$this->addProviderConfig(ProviderConfig::fromArray($provider));
 			}
 		}
 	}
@@ -132,59 +132,38 @@ class MediaEmbed {
 			return null;
 		}
 
-		// local files?
-		if ($host === 'local') {
-			$res = $this->embedLocal($id);
-			if (!$res) {
-				$stub = [];
-				$Object = $this->object($stub, $config);
-
-				return $Object;
-			}
-
-			//TODO
+		if (empty($this->_hosts[$host])) {
 			return null;
 		}
-
-		// all other hosts
-		$hostArray = $this->getHost($host);
-		if (!$hostArray) {
-			return null;
-		}
-		$stub = $hostArray;
+		$stub = $this->_hosts[$host];
 		$config += $this->config;
 
 		$stub['id'] = $id;
 		$stub['reverse'] = true;
-		$Object = $this->object($stub, $config);
 
-		return $Object;
+		return $this->object($stub, $config);
 	}
 
 	/**
 	 * Prepare embed video from different video hosts or throw exception on failure.
 	 *
-     * @param string $id
-     * @param string $host
-     * @param array<string, mixed> $config
-     *
-     * @throws \MediaEmbed\Exception\InvalidUrlException When ID or host is empty.
-     * @throws \MediaEmbed\Exception\ProviderNotFoundException When host is not found.
-     * @return \MediaEmbed\Object\MediaObject
+	 * @param string $id
+	 * @param string $host
+	 * @param array<string, mixed> $config
+	 *
+	 * @throws \MediaEmbed\Exception\InvalidUrlException When ID or host is empty.
+	 * @throws \MediaEmbed\Exception\ProviderNotFoundException When host is not found.
+	 * @return \MediaEmbed\Object\MediaObject
 	 */
 	public function parseIdOrFail(string $id, string $host, array $config = []): MediaObject {
 		if (!$id || !$host) {
 			throw new InvalidUrlException('', 'ID and host are required.');
 		}
 
-		// local files not supported in OrFail variant
-		if ($host === 'local') {
+		if (empty($this->_hosts[$host])) {
 			throw new ProviderNotFoundException($host);
 		}
-
-		// all other hosts
-		$hostArray = $this->getHostOrFail($host);
-		$stub = $hostArray;
+		$stub = $this->_hosts[$host];
 		$config += $this->config;
 
 		$stub['id'] = $id;
@@ -275,24 +254,6 @@ class MediaEmbed {
 	}
 
 	/**
-	 * MediaEmbed::_match()
-	 *
-	 * @param string $url
-	 * @param array<string> $regexRules
-	 * @return array<string>
-	 */
-	protected function _matchUrl(string $url, array $regexRules): array {
-		foreach ($regexRules as $regexRule) {
-
-			if (preg_match('~' . $regexRule . '~imu', $url, $match)) {
-				return $match;
-			}
-		}
-
-		return [];
-	}
-
-	/**
 	 * Attempt to parse the embed id from a given URL
 	 *
 	 * @param string $url
@@ -341,36 +302,6 @@ class MediaEmbed {
 	}
 
 	/**
-	 * Add a single provider dynamically.
-	 *
-	 * @deprecated Use addProviderConfig() with ProviderConfig DTO for type-safe provider configuration.
-	 *
-	 * @param array<string, mixed> $provider Provider configuration array.
-	 * @param bool $override Whether to override existing provider with same name.
-	 * @return $this
-	 */
-	public function addProvider(array $provider, bool $override = false) {
-		if (empty($provider['name'])) {
-			return $this;
-		}
-
-		$slug = !empty($provider['slug']) ? $provider['slug'] : $this->_slug($provider['name']);
-
-		if (!$override && isset($this->_hosts[$slug])) {
-			return $this;
-		}
-
-		if (empty($provider['slug'])) {
-			$provider['slug'] = $slug;
-		}
-
-		$this->_hosts[$slug] = $provider;
-		$this->urlMatcher = null; // Reset matcher when providers change
-
-		return $this;
-	}
-
-	/**
 	 * Load providers from a configuration file.
 	 *
 	 * Supports PHP, JSON, or serialized array formats.
@@ -398,7 +329,7 @@ class MediaEmbed {
 		if (is_array($providers)) {
 			foreach ($providers as $provider) {
 				if (is_array($provider)) {
-					$this->addProvider($provider);
+					$this->addProviderConfig(ProviderConfig::fromArray($provider));
 				}
 			}
 		}
@@ -445,68 +376,32 @@ class MediaEmbed {
 	}
 
 	/**
-	 * @deprecated Use getProvider() which returns a ProviderConfig DTO.
-	 *
-	 * @param string $alias
-	 * @return array<string, mixed>|null Host info or null on failure
-	 */
-	public function getHost(string $alias): ?array {
-		if (!$this->_hosts) {
-			$this->_hosts = $this->getHosts();
-		}
-		if (empty($this->_hosts[$alias])) {
-			return null;
-		}
-
-		return $this->_hosts[$alias];
-	}
-
-	/**
-	 * Get a provider by alias or throw exception if not found.
-	 *
-	 * @deprecated Use getProviderOrFail() which returns a ProviderConfig DTO.
-	 *
-	 * @param string $alias
-	 * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
-	 * @return array<string, mixed> Host info
-	 */
-	public function getHostOrFail(string $alias): array {
-		if (!$this->_hosts) {
-			$this->_hosts = $this->getHosts();
-		}
-		if (empty($this->_hosts[$alias])) {
-			throw new ProviderNotFoundException($alias);
-		}
-
-		return $this->_hosts[$alias];
-	}
-
-	/**
 	 * Get a provider configuration by alias.
 	 *
 	 * @param string $alias Provider slug/alias.
 	 * @return \MediaEmbed\Provider\ProviderConfig|null Provider config or null if not found.
 	 */
 	public function getProvider(string $alias): ?ProviderConfig {
-		$host = $this->getHost($alias);
-		if ($host === null) {
+		if (empty($this->_hosts[$alias])) {
 			return null;
 		}
 
-		return ProviderConfig::fromArray($host);
+		return ProviderConfig::fromArray($this->_hosts[$alias]);
 	}
 
 	/**
 	 * Get a provider configuration by alias or throw exception.
 	 *
-     * @param string $alias Provider slug/alias.
-     * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
-     * @return \MediaEmbed\Provider\ProviderConfig Provider config.
+	 * @param string $alias Provider slug/alias.
+	 * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
+	 * @return \MediaEmbed\Provider\ProviderConfig Provider config.
 	 */
 	public function getProviderOrFail(string $alias): ProviderConfig {
-		$host = $this->getHostOrFail($alias);
+		if (empty($this->_hosts[$alias])) {
+			throw new ProviderNotFoundException($alias);
+		}
 
-		return ProviderConfig::fromArray($host);
+		return ProviderConfig::fromArray($this->_hosts[$alias]);
 	}
 
 	/**
@@ -547,16 +442,6 @@ class MediaEmbed {
 	}
 
 	/**
-	 * Create the embed code for a local file
-	 *
-	 * @param string $file The file we are wanting to embed
-	 * @return bool Whether the URL contains valid/supported video
-	 */
-	public function embedLocal(string $file): bool {
-		return false;
-	}
-
-	/**
 	 * @param array<string, mixed>|string $stub
 	 * @param array<string, mixed> $config
 	 *
@@ -564,11 +449,10 @@ class MediaEmbed {
 	 */
 	public function object($stub, array $config = []): ?MediaObject {
 		if (!is_array($stub)) {
-			$host = $this->getHost($stub);
-			if (!$host) {
+			if (empty($this->_hosts[$stub])) {
 				return null;
 			}
-			$stub = $host;
+			$stub = $this->_hosts[$stub];
 		}
 		if (!isset($stub['slug']) && !empty($stub['name'])) {
 			$stub['slug'] = $this->_slug($stub['name']);

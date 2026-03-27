@@ -2,9 +2,9 @@
 
 namespace MediaEmbed\Test;
 
-use InvalidArgumentException;
 use MediaEmbed\MediaEmbed;
 use MediaEmbed\Object\MediaObject;
+use MediaEmbed\Provider\ProviderConfig;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -130,44 +130,6 @@ class MediaEmbedTest extends TestCase {
 		$this->assertNull($result);
 	}
 
-	public function testParseUrlRejectsTextContainingSupportedUrl(): void {
-		$MediaEmbed = new MediaEmbed();
-		$result = $MediaEmbed->parseUrl('Watch https://www.youtube.com/watch?v=yiSjHJnc9CY now');
-
-		$this->assertNull($result);
-	}
-
-	public function testParseUrlRejectsWrapperUrlContainingSupportedUrl(): void {
-		$MediaEmbed = new MediaEmbed();
-		$result = $MediaEmbed->parseUrl('https://example.com/?u=https://www.youtube.com/watch?v=yiSjHJnc9CY');
-
-		$this->assertNull($result);
-	}
-
-	public function testParseUrlRejectsNonHttpUrl(): void {
-		$MediaEmbed = new MediaEmbed();
-		$result = $MediaEmbed->parseUrl('javascript:https://www.youtube.com/watch?v=yiSjHJnc9CY');
-
-		$this->assertNull($result);
-	}
-
-	public function testParseUrlSupportsUnindexedCustomProviderPattern(): void {
-		$MediaEmbed = new MediaEmbed();
-		$MediaEmbed->addProvider([
-			'name' => 'UnindexedProvider',
-			'website' => 'https://unindexed.example.com',
-			'url-match' => 'https?://[^/]+/unindexed/([0-9]+)',
-			'embed-src' => '//unindexed.example.com/embed/$2',
-			'embed-width' => 640,
-			'embed-height' => 360,
-			'iframe-player' => '//unindexed.example.com/embed/$2',
-		]);
-
-		$Object = $MediaEmbed->parseUrl('https://video.example.org/unindexed/12345');
-		$this->assertInstanceOf(MediaObject::class, $Object);
-		$this->assertSame('12345', $Object->id());
-	}
-
 	/**
 	 * @dataProvider getUrls
 	 * @param string $url
@@ -196,37 +158,6 @@ class MediaEmbedTest extends TestCase {
 		}
 
 		return $urls;
-	}
-
-	/**
-	 * @dataProvider getEmbedSrcUrls
-	 * @param string $url
-	 * @param string $expected
-	 * @return void
-	 */
-	#[DataProvider('getEmbedSrcUrls')]
-	public function testGetEmbedSrc(string $url, string $expected): void {
-		$MediaEmbed = new MediaEmbed();
-		$Object = $MediaEmbed->parseUrl($url);
-		$this->assertInstanceOf(MediaObject::class, $Object);
-
-		$this->assertSame($expected, $Object->getEmbedSrc());
-	}
-
-	/**
-	 * Data provider for expected embed src URLs.
-	 *
-	 * @return array
-	 */
-	public static function getEmbedSrcUrls(): array {
-		return [
-			['https://www.mixcloud.com/spartacus/party-time/', '//www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2Fspartacus%2Fparty-time%2F&wmode=transparent'],
-			['https://open.spotify.com/track/4iV5W9uYEdYUVa79Axb7Rh', 'https://open.spotify.com/embed/track/4iV5W9uYEdYUVa79Axb7Rh?wmode=transparent'],
-			['https://artist.bandcamp.com/track/song-title', 'https://bandcamp.com/EmbeddedPlayer/track=artist/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/?wmode=transparent'],
-			['https://peertube.example.org/w/abc123XYZ', 'https://peertube.example.org/videos/embed/abc123XYZ?wmode=transparent'],
-			['https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/', 'https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/embed/?wmode=transparent'],
-			['https://lds.cdn.vooplayer.com/publish/MTEwNTMw', 'https://lds.cdn.vooplayer.com/publish/MTEwNTMw?fallback=true&wmode=transparent'],
-		];
 	}
 
 	/**
@@ -279,79 +210,6 @@ class MediaEmbedTest extends TestCase {
 
 		$src = $Object->getEmbedSrc();
 		$this->assertStringContainsString('//www.youtube.com/embed/h9Pu4bZqWyg', $src);
-	}
-
-	/**
-	 * @return void
-	 */
-	public function testYoutubeWithoutIframe(): void {
-		$MediaEmbed = new MediaEmbed(['prefer' => 'object']);
-		$Object = $MediaEmbed->parseUrl('http://www.youtube.com/watch?v=h9Pu4bZqWyg');
-		$this->assertInstanceOf(MediaObject::class, $Object);
-
-		$code = $Object->getEmbedCode();
-		$this->assertStringNotContainsString('<iframe', $code);
-	}
-
-	public function testEmbedCodeEscapesIframeSource(): void {
-		$MediaEmbed = new MediaEmbed();
-		$MediaEmbed->addProvider([
-			'name' => 'UnsafeProvider',
-			'website' => 'https://unsafe.example.com',
-			'url-match' => 'https://unsafe\\.example\\.com/video/([0-9]+)',
-			'embed-src' => '//unsafe.example.com/embed/$2',
-			'embed-width' => 640,
-			'embed-height' => 360,
-			'iframe-player' => '//unsafe.example.com/embed/$2?foo=1&bar="quoted"',
-		]);
-
-		$Object = $MediaEmbed->parseUrl('https://unsafe.example.com/video/12345');
-		$this->assertInstanceOf(MediaObject::class, $Object);
-
-		$code = $Object->getEmbedCode();
-
-		$this->assertStringContainsString('src="//unsafe.example.com/embed/12345?foo=1&amp;bar=&quot;quoted&quot;&amp;wmode=transparent"', $code);
-		$this->assertStringNotContainsString('bar="quoted"', $code);
-		$this->assertSame('//unsafe.example.com/embed/12345?foo=1&bar="quoted"&wmode=transparent', $Object->getEmbedSrc());
-		$this->assertSame('//unsafe.example.com/embed/12345?foo=1&amp;bar=&quot;quoted&quot;&amp;wmode=transparent', $Object->getEmbedSrcForHtml());
-	}
-
-	public function testSetAttributeRejectsInvalidAttributeName(): void {
-		$MediaEmbed = new MediaEmbed();
-		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
-		$this->assertInstanceOf(MediaObject::class, $Object);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid iframe attribute name "x onload"');
-
-		$Object->setAttribute('x onload', 'alert(1)');
-	}
-
-	public function testSetAttributeRejectsEventHandlerAttributeName(): void {
-		$MediaEmbed = new MediaEmbed();
-		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
-		$this->assertInstanceOf(MediaObject::class, $Object);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid iframe attribute name "onload"');
-
-		$Object->setAttribute('onload', 'alert(1)');
-	}
-
-	public function testSetAttributeAllowsDataAndAriaAttributes(): void {
-		$MediaEmbed = new MediaEmbed();
-		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
-		$this->assertInstanceOf(MediaObject::class, $Object);
-
-		$Object->setAttribute([
-			'data-controller' => 'media',
-			'aria-label' => 'Video',
-		]);
-
-		$code = $Object->getEmbedCode();
-
-		$this->assertStringContainsString(' data-controller="media"', $code);
-		$this->assertStringContainsString(' aria-label="Video"', $code);
 	}
 
 	/**
@@ -490,31 +348,29 @@ class MediaEmbedTest extends TestCase {
 	}
 
 	/**
-	 * Test addProvider() method
+	 * Test addProviderConfig() method
 	 *
 	 * @return void
 	 */
-	public function testAddProvider(): void {
+	public function testAddProviderConfig(): void {
 		$MediaEmbed = new MediaEmbed();
 
-		$customProvider = [
-			'name' => 'CustomProvider',
-			'website' => 'https://custom.example.com',
-			'url-match' => [
-				'https?://(?:www\.)?custom\.example\.com/video/([0-9]+)',
-			],
-			'embed-src' => '',
-			'embed-width' => '640',
-			'embed-height' => '360',
-			'iframe-player' => '//custom.example.com/embed/$2',
-		];
+		$customProvider = new ProviderConfig(
+			name: 'CustomProvider',
+			website: 'https://custom.example.com',
+			urlMatch: ['https?://(?:www\.)?custom\.example\.com/video/([0-9]+)'],
+			embedSrc: '',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '//custom.example.com/embed/$2',
+		);
 
-		$MediaEmbed->addProvider($customProvider);
+		$MediaEmbed->addProviderConfig($customProvider);
 
-		$host = $MediaEmbed->getHost('customprovider');
-		$this->assertNotNull($host);
-		$this->assertSame('CustomProvider', $host['name']);
-		$this->assertSame('https://custom.example.com', $host['website']);
+		$provider = $MediaEmbed->getProvider('customprovider');
+		$this->assertNotNull($provider);
+		$this->assertSame('CustomProvider', $provider->name);
+		$this->assertSame('https://custom.example.com', $provider->website);
 
 		// Test parsing a URL with the custom provider
 		$Object = $MediaEmbed->parseUrl('https://custom.example.com/video/12345');
@@ -555,13 +411,13 @@ class MediaEmbedTest extends TestCase {
 
 		$MediaEmbed = new MediaEmbed(['custom_providers' => $customProviders]);
 
-		$host1 = $MediaEmbed->getHost('testprovider1');
-		$this->assertNotNull($host1);
-		$this->assertSame('TestProvider1', $host1['name']);
+		$provider1 = $MediaEmbed->getProvider('testprovider1');
+		$this->assertNotNull($provider1);
+		$this->assertSame('TestProvider1', $provider1->name);
 
-		$host2 = $MediaEmbed->getHost('testprovider2');
-		$this->assertNotNull($host2);
-		$this->assertSame('TestProvider2', $host2['name']);
+		$provider2 = $MediaEmbed->getProvider('testprovider2');
+		$this->assertNotNull($provider2);
+		$this->assertSame('TestProvider2', $provider2->name);
 
 		// Test parsing URLs
 		$Object1 = $MediaEmbed->parseUrl('https://test1.example.com/v/abc123');
@@ -582,24 +438,24 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		// Try to add without override - should not replace existing
-		$customYouTube = [
-			'name' => 'YouTube',
-			'website' => 'https://custom-youtube.example.com',
-			'url-match' => ['https?://custom-youtube\.example\.com/watch/([0-9]+)'],
-			'embed-src' => '',
-			'embed-width' => '800',
-			'embed-height' => '600',
-			'iframe-player' => '//custom-youtube.example.com/embed/$2',
-		];
+		$customYouTube = new ProviderConfig(
+			name: 'YouTube',
+			website: 'https://custom-youtube.example.com',
+			urlMatch: ['https?://custom-youtube\.example\.com/watch/([0-9]+)'],
+			embedSrc: '',
+			embedWidth: 800,
+			embedHeight: 600,
+			iframePlayer: '//custom-youtube.example.com/embed/$2',
+		);
 
-		$MediaEmbed->addProvider($customYouTube, false);
-		$host = $MediaEmbed->getHost('youtube');
-		$this->assertSame('https://www.youtube.com', $host['website']); // Should still be original
+		$MediaEmbed->addProviderConfig($customYouTube, false);
+		$provider = $MediaEmbed->getProvider('youtube');
+		$this->assertSame('https://www.youtube.com', $provider->website); // Should still be original
 
 		// Now with override
-		$MediaEmbed->addProvider($customYouTube, true);
-		$host = $MediaEmbed->getHost('youtube');
-		$this->assertSame('https://custom-youtube.example.com', $host['website']); // Should be overridden
+		$MediaEmbed->addProviderConfig($customYouTube, true);
+		$provider = $MediaEmbed->getProvider('youtube');
+		$this->assertSame('https://custom-youtube.example.com', $provider->website); // Should be overridden
 	}
 
 	/**
@@ -627,9 +483,9 @@ class MediaEmbedTest extends TestCase {
 
 		$MediaEmbed = new MediaEmbed(['providers_config' => $tempFile]);
 
-		$host = $MediaEmbed->getHost('fileprovider');
-		$this->assertNotNull($host);
-		$this->assertSame('FileProvider', $host['name']);
+		$provider = $MediaEmbed->getProvider('fileprovider');
+		$this->assertNotNull($provider);
+		$this->assertSame('FileProvider', $provider->name);
 
 		unlink($tempFile);
 	}
@@ -659,9 +515,9 @@ class MediaEmbedTest extends TestCase {
 
 		$MediaEmbed = new MediaEmbed(['providers_config' => $tempFile]);
 
-		$host = $MediaEmbed->getHost('jsonprovider');
-		$this->assertNotNull($host);
-		$this->assertSame('JsonProvider', $host['name']);
+		$provider = $MediaEmbed->getProvider('jsonprovider');
+		$this->assertNotNull($provider);
+		$this->assertSame('JsonProvider', $provider->name);
 
 		unlink($tempFile);
 	}

@@ -56,19 +56,6 @@ class MediaEmbedOrFailTest extends TestCase {
 		$this->mediaEmbed->parseIdOrFail('abc123', 'nonexistent-provider');
 	}
 
-	public function testGetHostOrFailSuccess(): void {
-		$result = $this->mediaEmbed->getHostOrFail('youtube');
-
-		$this->assertIsArray($result);
-		$this->assertSame('YouTube', $result['name']);
-	}
-
-	public function testGetHostOrFailThrows(): void {
-		$this->expectException(ProviderNotFoundException::class);
-
-		$this->mediaEmbed->getHostOrFail('nonexistent');
-	}
-
 	public function testGetProviderSuccess(): void {
 		$result = $this->mediaEmbed->getProvider('youtube');
 
