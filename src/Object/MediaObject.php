@@ -167,6 +167,15 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
+	 * Check if iframe mode should be used.
+	 *
+	 * @return bool
+	 */
+	protected function useIframeMode(): bool {
+		return !empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe';
+	}
+
+	/**
 	 * Returns a png img
 	 *
 	 * @return string|null Resource content or null if not available
@@ -235,24 +244,14 @@ class MediaObject implements ObjectInterface {
 	 * @return $this
 	 */
 	public function setParam($param, ?string $value = null) {
-		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
-			if (is_array($param)) {
-				foreach ($param as $p => $v) {
-					$this->_iframeParams[$p] = $v;
-				}
+		$params = $this->useIframeMode() ? '_iframeParams' : '_objectParams';
 
-			} else {
-				$this->_iframeParams[$param] = $value;
+		if (is_array($param)) {
+			foreach ($param as $p => $v) {
+				$this->{$params}[$p] = $v;
 			}
 		} else {
-			if (is_array($param)) {
-				foreach ($param as $p => $v) {
-					$this->_objectParams[$p] = $v;
-				}
-
-			} else {
-				$this->_objectParams[$param] = $value;
-			}
+			$this->{$params}[$param] = $value;
 		}
 
 		return $this;
@@ -268,24 +267,14 @@ class MediaObject implements ObjectInterface {
 	 * @return $this
 	 */
 	public function setAttribute($param, $value = null) {
-		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
-			if (is_array($param)) {
-				foreach ($param as $p => $v) {
-					$this->_iframeAttributes[$p] = $v;
-				}
+		$attributes = $this->useIframeMode() ? '_iframeAttributes' : '_objectAttributes';
 
-			} else {
-				$this->_iframeAttributes[$param] = $value;
+		if (is_array($param)) {
+			foreach ($param as $p => $v) {
+				$this->{$attributes}[$p] = $v;
 			}
 		} else {
-			if (is_array($param)) {
-				foreach ($param as $p => $v) {
-					$this->_objectAttributes[$p] = $v;
-				}
-
-			} else {
-				$this->_objectAttributes[$param] = $value;
-			}
+			$this->{$attributes}[$param] = $value;
 		}
 
 		return $this;
@@ -346,25 +335,13 @@ class MediaObject implements ObjectInterface {
 	 * @return array<string, mixed>|string|null Object params
 	 */
 	public function getParams(?string $key = null) {
-		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
-			if ($key === null) {
-				return $this->_iframeParams;
-			}
-			if (!isset($this->_iframeParams[$key])) {
-				return null;
-			}
-
-			return $this->_iframeParams[$key];
-		}
+		$params = $this->useIframeMode() ? $this->_iframeParams : $this->_objectParams;
 
 		if ($key === null) {
-			return $this->_objectParams;
-		}
-		if (!isset($this->_objectParams[$key])) {
-			return null;
+			return $params;
 		}
 
-		return $this->_objectParams[$key];
+		return $params[$key] ?? null;
 	}
 
 	/**
@@ -374,25 +351,13 @@ class MediaObject implements ObjectInterface {
 	 * @return mixed Object attribute
 	 */
 	public function getAttributes(?string $key = null) {
-		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
-			if ($key === null) {
-				return $this->_iframeAttributes;
-			}
-			if (!isset($this->_iframeAttributes[$key])) {
-				return null;
-			}
-
-			return $this->_iframeAttributes[$key];
-		}
+		$attributes = $this->useIframeMode() ? $this->_iframeAttributes : $this->_objectAttributes;
 
 		if ($key === null) {
-			return $this->_objectAttributes;
-		}
-		if (!isset($this->_objectAttributes[$key])) {
-			return null;
+			return $attributes;
 		}
 
-		return $this->_objectAttributes[$key];
+		return $attributes[$key] ?? null;
 	}
 
 	/**
@@ -401,11 +366,7 @@ class MediaObject implements ObjectInterface {
 	 * @return string The embed HTML
 	 */
 	public function getEmbedCode(): string {
-		if (!empty($this->_stub['iframe-player']) && $this->config['prefer'] === 'iframe') {
-			return $this->_buildIframe();
-		}
-
-		return $this->_buildObject();
+		return $this->useIframeMode() ? $this->_buildIframe() : $this->_buildObject();
 	}
 
 	/**
