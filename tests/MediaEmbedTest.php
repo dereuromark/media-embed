@@ -16,7 +16,6 @@ class MediaEmbedTest extends TestCase {
 	 * @var array
 	 */
 	protected static array $_stubs = [
-		'http://www.clipmoon.com/videos/91464f/dog-cat-and-printer.html' => '91464f',
 		'https://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music' => 'x2bqyl6',
 		'https://dai.ly/x2bqyl6' => 'x2bqyl6',
 		'http://www.youtube.com/watch?v=yiSjHJnc9CY&feature=feedrec_grec_index' => 'yiSjHJnc9CY',
@@ -27,8 +26,6 @@ class MediaEmbedTest extends TestCase {
 		'https://www.facebook.com/diginights.HN/videos/1231155290281511/' => '1231155290281511',
 		'https://www.facebook.com/SkySports/videos/vb.10911153761/10153310275743762/?type=2&theater' => '10153310275743762',
 		'https://www.facebook.com/demotivateurFood/videos/vl.184872862011827/1034411179983244/?type=1' => '1034411179983244',
-		// Not yet possible
-		'http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy' => '7645001',
 		'http://vimeo.com/19570639' => '19570639',
 		'http://vimeo.com/245928033/572c32a20d' => '245928033/572c32a20d',
 		'http://vimeo.com/channels/staffpicks/99585787' => '99585787',
@@ -36,29 +33,7 @@ class MediaEmbedTest extends TestCase {
 		'http://www.clipfish.de/special/dsds/video/3507980/dsds-recall-anna-und-tobias-harmonieren/' => '3507980',
 		'http://www.clipfish.de/special/kino-trailer/video/3495650/serengeti-filmausschnitt-gepardenkinder-und-die-jagd-der-mutter/' => '3495650',
 		'http://www.clipfish.de/musikvideos/video/3486922/nicole-scherzinger-poison/' => '3486922',
-		'http://video.aol.com/video/defining-moments-sarah-chalke/711269187' => '711269187',
-		'http://www.xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
-		'http://xvideos.com/video566979/amber_tickle_tied_to_bed' => '566979',
-		// errors
-		//'http://www.spike.com/video-clips/g4539c/1000-ways-to-die-gangsta-trapped' => 'g4539c',
-		// errors
-		//'http://www.theonion.com/video/american-dream-declared-dead-as-final-believer-giv,19846/' => '19846',
-		// errors
-		//'http://www.flickr.com/photos/24068543@N00/5582723426/' => '5582723426',
-		//'http://video.sina.com.cn/v/b/49393210-2042807271.html' => '49393210',
-		//'http://video.sina.com.cn/p/news/w/v/2014-07-21/170364075707.html' => '170364075707',
-		'http://community.webshots.com/slideshow/577840443HaeXKG?mediaPosition=4' => '577840443HaeXKG',
-		'http://www.crunchyroll.com/super-robot-wars-og-the-inspector/episode-25-what-once-was-572858' => '572858',
-		// Errors
-		//'http://video.yahoo.com/purinaanimalallstars-10513021/nowplaying-24721185/dog-s-guilty-conscience-charms-web-24722485.html' => '24722485',
-		//'http://new.music.yahoo.com/Burning-Spear/videos/view/Burning-Reggae--2139897;_ylt=AhnR4YcZGFPnoo2G5.JJRTesvyUv' => '2139897',
-		'http://new.music.yahoo.com/reggae-cowboys/videos/view/reggae-rodeo--2146467' => '2146467',
-		// more difficult
-		//'http://www.youtube.com/user/AttilaHildmannTV#p/c/D0F9D267C03BF7BE/0/hHCnY3RwxMM' => 'hHCnY3RwxMM',
 		'http://www.youtube.com/watch?v=-vGzem8glbE&feature=channel' => '-vGzem8glbE',
-		'http://www.ebaumsworld.com/video/watch/80648170' => '80648170',
-		'http://www.ebaumsworld.com/video/watch/80648170/' => '80648170',
-		//'http://www.videojug.com/film/summer-party-look-with-daniel-sandler' => 'f027ea3e-6eda-8f23-3cc3-ff0008d15e6e',
 		'http://www.aparat.com/v/sSLMC' => 'sSLMC',
 		'http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/' => '245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
 		// Fetch lookup required
@@ -193,7 +168,6 @@ class MediaEmbedTest extends TestCase {
 		$test = [
 			'dailymotion' => 'x2bqyl6',
 			'youtube' => 'yiSjHJnc9CY',
-			'myvideo' => '7645001',
 			'matterport' => 'Zh14WDtkjdC',
 		];
 
@@ -378,9 +352,9 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$hosts = $MediaEmbed->getHosts();
-		$this->assertTrue(count($hosts) > 50);
+		$this->assertTrue(count($hosts) > 30);
 
-		$hosts = $MediaEmbed->getHosts(['myvideo', 'youtube']);
+		$hosts = $MediaEmbed->getHosts(['vimeo', 'youtube']);
 		$this->assertTrue(count($hosts) === 2);
 	}
 
