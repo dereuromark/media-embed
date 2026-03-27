@@ -55,7 +55,6 @@ class MediaEmbedTest extends TestCase {
 		'http://www.crunchyroll.com/super-robot-wars-og-the-inspector/episode-25-what-once-was-572858' => '572858',
 		// Errors
 		//'http://video.yahoo.com/purinaanimalallstars-10513021/nowplaying-24721185/dog-s-guilty-conscience-charms-web-24722485.html' => '24722485',
-		'http://www.viddler.com/explore/sandieman/videos/618/' => '618',
 		//'http://new.music.yahoo.com/Burning-Spear/videos/view/Burning-Reggae--2139897;_ylt=AhnR4YcZGFPnoo2G5.JJRTesvyUv' => '2139897',
 		'http://new.music.yahoo.com/reggae-cowboys/videos/view/reggae-rodeo--2146467' => '2146467',
 		// more difficult

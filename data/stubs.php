@@ -813,16 +813,6 @@ $stubs = [
 		'embed-width' => '480',
 		'embed-height' => '360',
 	],
-	# errors.. ex: https://www.spike.com/full-episodes/4l230e/1000-ways-to-die-stupid-as-death-does-season-3-ep-322 => https://media.mtvnservices.com/mgid:arc:video:spike.com:5fade703-67f5-4228-893b-b8afe49a6867
-	[
-		'name' => 'Spike',
-		'website' => 'https://www.spike.com',
-		'url-match' => 'https?://(?:www\.)?spike\.com/video-clips/([a-z0-9]{4,12})/',
-		'embed-src' => 'https://www.spike.com/efp?flvbaseclip=$2&',
-		//new: 'embed-scr' => 'https://media.mtvnservices.com/mgid:arc:video:spike.com:$2',
-		'embed-width' => '448',
-		'embed-height' => '365',
-	],
 	[
 		'name' => 'Songza',
 		'website' => 'https://www.songza.com',
@@ -848,16 +838,6 @@ $stubs = [
 		'embed-width' => '446',
 		'embed-height' => '326',
 		'flashvars' => 'vu=https://video.ted.com/talks/dynamic/$2-medium.flv&su=https://images.ted.com/images/ted/tedindex/embed-posters/$2.embed_thumbnail.jpg&vw=432&vh=240',
-	],
-	# errors!
-	[
-		'name' => 'The Onion',
-		'website' => 'https://www.theonion.com',
-		'url-match' => 'https?://(?:www\.)?theonion\.com/video/.*',
-		'fetch-match' => 'videoid\s?=\s?"([0-9]{2,7})";.*var image_url\s?=\s?escape\("([^"]*)"',
-		'embed-src' => 'https://www.theonion.com/content/themes/common/assets/onn_embed/embedded_player.swf?image=$3&amp;videoid=$2',
-		'embed-width' => '480',
-		'embed-height' => '430',
 	],
 	[
 		'name' => 'TinyPic',
@@ -937,16 +917,6 @@ $stubs = [
 		'embed-width' => '428',
 		'embed-height' => '352',
 	],
-	# errors! ex: https://www.viddler.com/explore/sandieman/videos/618/ => https://cdn.static.viddler.com/flash/publisher.swf?ref=&key=ed57527a
-	[
-		'name' => 'Viddler',
-		'website' => 'https://www.viddler.com',
-		//'url-match' => '(https://www\.viddler\.com/(?:player|simple)/(?:[0-9a-f]{8})/)',
-		'url-match' => 'https?://www\.viddler\.com/explore/[a-z0-9\-_]*/videos/([0-9]*)/',
-		'embed-src' => 'https://cdn.static.viddler.com/flash/simple_publisher.swf?key=$2',
-		'embed-width' => '437',
-		'embed-height' => '370',
-	],
 	[
 		'name' => 'Videa',
 		'website' => 'https://www.videa.hu',
@@ -1015,17 +985,6 @@ $stubs = [
 		'embed-width' => '420',
 		'embed-height' => '370',
 	],
-	# not working...
-	[
-		'name' => 'Yahoo Video',
-		'website' => 'https://video.yahoo.com',
-		//'url-match' => 'https?://(?:(?:www|uk|fr|it|es|br|au|mx|de|ca)\.)?video\.yahoo\.com/watch/([0-9]{1,12})/([0-9]{1,12})',
-		'url-match' => 'https?://(?:(?:www|uk|fr|it|es|br|au|mx|de|ca)\.)?video\.yahoo\.com/(?:[^"]*?)/(?:[^"]*?)/([a-z0-9_]+)-([0-9]{1,12})',
-		'embed-src' => 'https://d.yimg.com/nl/vyc/site/player.swf',
-		'embed-width' => '630',
-		'embed-height' => '354',
-		'flashvars' => 'id=$3&vid=$2&lang=en-us&intl=us&embed=1',
-	],
 	[
 		'name' => 'Yahoo Music Videos',
 		'website' => 'https://music.yahoo.com',
@@ -1033,24 +992,6 @@ $stubs = [
 		'embed-src' => 'https://d.yimg.com/cosmos.bcst.yahoo.com/up/fop/embedflv/swf/fop.swf?id=v$2&eID=0000000&lang=us&enableFullScreen=0&shareEnable=1',
 		'embed-width' => '400',
 		'embed-height' => '255',
-	],
-	# offline
-	[
-		'name' => 'YouKu',
-		'website' => 'https://www.youku.com',
-		'url-match' => 'https?://(?:v\.youku\.com/v_show/id_|player\.youku\.com/player\.php/sid/)([0-9a-z]{6,14})',
-		'embed-src' => 'https://player.youku.com/player.php/sid/$2=/v.swf',
-		'embed-width' => '450',
-		'embed-height' => '372',
-	],
-	# errors: https://video.sina.com.cn/v/b/49393210-2042807271.html
-	[
-		'name' => 'sina video',
-		'website' => 'https://video.sina.com.cn',
-		'url-match' => 'https?://(?:vhead\.blog|you\.video)\.sina\.com\.cn/(?:player/(?:[^"]*?)vid=|b/)([0-9]{5,12})(?:-|&(?:amp;)?uid=)([0-9]{5,12})',
-		'embed-src' => 'https://vhead.blog.sina.com.cn/player/outer_player.swf?auto=0&vid=$2&uid=$3',
-		'embed-width' => '480',
-		'embed-height' => '370',
 	],
 	# https://www.xvideos.com/video566979/amber_tickle_tied_to_bed
 	[
