@@ -104,19 +104,16 @@ class MediaEmbedTest extends TestCase {
 	];
 
 	/**
-	 * Test Generation of a basic youtube MediaObject (empty)
+	 * Test getting a provider configuration.
 	 *
 	 * @return void
 	 */
-	public function testObject(): void {
+	public function testGetProvider(): void {
 		$MediaEmbed = new MediaEmbed();
-		$Object = $MediaEmbed->object('youtube');
-		$this->assertTrue($Object !== null);
-		$result = $Object->name();
-		$this->assertSame('YouTube', $result);
-
-		$result = $Object->id();
-		$this->assertSame('', $result);
+		$provider = $MediaEmbed->getProvider('youtube');
+		$this->assertNotNull($provider);
+		$this->assertSame('YouTube', $provider->name);
+		$this->assertSame('https://www.youtube.com', $provider->website);
 	}
 
 	/**
@@ -198,7 +195,7 @@ class MediaEmbedTest extends TestCase {
 		$icon = $Object->icon();
 		$this->assertNotEmpty($icon);
 
-		$location = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DS;
+		$location = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 		$filename = $Object->saveIcon($location, $icon);
 		$this->assertSame('youtube.png', $filename);
 

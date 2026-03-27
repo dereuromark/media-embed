@@ -18,8 +18,8 @@ final class ProviderConfig {
 	 * @param string $name Display name of the provider.
 	 * @param string $website Provider's website URL.
 	 * @param array<string>|string $urlMatch URL matching regex pattern(s).
-	 * @param int|string $embedWidth Default embed width.
-	 * @param int|string $embedHeight Default embed height.
+	 * @param string|int $embedWidth Default embed width.
+	 * @param string|int $embedHeight Default embed height.
 	 * @param string|null $slug URL-safe identifier (auto-generated from name if not provided).
 	 * @param string|null $iframePlayer iframe src template URL.
 	 * @param string|null $imageSrc Thumbnail image URL template.
