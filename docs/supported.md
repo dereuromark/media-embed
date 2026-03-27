@@ -1,6 +1,6 @@
 # Supported Media Services
 
-98 services
+97 services
 
  - [123video](https://www.123video.nl)
  - [AOL Video (Old)](https://video.aol.com)
@@ -21,7 +21,6 @@
  - [Dailyhaha](https://www.dailyhaha.com)
  - [Dailymotion](https://www.dailymotion.com)
  - [Divshare](https://www.divshare.com)
- - [DotSub (w/o Captions)](https://www.dotsub.com)
  - [Dropshots](https://www.dropshots.com)
  - [EbaumsWorld](https://www.ebaumsworld.com)
  - [ESPN](https://www.espn.com)
