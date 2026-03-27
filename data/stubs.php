@@ -1141,6 +1141,92 @@ $stubs = [
 		'iframe-player' => 'https://www.loom.com/embed/$3',
 		'id' => '$3',
 	],
+	[
+		'name' => 'TikTok',
+		'website' => 'https://www.tiktok.com',
+		'url-match' => [
+			'https?://(?:www\.)?tiktok\.com/@[^/]+/video/([0-9]+)',
+			'https?://(?:vm|vt)\.tiktok\.com/([A-Za-z0-9]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '325',
+		'embed-height' => '580',
+		'iframe-player' => 'https://www.tiktok.com/embed/v2/$2',
+		'id' => '$2',
+	],
+	[
+		'name' => 'Instagram',
+		'website' => 'https://www.instagram.com',
+		'url-match' => [
+			'https?://(?:www\.)?instagram\.com/(?:p|reel|tv)/([A-Za-z0-9_-]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '400',
+		'embed-height' => '480',
+		'iframe-player' => 'https://www.instagram.com/p/$2/embed',
+		'id' => '$2',
+	],
+	[
+		'name' => 'Twitter',
+		'website' => 'https://twitter.com',
+		'url-match' => [
+			'https?://(?:www\.)?(?:twitter|x)\.com/[^/]+/status/([0-9]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '550',
+		'embed-height' => '400',
+		'iframe-player' => 'https://platform.twitter.com/embed/Tweet.html?id=$2',
+		'id' => '$2',
+	],
+	[
+		'name' => 'Reddit',
+		'website' => 'https://www.reddit.com',
+		'url-match' => [
+			'https?://(?:www\.)?reddit\.com/r/[^/]+/comments/([A-Za-z0-9]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '640',
+		'embed-height' => '400',
+		'iframe-player' => 'https://www.redditmedia.com/r/videos/comments/$2?ref_source=embed&embed=true',
+		'id' => '$2',
+	],
+	[
+		'name' => 'Spotify',
+		'website' => 'https://open.spotify.com',
+		'url-match' => [
+			'https?://open\.spotify\.com/(track|album|playlist|episode|show)/([A-Za-z0-9]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '300',
+		'embed-height' => '380',
+		'iframe-player' => 'https://open.spotify.com/embed/$2/$3',
+		'id' => '$3',
+	],
+	[
+		'name' => 'Streamable',
+		'website' => 'https://streamable.com',
+		'url-match' => [
+			'https?://(?:www\.)?streamable\.com/(?:e/)?([A-Za-z0-9]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '640',
+		'embed-height' => '360',
+		'iframe-player' => 'https://streamable.com/e/$2',
+		'id' => '$2',
+	],
+	[
+		'name' => 'Bilibili',
+		'website' => 'https://www.bilibili.com',
+		'url-match' => [
+			'https?://(?:www\.)?bilibili\.com/video/(BV[A-Za-z0-9]+)',
+			'https?://(?:www\.)?bilibili\.com/video/av([0-9]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '640',
+		'embed-height' => '360',
+		'iframe-player' => '//player.bilibili.com/player.html?bvid=$2',
+		'id' => '$2',
+	],
 ];
 
 /**
