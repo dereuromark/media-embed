@@ -347,6 +347,145 @@ $loader = new ArrayLoader([
 $MediaEmbed->loadProvidersFromLoader($loader, reset: true);
 ```
 
+### Provider Collection
+
+Get all providers as a filterable collection:
+
+```php
+use MediaEmbed\Provider\ProviderCollection;
+
+$MediaEmbed = new MediaEmbed();
+
+// Get all providers
+$providers = $MediaEmbed->getProviders();
+echo count($providers); // e.g., 137
+
+// Filter to specific providers
+$subset = $MediaEmbed->getProviders(['youtube', 'vimeo', 'dailymotion']);
+
+// Filter by capabilities
+$withIframe = $providers->withIframeSupport();
+$withThumbnails = $providers->withThumbnailSupport();
+
+// Iterate over providers
+foreach ($providers as $slug => $config) {
+    echo $config->name . ' (' . $slug . ')' . PHP_EOL;
+}
+
+// Chain filters
+$filtered = $providers
+    ->withIframeSupport()
+    ->whitelist(['youtube', 'vimeo', 'twitch']);
+```
+
+### Caching
+
+For better performance on repeated requests, use the cache support:
+
+```php
+use MediaEmbed\Cache\ArrayCache;
+use MediaEmbed\Cache\CacheInterface;
+
+// Using the built-in ArrayCache (in-memory, single request)
+$cache = new ArrayCache();
+$MediaEmbed = new MediaEmbed();
+$matcher = $MediaEmbed->getUrlMatcher();
+$matcher->setCache($cache);
+
+// The domain index will be cached after first match
+$MediaEmbed->parseUrl('https://youtube.com/watch?v=abc');
+```
+
+For persistent caching, implement `CacheInterface` with your preferred cache backend (Redis, Memcached, filesystem, etc.):
+
+```php
+use MediaEmbed\Cache\CacheInterface;
+use Psr\SimpleCache\CacheInterface as Psr16Cache;
+
+class Psr16Adapter implements CacheInterface {
+    public function __construct(private Psr16Cache $cache) {}
+
+    public function get(string $key, mixed $default = null): mixed {
+        return $this->cache->get($key, $default);
+    }
+
+    public function set(string $key, mixed $value, ?int $ttl = null): bool {
+        return $this->cache->set($key, $value, $ttl);
+    }
+
+    public function delete(string $key): bool {
+        return $this->cache->delete($key);
+    }
+
+    public function has(string $key): bool {
+        return $this->cache->has($key);
+    }
+}
+
+// Use with any PSR-16 cache
+$cache = new Psr16Adapter($yourPsr16Cache);
+$MediaEmbed->getUrlMatcher()->setCache($cache, ttl: 3600);
+```
+
+### oEmbed Discovery
+
+For URLs not covered by built-in providers, use oEmbed auto-discovery:
+
+```php
+use MediaEmbed\OEmbed\OEmbedDiscovery;
+
+$discovery = new OEmbedDiscovery();
+
+// Auto-discover and fetch oEmbed data
+$response = $discovery->discover('https://example.com/video/123');
+
+if ($response !== null) {
+    echo $response->title;
+    echo $response->providerName;
+
+    if ($response->hasHtml()) {
+        echo $response->html; // Ready-to-use embed code
+    }
+
+    if ($response->hasThumbnail()) {
+        echo $response->thumbnailUrl;
+    }
+}
+
+// With size constraints
+$response = $discovery->discover($url, maxWidth: 640, maxHeight: 480);
+
+// Or fetch directly from a known endpoint
+$response = $discovery->fetch('https://example.com/oembed?url=...');
+```
+
+The `OEmbedResponse` provides typed access to all oEmbed fields:
+
+```php
+$response->type;           // 'video', 'photo', 'link', or 'rich'
+$response->version;        // oEmbed version (usually '1.0')
+$response->title;          // Content title
+$response->authorName;     // Author/creator name
+$response->authorUrl;      // Author URL
+$response->providerName;   // Provider name (e.g., 'YouTube')
+$response->providerUrl;    // Provider homepage
+$response->thumbnailUrl;   // Thumbnail image URL
+$response->thumbnailWidth; // Thumbnail width
+$response->thumbnailHeight;// Thumbnail height
+$response->html;           // Embed HTML (for video/rich types)
+$response->width;          // Embed width
+$response->height;         // Embed height
+$response->url;            // Source URL (for photo type)
+$response->cacheAge;       // Suggested cache duration in seconds
+
+// Type checks
+$response->isVideo();
+$response->isPhoto();
+$response->isRich();
+$response->hasHtml();
+$response->hasThumbnail();
+```
+
 ### Example with BBCode
 
 #### Parse video content upon save (db input)
