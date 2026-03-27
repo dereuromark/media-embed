@@ -1,9 +1,45 @@
 {
-	"_comment": "For now we ignore some 403 URLs, for details on the tool see https://github.com/tcort/markdown-link-check URL.",
+	"_comment": "For now we ignore some 403 URLs and sites with bot protection, for details on the tool see https://github.com/tcort/markdown-link-check URL.",
 	"ignorePatterns": [
 		{
-			"pattern": "^(https://www.crunchyroll.com|https://www.myvi.ru)"
+			"pattern": "^https://www.crunchyroll.com"
+		},
+		{
+			"pattern": "^https://www.myvi.ru"
+		},
+		{
+			"pattern": "^https://www.aparat.com"
+		},
+		{
+			"pattern": "^https://www.ebaumsworld.com"
+		},
+		{
+			"pattern": "^https://www.gamespot.com"
+		},
+		{
+			"pattern": "^https://www.imdb.com"
+		},
+		{
+			"pattern": "^https://www.newgrounds.com"
+		},
+		{
+			"pattern": "^https://www.sharkle.com"
+		},
+		{
+			"pattern": "^https://www.tagtele.com"
+		},
+		{
+			"pattern": "^https://www.vidiac.com"
+		},
+		{
+			"pattern": "^https://www.onsmash.com"
+		},
+		{
+			"pattern": "^https://vooplayer.com"
+		},
+		{
+			"pattern": "^https://www.msnbc.msn.com"
 		}
 	],
-	"aliveStatusCodes": [200, 206]
+	"aliveStatusCodes": [200, 202, 206]
 }
