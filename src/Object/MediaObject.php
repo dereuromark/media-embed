@@ -12,6 +12,13 @@ use MediaEmbed\Template\TemplateResolver;
 class MediaObject implements ObjectInterface {
 
 	/**
+	 * Google favicon service URL.
+	 *
+	 * @var string
+	 */
+	protected const FAVICON_SERVICE_URL = 'https://www.google.com/s2/favicons?domain=';
+
+	/**
 	 * Provider stub data.
 	 *
 	 * @var array<string, mixed>
@@ -157,14 +164,11 @@ class MediaObject implements ObjectInterface {
 		}
 
 		$url = $pieces['host'];
-
-		$icon = 'http://www.google.com/s2/favicons?domain=';
-		$icon .= $url;
+		$icon = static::FAVICON_SERVICE_URL . $url;
 
 		$context = stream_context_create(
 			['http' => ['header' => 'Connection: close']],
 		);
-		// E.g. http://www.google.com/s2/favicons?domain=xyz.com
 		$file = file_get_contents($icon, false, $context);
 		if ($file === false) {
 			return null;
@@ -198,16 +202,14 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Override a default iframe param value
+	 * Override a default iframe param value.
 	 *
 	 * @param array<string, mixed>|string $param The name of the param to be set
-	 *                                           or an array of multiple params to set
-	 * @param string|null $value (optional) the value to set the param to
-	 *                                              if only one param is being set
-	 *
+	 *   or an array of multiple params to set.
+	 * @param string|null $value The value to set the param to (when $param is string).
 	 * @return $this
 	 */
-	public function setParam($param, ?string $value = null) {
+	public function setParam(array|string $param, ?string $value = null) {
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
 				$this->iframeParams[$p] = $v;
@@ -220,15 +222,14 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Override a default iframe attribute value
+	 * Override a default iframe attribute value.
 	 *
 	 * @param array<string, mixed>|string $param The name of the attribute to be set
-	 *   or an array of multiple attribs to be set
-	 * @param string|int|null $value (optional) the value to set the param to
-	 *   if only one param is being set
+	 *   or an array of multiple attributes to set.
+	 * @param string|int|bool|null $value The value to set (when $param is string).
 	 * @return $this
 	 */
-	public function setAttribute($param, $value = null) {
+	public function setAttribute(array|string $param, string|int|bool|null $value = null) {
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
 				$this->iframeAttributes[$p] = $v;
@@ -326,23 +327,14 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Add src getter method
+	 * Get the iframe src URL with parameters.
 	 *
 	 * @return string The src attribute
 	 */
 	public function getEmbedSrc(): string {
 		$source = $this->templateResolver->resolve($this->stub['iframe-player'], $this->match);
 
-		//add custom params
-		if ($this->iframeParams) {
-			$c = '?';
-			if (strpos($source, '?') !== false) {
-				$c = '&amp;';
-			}
-			$source .= $c . http_build_query($this->iframeParams, '', '&amp;');
-		}
-
-		return $source;
+		return $this->appendQueryParams($source);
 	}
 
 	/**
@@ -403,34 +395,51 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Build an iFrame player
+	 * Build an iFrame player.
 	 *
 	 * @return string
 	 */
 	protected function buildIframe(): string {
 		$source = $this->templateResolver->resolve($this->stub['iframe-player'], $this->match);
+		$source = $this->appendQueryParams($source);
 
-		//add custom params
-		if ($this->iframeParams) {
-			$c = '?';
-			if (strpos($source, '?') !== false) {
-				$c = '&amp;';
-			}
-			$source .= $c . http_build_query($this->iframeParams, '', '&amp;');
+		$attributes = $this->buildAttributeString();
+
+		return sprintf('<iframe src="%s"%s></iframe>', $source, $attributes);
+	}
+
+	/**
+	 * Append query parameters to a URL.
+	 *
+	 * @param string $url The base URL.
+	 * @return string URL with appended parameters.
+	 */
+	protected function appendQueryParams(string $url): string {
+		if (!$this->iframeParams) {
+			return $url;
 		}
+
+		$separator = str_contains($url, '?') ? '&amp;' : '?';
+
+		return $url . $separator . http_build_query($this->iframeParams, '', '&amp;');
+	}
+
+	/**
+	 * Build HTML attribute string from iframe attributes.
+	 *
+	 * @return string
+	 */
+	protected function buildAttributeString(): string {
 		$attributes = '';
-		//add custom attributes
 
 		foreach ($this->iframeAttributes as $key => $val) {
-			//if === true, is an attribute without value
-			//if === false, remove the attribute
-			if ($val !== false) {
-				$attributes .= ' ' . $key . ($val !== true ? '="' . $this->esc((string)$val) . '"' : '');
+			if ($val === false) {
+				continue;
 			}
+			$attributes .= ' ' . $key . ($val !== true ? '="' . $this->esc((string)$val) . '"' : '');
 		}
 
-		// Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
-		return sprintf('<iframe src="%s"%s></iframe>', $source, $attributes);
+		return $attributes;
 	}
 
 	/**

@@ -42,7 +42,7 @@ final class TemplateResolver {
 	 * @return string The resolved string.
 	 */
 	public function resolveReverse(string $template, string $id): string {
-		if (strpos($template, '$r2') !== false) {
+		if (str_contains($template, '$r2')) {
 			return str_replace('$r2', $id, $template);
 		}
 
@@ -81,7 +81,7 @@ final class TemplateResolver {
 	 * @return bool True if reverse placeholder `$r2` is present.
 	 */
 	public function usesReversePlaceholder(string $template): bool {
-		return strpos($template, '$r2') !== false;
+		return str_contains($template, '$r2');
 	}
 
 	/**

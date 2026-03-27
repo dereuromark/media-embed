@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Matcher;
 
-use MediaEmbed\Cache\CacheInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * URL matcher with optional domain-based caching for faster lookups.
@@ -16,7 +16,8 @@ final class UrlMatcher {
 
 	/**
 	 * Cache key for the domain index.
-     * @var string
+	 *
+	 * @var string
 	 */
 	private const CACHE_KEY = 'media_embed_domain_index';
 
@@ -58,7 +59,7 @@ final class UrlMatcher {
 
 	/**
 	 * @param array<string, array<string, mixed>> $providers Providers keyed by slug.
-	 * @param \MediaEmbed\Cache\CacheInterface|null $cache Optional cache for persisting domain index.
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Optional cache for persisting domain index.
 	 * @param int $cacheTtl Cache TTL in seconds.
 	 */
 	public function __construct(array $providers = [], ?CacheInterface $cache = null, int $cacheTtl = 3600) {
@@ -90,7 +91,7 @@ final class UrlMatcher {
 	/**
 	 * Set the cache implementation.
 	 *
-	 * @param \MediaEmbed\Cache\CacheInterface|null $cache Cache implementation.
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Cache implementation.
 	 * @param int $ttl Cache TTL in seconds.
 	 * @return $this
 	 */
@@ -309,14 +310,7 @@ final class UrlMatcher {
 			return null;
 		}
 
-		$host = $parsed['host'];
-
-		// Remove www. prefix for matching
-		if (str_starts_with($host, 'www.')) {
-			$host = substr($host, 4);
-		}
-
-		return strtolower($host);
+		return $this->normalizeHost($parsed['host']);
 	}
 
 	/**
@@ -334,18 +328,27 @@ final class UrlMatcher {
 			foreach ($matches[1] as $match) {
 				// Unescape the domain
 				$domain = str_replace('\\.', '.', $match);
-				$domain = strtolower($domain);
-
-				// Remove www. prefix
-				if (str_starts_with($domain, 'www.')) {
-					$domain = substr($domain, 4);
-				}
-
-				$domains[] = $domain;
+				$domains[] = $this->normalizeHost($domain);
 			}
 		}
 
 		return array_unique($domains);
+	}
+
+	/**
+	 * Normalize a hostname by lowercasing and removing www. prefix.
+	 *
+	 * @param string $host
+	 * @return string
+	 */
+	private function normalizeHost(string $host): string {
+		$host = strtolower($host);
+
+		if (str_starts_with($host, 'www.')) {
+			return substr($host, 4);
+		}
+
+		return $host;
 	}
 
 	/**

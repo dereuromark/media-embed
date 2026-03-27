@@ -45,9 +45,9 @@ final class ProviderConfig {
 	/**
 	 * Create a ProviderConfig from an array.
 	 *
-     * @param array<string, mixed> $data Provider configuration array.
-     * @throws \MediaEmbed\Exception\ProviderConfigException When required fields are missing.
-     * @return self
+	 * @param array<string, mixed> $data Provider configuration array.
+	 * @throws \MediaEmbed\Exception\ProviderConfigException When required fields are missing.
+	 * @return self
 	 */
 	public static function fromArray(array $data): self {
 		// Validate required fields
