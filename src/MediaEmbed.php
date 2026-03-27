@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MediaEmbed;
 
 use MediaEmbed\Exception\FetchException;
@@ -204,11 +206,11 @@ class MediaEmbed {
 	/**
 	 * Parse given URL or throw exception on failure.
 	 *
-     * @param string $url Href to check for embedded video
-     * @param array<string, mixed> $config
-     * @throws \MediaEmbed\Exception\InvalidUrlException When URL is not supported.
-     * @throws \MediaEmbed\Exception\FetchException When fetch-match fails.
-     * @return \MediaEmbed\Object\MediaObject
+	 * @param string $url Href to check for embedded video
+	 * @param array<string, mixed> $config
+	 * @throws \MediaEmbed\Exception\InvalidUrlException When URL is not supported.
+	 * @throws \MediaEmbed\Exception\FetchException When fetch-match fails.
+	 * @return \MediaEmbed\Object\MediaObject
 	 */
 	public function parseUrlOrFail(string $url, array $config = []): MediaObject {
 		$result = $this->getUrlMatcher()->match($url);

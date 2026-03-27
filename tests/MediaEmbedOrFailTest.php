@@ -87,8 +87,8 @@ class MediaEmbedOrFailTest extends TestCase {
 			name: 'CustomProvider',
 			website: 'https://custom.example.com',
 			urlMatch: 'https://custom\\.example\\.com/v/([a-z0-9]+)',
-			embedWidth: '640',
-			embedHeight: '360',
+			embedWidth: 640,
+			embedHeight: 360,
 			iframePlayer: '//custom.example.com/embed/$2',
 		);
 
