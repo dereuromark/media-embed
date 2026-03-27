@@ -2,7 +2,15 @@
 
 namespace MediaEmbed;
 
+use MediaEmbed\Exception\FetchException;
+use MediaEmbed\Exception\InvalidUrlException;
+use MediaEmbed\Exception\ProviderNotFoundException;
+use MediaEmbed\Http\HttpClientInterface;
+use MediaEmbed\Http\StreamHttpClient;
 use MediaEmbed\Object\MediaObject;
+use MediaEmbed\Provider\PhpFileLoader;
+use MediaEmbed\Provider\ProviderConfig;
+use MediaEmbed\Provider\ProviderLoaderInterface;
 use URLify;
 
 if (!defined('DS')) {
@@ -36,16 +44,57 @@ class MediaEmbed {
 	public array $config = [];
 
 	/**
+	 * HTTP client for fetching remote content.
+	 */
+	protected HttpClientInterface $httpClient;
+
+	/**
+	 * Get the HTTP client.
+	 *
+	 * @return \MediaEmbed\Http\HttpClientInterface
+	 */
+	public function getHttpClient(): HttpClientInterface {
+		return $this->httpClient;
+	}
+
+	/**
+	 * Set the HTTP client.
+	 *
+	 * @param \MediaEmbed\Http\HttpClientInterface $httpClient
+	 * @return $this
+	 */
+	public function setHttpClient(HttpClientInterface $httpClient) {
+		$this->httpClient = $httpClient;
+
+		return $this;
+	}
+
+	/**
 	 * Loads stubs
 	 *
 	 * @param array<string, mixed> $config
 	 * @param string|null $stubsPath
+	 * @param \MediaEmbed\Http\HttpClientInterface|null $httpClient
+	 * @param \MediaEmbed\Provider\ProviderLoaderInterface|null $providerLoader
 	 */
-	public function __construct(array $config = [], ?string $stubsPath = null) {
-		if ($stubsPath === null) {
-			$stubsPath = dirname(__DIR__) . DS . 'data' . DS . 'stubs.php';
+	public function __construct(
+		array $config = [],
+		?string $stubsPath = null,
+		?HttpClientInterface $httpClient = null,
+		?ProviderLoaderInterface $providerLoader = null,
+	) {
+		$this->httpClient = $httpClient ?? new StreamHttpClient();
+
+		// Use provided loader or default to PhpFileLoader
+		if ($providerLoader !== null) {
+			$stubs = $providerLoader->load();
+		} else {
+			if ($stubsPath === null) {
+				$stubsPath = dirname(__DIR__) . DS . 'data' . DS . 'stubs.php';
+			}
+			$loader = new PhpFileLoader($stubsPath);
+			$stubs = $loader->load();
 		}
-		$stubs = include $stubsPath;
 		$this->setHosts($stubs);
 		$this->config = $config + $this->config;
 
@@ -106,6 +155,43 @@ class MediaEmbed {
 	}
 
 	/**
+	 * Prepare embed video from different video hosts or throw exception on failure.
+	 *
+     * @param string $id
+     * @param string $host
+     * @param array<string, mixed> $config
+     *
+     * @throws \MediaEmbed\Exception\InvalidUrlException When ID or host is empty.
+     * @throws \MediaEmbed\Exception\ProviderNotFoundException When host is not found.
+     * @return \MediaEmbed\Object\MediaObject
+	 */
+	public function parseIdOrFail(string $id, string $host, array $config = []): MediaObject {
+		if (!$id || !$host) {
+			throw new InvalidUrlException('', 'ID and host are required.');
+		}
+
+		// local files not supported in OrFail variant
+		if ($host === 'local') {
+			throw new ProviderNotFoundException($host);
+		}
+
+		// all other hosts
+		$hostArray = $this->getHostOrFail($host);
+		$stub = $hostArray;
+		$config += $this->config;
+
+		$stub['id'] = $id;
+		$stub['reverse'] = true;
+
+		$object = $this->object($stub, $config);
+		if ($object === null) {
+			throw new ProviderNotFoundException($host);
+		}
+
+		return $object;
+	}
+
+	/**
 	 * Parse given URL.
 	 *
 	 * It will return an object if the url contains valid/supported video.
@@ -139,6 +225,43 @@ class MediaEmbed {
 	}
 
 	/**
+	 * Parse given URL or throw exception on failure.
+	 *
+     * @param string $url Href to check for embedded video
+     * @param array<string, mixed> $config
+     * @throws \MediaEmbed\Exception\InvalidUrlException When URL is not supported.
+     * @throws \MediaEmbed\Exception\FetchException When fetch-match fails.
+     * @return \MediaEmbed\Object\MediaObject
+	 */
+	public function parseUrlOrFail(string $url, array $config = []): MediaObject {
+		foreach ($this->_hosts as $stub) {
+			$match = $this->_matchUrl($url, (array)$stub['url-match']);
+			if (!$match) {
+				continue;
+			}
+
+			$this->_match = $match;
+
+			if (!empty($stub['fetch-match'])) {
+				if (!$this->_parseLink($url, $stub['fetch-match'])) {
+					throw new FetchException($url, sprintf('Failed to fetch and match content from URL: %s', $url));
+				}
+			}
+
+			$stub['match'] = $this->_match;
+
+			$object = $this->object($stub, $config + $this->config);
+			if ($object === null) {
+				throw new InvalidUrlException($url);
+			}
+
+			return $object;
+		}
+
+		throw new InvalidUrlException($url);
+	}
+
+	/**
 	 * MediaEmbed::_match()
 	 *
 	 * @param string $url
@@ -164,13 +287,7 @@ class MediaEmbed {
 	 * @return bool
 	 */
 	protected function _parseLink(string $url, string $regex): bool {
-		$context = stream_context_create([
-			'http' => [
-				'header' => 'Connection: close',
-				'timeout' => 5,
-			],
-		]);
-		$content = @file_get_contents($url, false, $context);
+		$content = $this->httpClient->get($url);
 		if (!$content) {
 			return false;
 		}
@@ -272,6 +389,24 @@ class MediaEmbed {
 	}
 
 	/**
+	 * Load providers using a ProviderLoaderInterface.
+	 *
+	 * @param \MediaEmbed\Provider\ProviderLoaderInterface $loader The provider loader.
+	 * @param bool $reset Whether to reset existing providers before loading.
+	 * @return $this
+	 */
+	public function loadProvidersFromLoader(ProviderLoaderInterface $loader, bool $reset = false) {
+		if (!$loader->canLoad()) {
+			return $this;
+		}
+
+		$providers = $loader->load();
+		$this->setHosts($providers, $reset);
+
+		return $this;
+	}
+
+	/**
 	 * @param array<string> $whitelist (alias/keys)
 	 * @return array<string, array<string, mixed>> Host info
 	 */
@@ -304,6 +439,76 @@ class MediaEmbed {
 		}
 
 		return $this->_hosts[$alias];
+	}
+
+	/**
+	 * Get a provider by alias or throw exception if not found.
+	 *
+     * @param string $alias
+     * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
+     * @return array<string, mixed> Host info
+	 */
+	public function getHostOrFail(string $alias): array {
+		if (!$this->_hosts) {
+			$this->_hosts = $this->getHosts();
+		}
+		if (empty($this->_hosts[$alias])) {
+			throw new ProviderNotFoundException($alias);
+		}
+
+		return $this->_hosts[$alias];
+	}
+
+	/**
+	 * Get a provider configuration by alias.
+	 *
+	 * @param string $alias Provider slug/alias.
+	 * @return \MediaEmbed\Provider\ProviderConfig|null Provider config or null if not found.
+	 */
+	public function getProvider(string $alias): ?ProviderConfig {
+		$host = $this->getHost($alias);
+		if ($host === null) {
+			return null;
+		}
+
+		return ProviderConfig::fromArray($host);
+	}
+
+	/**
+	 * Get a provider configuration by alias or throw exception.
+	 *
+     * @param string $alias Provider slug/alias.
+     * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
+     * @return \MediaEmbed\Provider\ProviderConfig Provider config.
+	 */
+	public function getProviderOrFail(string $alias): ProviderConfig {
+		$host = $this->getHostOrFail($alias);
+
+		return ProviderConfig::fromArray($host);
+	}
+
+	/**
+	 * Add a provider using ProviderConfig DTO.
+	 *
+	 * @param \MediaEmbed\Provider\ProviderConfig $config Provider configuration.
+	 * @param bool $override Whether to override existing provider with same slug.
+	 * @return $this
+	 */
+	public function addProviderConfig(ProviderConfig $config, bool $override = false) {
+		$slug = $config->slug ?? $this->_slug($config->name);
+
+		if (!$override && isset($this->_hosts[$slug])) {
+			return $this;
+		}
+
+		$array = $config->toArray();
+		if (!isset($array['slug'])) {
+			$array['slug'] = $slug;
+		}
+
+		$this->_hosts[$slug] = $array;
+
+		return $this;
 	}
 
 	/**
