@@ -1219,12 +1219,24 @@ $stubs = [
 		'website' => 'https://www.bilibili.com',
 		'url-match' => [
 			'https?://(?:www\.)?bilibili\.com/video/(BV[A-Za-z0-9]+)',
-			'https?://(?:www\.)?bilibili\.com/video/av([0-9]+)',
 		],
 		'embed-src' => '',
 		'embed-width' => '640',
 		'embed-height' => '360',
 		'iframe-player' => '//player.bilibili.com/player.html?bvid=$2',
+		'id' => '$2',
+	],
+	[
+		'slug' => 'bilibili-legacy',
+		'name' => 'Bilibili (Legacy)',
+		'website' => 'https://www.bilibili.com',
+		'url-match' => [
+			'https?://(?:www\.)?bilibili\.com/video/av([0-9]+)',
+		],
+		'embed-src' => '',
+		'embed-width' => '640',
+		'embed-height' => '360',
+		'iframe-player' => '//player.bilibili.com/player.html?aid=$2',
 		'id' => '$2',
 	],
 	[

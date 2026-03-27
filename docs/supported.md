@@ -1,6 +1,6 @@
 # Supported Media Services
 
-109 services
+110 services
 
  - [123video](https://www.123video.nl)
  - [AOL Video (Old)](https://video.aol.com)
@@ -8,6 +8,7 @@
  - [Archive.org](https://www.archive.org)
  - [Bandcamp](https://bandcamp.com)
  - [Bilibili](https://www.bilibili.com)
+ - [Bilibili (Legacy)](https://www.bilibili.com)
  - [Bit.Tube](https://bit.tube/)
  - [Brightcove.com](https://link.brightcove.com)
  - [CBS News](https://www.cbsnews.com/video)

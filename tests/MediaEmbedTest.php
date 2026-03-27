@@ -114,6 +114,8 @@ class MediaEmbedTest extends TestCase {
 		// Bilibili
 		'https://www.bilibili.com/video/BV1xx411c7mD' => 'BV1xx411c7mD',
 		'https://bilibili.com/video/BV1Ab4y1a7XY' => 'BV1Ab4y1a7XY',
+		// Bilibili (Legacy av format)
+		'https://www.bilibili.com/video/av12345' => '12345',
 		// Rumble
 		'https://rumble.com/v1abc12-example-video.html' => 'v1abc12',
 		'https://rumble.com/embed/v1xyz99' => 'v1xyz99',
