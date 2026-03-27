@@ -10,17 +10,17 @@
 A utility library that generates HTML embed tags for audio or video located on a given URL.
 It also parses and validates given media URLs.
 
-It currently works with [100+ services](docs/supported.md), including the most important ones like
+It currently works with [30+ services](docs/supported.md), including the most important ones like
 
 - YouTube
-- Dailymotion
-- MyVideo
 - Vimeo
-- Ustream
+- Dailymotion
+- TikTok
+- Twitch
 
 etc. With community driven updates this aims to be a complete and up-to-date service wrapper lib.
 
-It uses iframes if possible, and has a fallback on the embed object if necessary.
+All providers use modern iframe embeds (Flash support was removed as Flash was discontinued in 2020).
 
 ## Demo
 https://sandbox.dereuromark.de/sandbox/media-embed
