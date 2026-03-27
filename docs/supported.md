@@ -1,6 +1,6 @@
 # Supported Media Services
 
-99 services
+98 services
 
  - [123video](https://www.123video.nl)
  - [AOL Video (Old)](https://video.aol.com)
@@ -16,7 +16,6 @@
  - [ClipMoon](https://www.clipmoon.com)
  - [CNetTV](https://cnettv.cnet.com)
  - [ColbertNation](https://www.colbertnation.com)
- - [Coub](https://coub.com)
  - [CrunchyRoll](https://www.crunchyroll.com)
  - [Current](https://www.current.com)
  - [Dailyhaha](https://www.dailyhaha.com)
