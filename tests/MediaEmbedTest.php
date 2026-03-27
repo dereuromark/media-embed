@@ -89,6 +89,31 @@ class MediaEmbedTest extends TestCase {
 		'https://www.youtube.com/live/_L3nFAGwXdQ' => '_L3nFAGwXdQ',
 		'https://www.youtube.com/live/_L3nFAGwXdQ?si=8LzqZPR1EHqULhg7&t=6372' => '_L3nFAGwXdQ',
 		'https://youtube.com/live/dQw4w9WgXcQ' => 'dQw4w9WgXcQ',
+		// TikTok
+		'https://www.tiktok.com/@username/video/7123456789012345678' => '7123456789012345678',
+		'https://tiktok.com/@user/video/7123456789012345678' => '7123456789012345678',
+		// Instagram
+		'https://www.instagram.com/p/ABC123xyz/' => 'ABC123xyz',
+		'https://instagram.com/reel/XYZ789abc/' => 'XYZ789abc',
+		'https://www.instagram.com/tv/DEF456ghi/' => 'DEF456ghi',
+		// Twitter/X
+		'https://twitter.com/user/status/1234567890123456789' => '1234567890123456789',
+		'https://x.com/user/status/1234567890123456789' => '1234567890123456789',
+		'https://www.twitter.com/username/status/9876543210987654321' => '9876543210987654321',
+		// Reddit
+		'https://www.reddit.com/r/videos/comments/abc123/some_title/' => 'abc123',
+		'https://reddit.com/r/funny/comments/xyz789/another_post/' => 'xyz789',
+		// Spotify
+		'https://open.spotify.com/track/4iV5W9uYEdYUVa79Axb7Rh' => '4iV5W9uYEdYUVa79Axb7Rh',
+		'https://open.spotify.com/album/1DFixLWuPkv3KT3TnV35m3' => '1DFixLWuPkv3KT3TnV35m3',
+		'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M' => '37i9dQZF1DXcBWIGoYBM5M',
+		// Streamable
+		'https://streamable.com/abc123' => 'abc123',
+		'https://www.streamable.com/xyz789' => 'xyz789',
+		'https://streamable.com/e/def456' => 'def456',
+		// Bilibili
+		'https://www.bilibili.com/video/BV1xx411c7mD' => 'BV1xx411c7mD',
+		'https://bilibili.com/video/BV1Ab4y1a7XY' => 'BV1Ab4y1a7XY',
 	];
 
 	/**

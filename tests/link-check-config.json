@@ -39,6 +39,9 @@
 		},
 		{
 			"pattern": "^https://www.msnbc.msn.com"
+		},
+		{
+			"pattern": "^https://www.reddit.com"
 		}
 	],
 	"aliveStatusCodes": [200, 202, 206, 429]

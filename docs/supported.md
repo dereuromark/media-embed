@@ -1,11 +1,12 @@
 # Supported Media Services
 
-97 services
+104 services
 
  - [123video](https://www.123video.nl)
  - [AOL Video (Old)](https://video.aol.com)
  - [Aparat](https://www.aparat.com)
  - [Archive.org](https://www.archive.org)
+ - [Bilibili](https://www.bilibili.com)
  - [Bit.Tube](https://bit.tube/)
  - [Brightcove.com](https://link.brightcove.com)
  - [CBS News](https://www.cbsnews.com/video)
@@ -38,6 +39,7 @@
  - [IGN](https://www.ign.com)
  - [ImageShack](https://www.imageshack.us)
  - [IMDB](https://www.imdb.com)
+ - [Instagram](https://www.instagram.com)
  - [Jamendo](https://www.jamendo.com)
  - [JujuNation Audio](https://www.jujunation.com)
  - [JujuNation Video](https://www.jujunation.com)
@@ -61,6 +63,7 @@
  - [Photobucket](https://www.photobucket.com)
  - [Rambler](https://vision.rambler.ru)
  - [RawVegas](https://www.rawvegas.tv)
+ - [Reddit](https://www.reddit.com)
  - [RuTube](https://www.rutube.ru)
  - [Screencast](https://www.screencast.com)
  - [ShareView](https://www.shareview.us)
@@ -70,8 +73,11 @@
  - [SoundCloud](https://soundcloud.com)
  - [SouthPark Studios](https://www.southparkstudios.com)
  - [Spike](https://www.spike.com)
+ - [Spotify](https://open.spotify.com)
+ - [Streamable](https://streamable.com)
  - [TagTélé](https://www.tagtele.com)
  - [Ted.com](https://www.ted.com)
+ - [TikTok](https://www.tiktok.com)
  - [The Onion](https://www.theonion.com)
  - [TheDailyShow](https://www.thedailyshow.com)
  - [TinyPic](https://www.tinypic.com)
@@ -82,6 +88,7 @@
  - [Tumblr (Music)](https://www.tumblr.com)
  - [Twitch Clip](https://clips.twitch.tv)
  - [Twitch Video](https://www.twitch.tv)
+ - [Twitter](https://twitter.com)
  - [Ustream](https://www.ustream.tv)
  - [Viddler](https://www.viddler.com)
  - [Videa](https://www.videa.hu)
