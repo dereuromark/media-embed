@@ -35,12 +35,10 @@ class ProviderConfigTest extends TestCase {
 			'url-match' => ['pattern1', 'pattern2'],
 			'embed-width' => '800',
 			'embed-height' => '600',
-			'embed-src' => '//full.example.com/swf/$2',
 			'iframe-player' => '//full.example.com/embed/$2',
 			'image-src' => '//full.example.com/thumb/$2.jpg',
 			'id' => '$2',
 			'fetch-match' => 'data-id="([a-z0-9]+)"',
-			'flashvars' => 'autoplay=0',
 			'supports-timestamp' => true,
 		];
 
@@ -48,11 +46,9 @@ class ProviderConfigTest extends TestCase {
 
 		$this->assertSame('full-provider', $config->slug);
 		$this->assertSame(['pattern1', 'pattern2'], $config->urlMatch);
-		$this->assertSame('//full.example.com/swf/$2', $config->embedSrc);
 		$this->assertSame('//full.example.com/thumb/$2.jpg', $config->imageSrc);
 		$this->assertSame('$2', $config->id);
 		$this->assertSame('data-id="([a-z0-9]+)"', $config->fetchMatch);
-		$this->assertSame('autoplay=0', $config->flashvars);
 		$this->assertTrue($config->supportsTimestamp);
 	}
 

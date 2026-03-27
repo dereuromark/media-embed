@@ -18,30 +18,26 @@ final class ProviderConfig {
 	 * @param string $name Display name of the provider.
 	 * @param string $website Provider's website URL.
 	 * @param array<string>|string $urlMatch URL matching regex pattern(s).
-	 * @param string $embedWidth Default embed width.
-	 * @param string $embedHeight Default embed height.
+	 * @param int|string $embedWidth Default embed width.
+	 * @param int|string $embedHeight Default embed height.
 	 * @param string|null $slug URL-safe identifier (auto-generated from name if not provided).
-	 * @param string|null $embedSrc Legacy Flash embed URL.
 	 * @param string|null $iframePlayer iframe src template URL.
 	 * @param string|null $imageSrc Thumbnail image URL template.
 	 * @param string|null $id Custom ID extraction pattern.
 	 * @param string|null $fetchMatch Secondary HTTP fetch regex.
-	 * @param string|null $flashvars Flash player parameters.
 	 * @param bool $supportsTimestamp Whether provider supports timestamps.
 	 */
 	public function __construct(
 		public readonly string $name,
 		public readonly string $website,
 		public readonly array|string $urlMatch,
-		public readonly string $embedWidth,
-		public readonly string $embedHeight,
+		public readonly int|string $embedWidth,
+		public readonly int|string $embedHeight,
 		public readonly ?string $slug = null,
-		public readonly ?string $embedSrc = null,
 		public readonly ?string $iframePlayer = null,
 		public readonly ?string $imageSrc = null,
 		public readonly ?string $id = null,
 		public readonly ?string $fetchMatch = null,
-		public readonly ?string $flashvars = null,
 		public readonly bool $supportsTimestamp = false,
 	) {
 	}
@@ -75,21 +71,19 @@ final class ProviderConfig {
 			name: $data['name'],
 			website: $data['website'],
 			urlMatch: $data['url-match'],
-			embedWidth: (string)$data['embed-width'],
-			embedHeight: (string)$data['embed-height'],
+			embedWidth: $data['embed-width'],
+			embedHeight: $data['embed-height'],
 			slug: $data['slug'] ?? null,
-			embedSrc: isset($data['embed-src']) ? (string)$data['embed-src'] : null,
 			iframePlayer: $data['iframe-player'] ?? null,
 			imageSrc: $data['image-src'] ?? null,
 			id: $data['id'] ?? null,
 			fetchMatch: $data['fetch-match'] ?? null,
-			flashvars: $data['flashvars'] ?? null,
 			supportsTimestamp: !empty($data['supports-timestamp']),
 		);
 	}
 
 	/**
-	 * Convert to array format (backward compatible).
+	 * Convert to array format.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -105,9 +99,6 @@ final class ProviderConfig {
 		if ($this->slug !== null) {
 			$array['slug'] = $this->slug;
 		}
-		if ($this->embedSrc !== null) {
-			$array['embed-src'] = $this->embedSrc;
-		}
 		if ($this->iframePlayer !== null) {
 			$array['iframe-player'] = $this->iframePlayer;
 		}
@@ -119,9 +110,6 @@ final class ProviderConfig {
 		}
 		if ($this->fetchMatch !== null) {
 			$array['fetch-match'] = $this->fetchMatch;
-		}
-		if ($this->flashvars !== null) {
-			$array['flashvars'] = $this->flashvars;
 		}
 		if ($this->supportsTimestamp) {
 			$array['supports-timestamp'] = true;
