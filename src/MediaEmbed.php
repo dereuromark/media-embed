@@ -7,6 +7,7 @@ use MediaEmbed\Exception\InvalidUrlException;
 use MediaEmbed\Exception\ProviderNotFoundException;
 use MediaEmbed\Http\HttpClientInterface;
 use MediaEmbed\Http\StreamHttpClient;
+use MediaEmbed\Matcher\UrlMatcher;
 use MediaEmbed\Object\MediaObject;
 use MediaEmbed\Provider\PhpFileLoader;
 use MediaEmbed\Provider\ProviderConfig;
@@ -47,6 +48,11 @@ class MediaEmbed {
 	 * HTTP client for fetching remote content.
 	 */
 	protected HttpClientInterface $httpClient;
+
+	/**
+	 * URL matcher with domain-based caching.
+	 */
+	protected ?UrlMatcher $urlMatcher = null;
 
 	/**
 	 * Get the HTTP client.
@@ -201,27 +207,23 @@ class MediaEmbed {
 	 * @return \MediaEmbed\Object\MediaObject|null
 	 */
 	public function parseUrl(string $url, array $config = []): ?MediaObject {
-		foreach ($this->_hosts as $stub) {
-			$match = $this->_matchUrl($url, (array)$stub['url-match']);
-			if (!$match) {
-				continue;
-			}
-
-			$this->_match = $match;
-
-			if (!empty($stub['fetch-match'])) {
-				if (!$this->_parseLink($url, $stub['fetch-match'])) {
-					return null;
-				}
-			}
-
-			$stub['match'] = $this->_match;
-			$Object = $this->object($stub, $config + $this->config);
-
-			return $Object;
+		$result = $this->getUrlMatcher()->match($url);
+		if ($result === null) {
+			return null;
 		}
 
-		return null;
+		$stub = $result->providerStub;
+		$this->_match = $result->matches;
+
+		if (!empty($stub['fetch-match'])) {
+			if (!$this->_parseLink($url, $stub['fetch-match'])) {
+				return null;
+			}
+		}
+
+		$stub['match'] = $this->_match;
+
+		return $this->object($stub, $config + $this->config);
 	}
 
 	/**
@@ -234,31 +236,41 @@ class MediaEmbed {
      * @return \MediaEmbed\Object\MediaObject
 	 */
 	public function parseUrlOrFail(string $url, array $config = []): MediaObject {
-		foreach ($this->_hosts as $stub) {
-			$match = $this->_matchUrl($url, (array)$stub['url-match']);
-			if (!$match) {
-				continue;
-			}
-
-			$this->_match = $match;
-
-			if (!empty($stub['fetch-match'])) {
-				if (!$this->_parseLink($url, $stub['fetch-match'])) {
-					throw new FetchException($url, sprintf('Failed to fetch and match content from URL: %s', $url));
-				}
-			}
-
-			$stub['match'] = $this->_match;
-
-			$object = $this->object($stub, $config + $this->config);
-			if ($object === null) {
-				throw new InvalidUrlException($url);
-			}
-
-			return $object;
+		$result = $this->getUrlMatcher()->match($url);
+		if ($result === null) {
+			throw new InvalidUrlException($url);
 		}
 
-		throw new InvalidUrlException($url);
+		$stub = $result->providerStub;
+		$this->_match = $result->matches;
+
+		if (!empty($stub['fetch-match'])) {
+			if (!$this->_parseLink($url, $stub['fetch-match'])) {
+				throw new FetchException($url, sprintf('Failed to fetch and match content from URL: %s', $url));
+			}
+		}
+
+		$stub['match'] = $this->_match;
+
+		$object = $this->object($stub, $config + $this->config);
+		if ($object === null) {
+			throw new InvalidUrlException($url);
+		}
+
+		return $object;
+	}
+
+	/**
+	 * Get the URL matcher (lazy initialization).
+	 *
+	 * @return \MediaEmbed\Matcher\UrlMatcher
+	 */
+	public function getUrlMatcher(): UrlMatcher {
+		if ($this->urlMatcher === null) {
+			$this->urlMatcher = new UrlMatcher($this->_hosts);
+		}
+
+		return $this->urlMatcher;
 	}
 
 	/**
@@ -322,11 +334,15 @@ class MediaEmbed {
 			$this->_hosts[$slug] = $stub;
 		}
 
+		$this->urlMatcher = null; // Reset matcher when hosts change
+
 		return $this;
 	}
 
 	/**
 	 * Add a single provider dynamically.
+	 *
+	 * @deprecated Use addProviderConfig() with ProviderConfig DTO for type-safe provider configuration.
 	 *
 	 * @param array<string, mixed> $provider Provider configuration array.
 	 * @param bool $override Whether to override existing provider with same name.
@@ -348,6 +364,7 @@ class MediaEmbed {
 		}
 
 		$this->_hosts[$slug] = $provider;
+		$this->urlMatcher = null; // Reset matcher when providers change
 
 		return $this;
 	}
@@ -427,6 +444,8 @@ class MediaEmbed {
 	}
 
 	/**
+	 * @deprecated Use getProvider() which returns a ProviderConfig DTO.
+	 *
 	 * @param string $alias
 	 * @return array<string, mixed>|null Host info or null on failure
 	 */
@@ -444,9 +463,11 @@ class MediaEmbed {
 	/**
 	 * Get a provider by alias or throw exception if not found.
 	 *
-     * @param string $alias
-     * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
-     * @return array<string, mixed> Host info
+	 * @deprecated Use getProviderOrFail() which returns a ProviderConfig DTO.
+	 *
+	 * @param string $alias
+	 * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
+	 * @return array<string, mixed> Host info
 	 */
 	public function getHostOrFail(string $alias): array {
 		if (!$this->_hosts) {
@@ -507,6 +528,7 @@ class MediaEmbed {
 		}
 
 		$this->_hosts[$slug] = $array;
+		$this->urlMatcher = null; // Reset matcher when providers change
 
 		return $this;
 	}
