@@ -223,7 +223,6 @@ return [
 		'website' => 'https://www.tiktok.com',
 		'url-match' => [
 			'https?://(?:www\\.)?tiktok\\.com/@[^/]+/video/([0-9]+)',
-			'https?://(?:vm|vt)\\.tiktok\\.com/([A-Za-z0-9]+)',
 		],
 		'embed-width' => '325',
 		'embed-height' => '580',
@@ -234,12 +233,12 @@ return [
 		'name' => 'Instagram',
 		'website' => 'https://www.instagram.com',
 		'url-match' => [
-			'https?://(?:www\\.)?instagram\\.com/(?:p|reel|tv)/([A-Za-z0-9_-]+)',
+			'https?://(?:www\\.)?instagram\\.com/(p|reel|tv)/([A-Za-z0-9_-]+)',
 		],
 		'embed-width' => '400',
 		'embed-height' => '480',
-		'iframe-player' => 'https://www.instagram.com/p/$2/embed',
-		'id' => '$2',
+		'iframe-player' => 'https://www.instagram.com/$2/$3/embed',
+		'id' => '$3',
 	],
 	[
 		'name' => 'Twitter',

@@ -3,6 +3,7 @@
 namespace MediaEmbed\Test;
 
 use InvalidArgumentException;
+use MediaEmbed\Http\HttpClientInterface;
 use MediaEmbed\MediaEmbed;
 use MediaEmbed\Object\MediaObject;
 use MediaEmbed\Provider\ProviderConfig;
@@ -24,6 +25,7 @@ class MediaEmbedTest extends TestCase {
 		'https://m.youtube.com/watch?v=yWm4YwqO93I' => 'yWm4YwqO93I',
 		'https://www.youtube.com/embed/yWm4YwqO93I?rel=0' => 'yWm4YwqO93I',
 		'http://youtu.be/MKlq4gQKtU0' => 'MKlq4gQKtU0',
+		'https://www.youtube.com/shorts/yiSjHJnc9CY' => 'yiSjHJnc9CY',
 		'https://www.facebook.com/mega90er/videos/1309058692443747/' => '1309058692443747',
 		'https://www.facebook.com/diginights.HN/videos/1231155290281511/' => '1231155290281511',
 		'https://www.facebook.com/SkySports/videos/vb.10911153761/10153310275743762/?type=2&theater' => '10153310275743762',
@@ -35,6 +37,8 @@ class MediaEmbedTest extends TestCase {
 		'http://www.clipfish.de/special/dsds/video/3507980/dsds-recall-anna-und-tobias-harmonieren/' => '3507980',
 		'http://www.clipfish.de/special/kino-trailer/video/3495650/serengeti-filmausschnitt-gepardenkinder-und-die-jagd-der-mutter/' => '3495650',
 		'http://www.clipfish.de/musikvideos/video/3486922/nicole-scherzinger-poison/' => '3486922',
+		'http://www.clipfish.de/player.php?vid=3507980' => '3507980',
+		'http://www.clipfish.de/videoplayer.swf?videoid=abcdef' => 'abcdef',
 		'http://www.youtube.com/watch?v=-vGzem8glbE&feature=channel' => '-vGzem8glbE',
 		'http://www.aparat.com/v/sSLMC' => 'sSLMC',
 		'http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/' => '245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
@@ -93,6 +97,7 @@ class MediaEmbedTest extends TestCase {
 		'https://rumble.com/embed/v1xyz99' => 'v1xyz99',
 		// Odysee
 		'https://odysee.com/$/embed/video-title/abc123def' => 'abc123def',
+		'https://odysee.com/@channel:a/video-title:b' => 'video-title:b',
 		// Kick
 		'https://kick.com/username/clips/clip_abc123' => 'clip_abc123',
 		'https://kick.com/video/12345-abcd-6789' => '12345-abcd-6789',
@@ -144,6 +149,34 @@ class MediaEmbedTest extends TestCase {
 		$this->assertSame($id, $result, 'Invalid ID ' . $result . ' for ' . $url);
 	}
 
+	public function testDefaultProviderPatternsHaveFixtureCoverage(): void {
+		$providers = include dirname(__DIR__) . '/data/stubs.php';
+		$missing = [];
+
+		foreach ($providers as $provider) {
+			if (!empty($provider['fetch-match'])) {
+				continue;
+			}
+
+			foreach ((array)$provider['url-match'] as $index => $pattern) {
+				$covered = false;
+				foreach (array_keys(static::$_stubs) as $url) {
+					if (preg_match('~' . $pattern . '~imu', $url)) {
+						$covered = true;
+
+						break;
+					}
+				}
+
+				if (!$covered) {
+					$missing[] = $provider['name'] . ' #' . $index;
+				}
+			}
+		}
+
+		$this->assertSame([], $missing);
+	}
+
 	/**
 	 * Data provider for stub URLs.
 	 *
@@ -186,7 +219,33 @@ class MediaEmbedTest extends TestCase {
 			['https://peertube.example.org/w/abc123XYZ', 'https://peertube.example.org/videos/embed/abc123XYZ?wmode=transparent'],
 			['https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/', 'https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/embed/?wmode=transparent'],
 			['https://lds.cdn.vooplayer.com/publish/MTEwNTMw', 'https://lds.cdn.vooplayer.com/publish/MTEwNTMw?fallback=true&wmode=transparent'],
+			['https://instagram.com/reel/XYZ789abc/', 'https://www.instagram.com/reel/XYZ789abc/embed?wmode=transparent'],
+			['https://www.instagram.com/tv/DEF456ghi/', 'https://www.instagram.com/tv/DEF456ghi/embed?wmode=transparent'],
 		];
+	}
+
+	public function testScreencastFetchProvider(): void {
+		$httpClient = $this->createStub(HttpClientInterface::class);
+		$httpClient->method('get')
+			->willReturn('<iframe src="https://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/1d44810a-01f4-4c60-a862-6d114bed50c7/embed"></iframe>');
+
+		$MediaEmbed = new MediaEmbed(httpClient: $httpClient);
+		$Object = $MediaEmbed->parseUrl('https://www.screencast.com/t/Hh4ulI0M');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame('1d44810a-01f4-4c60-a862-6d114bed50c7', $Object->id());
+	}
+
+	public function testUstreamFetchProvider(): void {
+		$httpClient = $this->createStub(HttpClientInterface::class);
+		$httpClient->method('get')
+			->willReturn('<iframe src="https://www.ustream.tv/embed/17916695"></iframe>');
+
+		$MediaEmbed = new MediaEmbed(httpClient: $httpClient);
+		$Object = $MediaEmbed->parseUrl('https://www.ustream.tv/channel/america2oficial');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame('17916695', $Object->id());
 	}
 
 	/**
