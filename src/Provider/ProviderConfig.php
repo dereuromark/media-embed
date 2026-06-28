@@ -26,6 +26,7 @@ final class ProviderConfig {
 	 * @param string|null $id Custom ID extraction pattern.
 	 * @param string|null $fetchMatch Secondary HTTP fetch regex.
 	 * @param bool $supportsTimestamp Whether provider supports timestamps.
+	 * @param string|null $timestampParam Embed query parameter for timestamp values.
 	 */
 	public function __construct(
 		public readonly string $name,
@@ -39,6 +40,7 @@ final class ProviderConfig {
 		public readonly ?string $id = null,
 		public readonly ?string $fetchMatch = null,
 		public readonly bool $supportsTimestamp = false,
+		public readonly ?string $timestampParam = null,
 	) {
 	}
 
@@ -79,6 +81,7 @@ final class ProviderConfig {
 			id: $data['id'] ?? null,
 			fetchMatch: $data['fetch-match'] ?? null,
 			supportsTimestamp: !empty($data['supports-timestamp']),
+			timestampParam: $data['timestamp-param'] ?? null,
 		);
 	}
 
@@ -113,6 +116,9 @@ final class ProviderConfig {
 		}
 		if ($this->supportsTimestamp) {
 			$array['supports-timestamp'] = true;
+		}
+		if ($this->timestampParam !== null) {
+			$array['timestamp-param'] = $this->timestampParam;
 		}
 
 		return $array;

@@ -85,7 +85,7 @@ class MediaObject implements ObjectInterface {
 			$src = $this->getObjectSrc('iframe-player');
 			$this->stub['iframe-player'] = $src;
 
-			// Handle timestamps for providers that support them (e.g., YouTube)
+			// Handle timestamps for providers that support them.
 			$this->handleTimestampSupport();
 		}
 	}
@@ -470,7 +470,7 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Handle timestamp support for providers that support it (e.g., YouTube)
+	 * Handle timestamp support for providers that support it.
 	 *
 	 * @return void
 	 */
@@ -485,16 +485,13 @@ class MediaObject implements ObjectInterface {
 			return;
 		}
 
-		$timestamp = $this->match[2];
-
-		// For YouTube, convert 't' parameter to 'start' parameter for embed URLs
-		if ($this->stub['slug'] === 'youtube') {
-			// Remove 's' suffix if present (e.g., "3724s" -> "3724")
-			$timestamp = rtrim($timestamp, 's');
-
-			// Add as iframe parameter
-			$this->iframeParams['start'] = $timestamp;
+		$timestampParam = $this->stub['timestamp-param'] ?? 'start';
+		if (!$timestampParam) {
+			return;
 		}
+
+		$timestamp = rtrim($this->match[2], 's');
+		$this->iframeParams[$timestampParam] = $timestamp;
 	}
 
 	/**

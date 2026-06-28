@@ -234,6 +234,7 @@ $config = new ProviderConfig(
     slug: 'myprovider',           // Optional: Custom slug (auto-generated if omitted)
     imageSrc: '//.../$2.jpg',     // Optional: Thumbnail URL template
     supportsTimestamp: false,     // Optional: Timestamp support (like YouTube)
+    timestampParam: 'start',      // Optional: Embed query parameter for timestamps
 );
 ```
 
@@ -250,6 +251,7 @@ For array-based configs (legacy format):
 - **id**: Optional custom ID template
 - **fetch-match**: Optional regex for secondary HTTP lookup
 - **supports-timestamp**: Optional timestamp support flag
+- **timestamp-param**: Optional embed query parameter for timestamp values
 
 **Note:** In regex patterns and templates, `$1` is the full matched URL, `$2` is the first capture group, `$3` is the second, etc.
 

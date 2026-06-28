@@ -330,6 +330,25 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringContainsString('start=42', $code);
 	}
 
+	public function testCustomProviderTimestampParameter(): void {
+		$MediaEmbed = new MediaEmbed();
+		$MediaEmbed->addProviderConfig(new ProviderConfig(
+			name: 'TimedProvider',
+			website: 'https://timed.example.com',
+			urlMatch: 'https://timed\\.example\\.com/video/([0-9]+)\\?at=([0-9]+)',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '//timed.example.com/embed/$2',
+			supportsTimestamp: true,
+			timestampParam: 'time',
+		));
+
+		$Object = $MediaEmbed->parseUrl('https://timed.example.com/video/12345?at=60');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertStringContainsString('time=60', $Object->getEmbedCode());
+	}
+
 	/**
 	 * @return void
 	 */

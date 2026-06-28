@@ -40,6 +40,7 @@ class ProviderConfigTest extends TestCase {
 			'id' => '$2',
 			'fetch-match' => 'data-id="([a-z0-9]+)"',
 			'supports-timestamp' => true,
+			'timestamp-param' => 'start',
 		];
 
 		$config = ProviderConfig::fromArray($data);
@@ -50,6 +51,7 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('$2', $config->id);
 		$this->assertSame('data-id="([a-z0-9]+)"', $config->fetchMatch);
 		$this->assertTrue($config->supportsTimestamp);
+		$this->assertSame('start', $config->timestampParam);
 	}
 
 	public function testFromArrayPreservesPercentageDimensions(): void {
@@ -121,6 +123,7 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('//test.com/embed/$2', $array['iframe-player']);
 		$this->assertArrayNotHasKey('slug', $array);
 		$this->assertArrayNotHasKey('supports-timestamp', $array);
+		$this->assertArrayNotHasKey('timestamp-param', $array);
 	}
 
 	public function testGetUrlMatchPatterns(): void {
