@@ -96,6 +96,9 @@ final class ProviderConfig {
 			'supports-timestamp',
 			'timestamp-param',
 			'iframe-params',
+			// Legacy/removed keys (ignored in 1.0)
+			'embed-src',
+			'flashvars',
 		];
 
 		return new self(
