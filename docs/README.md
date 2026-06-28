@@ -102,7 +102,7 @@ if ($MediaObject) {
 ```
 This should return an embed code like:
 ```html
-<iframe src="https://www.youtube.com/embed/111111?autoplay=1&amp;loop=1" class="iframe-class" data-html5-parameter></iframe>
+<iframe src="//www.youtube.com/embed/111111?wmode=transparent&amp;autoplay=1&amp;loop=1" width="480" height="295" frameborder="0" allowfullscreen class="iframe-class" data-html5-parameter></iframe>
 ```
 
 Attribute names must be valid iframe attribute names. Whitespace/control characters, HTML syntax characters, and `on*` event-handler attributes are rejected.
@@ -249,6 +249,9 @@ For array-based configs (legacy format):
 - **iframe-player** (required): URL template for iframe embedding
 - **slug**: Optional custom slug (auto-generated from name if not provided)
 - **image-src**: Optional thumbnail image URL template
+- **id**: Optional custom ID template
+- **fetch-match**: Optional regex for secondary HTTP lookup
+- **supports-timestamp**: Optional timestamp support flag
 
 **Note:** In regex patterns and templates, `$1` is the full matched URL, `$2` is the first capture group, `$3` is the second, etc.
 

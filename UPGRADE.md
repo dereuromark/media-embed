@@ -31,6 +31,7 @@ If you have custom providers using these keys, remove them.
 | Property | Change |
 |----------|--------|
 | `MediaObject::$config` | `public` → `protected` |
+| `MediaEmbed::$config` | `public` → `protected` |
 | `MediaEmbed::object()` | `public` → `protected` |
 | `MediaEmbed::setHosts()` | Removed (was `public`) |
 
