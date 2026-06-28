@@ -81,10 +81,12 @@ class MediaObject implements ObjectInterface {
 
 		$this->setDefaultParams($stub);
 
-		if (isset($this->stub['iframe-player'])) {
+		if (!empty($this->stub['reverse']) && isset($this->stub['iframe-player'])) {
 			$src = $this->getObjectSrc('iframe-player');
 			$this->stub['iframe-player'] = $src;
+		}
 
+		if (isset($this->stub['iframe-player'])) {
 			// Handle timestamps for providers that support them.
 			$this->handleTimestampSupport();
 		}
@@ -425,9 +427,9 @@ class MediaObject implements ObjectInterface {
 			return $url;
 		}
 
-		$separator = str_contains($url, '?') ? '&amp;' : '?';
+		$separator = str_contains($url, '?') ? '&' : '?';
 
-		return $url . $separator . http_build_query($this->iframeParams, '', '&amp;');
+		return $url . $separator . http_build_query($this->iframeParams);
 	}
 
 	/**
