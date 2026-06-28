@@ -159,10 +159,16 @@ class MediaEmbed {
 		$stub = $this->providers[$host];
 		$config += $this->config;
 
+		$stub['id-template'] = $stub['id'] ?? null;
 		$stub['id'] = $id;
 		$stub['reverse'] = true;
 
-		return $this->object($stub, $config);
+		$object = $this->object($stub, $config);
+		if (!$object->isSourceResolved()) {
+			return null;
+		}
+
+		return $object;
 	}
 
 	/**
@@ -187,10 +193,16 @@ class MediaEmbed {
 		$stub = $this->providers[$host];
 		$config += $this->config;
 
+		$stub['id-template'] = $stub['id'] ?? null;
 		$stub['id'] = $id;
 		$stub['reverse'] = true;
 
-		return $this->object($stub, $config);
+		$object = $this->object($stub, $config);
+		if (!$object->isSourceResolved()) {
+			throw new InvalidUrlException($id, 'Could not resolve embed source for the given ID.');
+		}
+
+		return $object;
 	}
 
 	/**

@@ -385,6 +385,22 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
+	 * Whether the iframe source template is fully resolved (no leftover placeholders).
+	 *
+	 * Used by reverse lookups (`parseId()`) to detect IDs that cannot reconstruct a valid
+	 * embed (e.g. a compound-ID provider given only a partial legacy ID).
+	 *
+	 * @return bool
+	 */
+	public function isSourceResolved(): bool {
+		if (empty($this->stub['iframe-player'])) {
+			return true;
+		}
+
+		return !$this->templateResolver->hasUnresolvedPlaceholders((string)$this->stub['iframe-player']);
+	}
+
+	/**
 	 * Get the raw iframe src URL with parameters.
 	 *
 	 * @return string The unescaped src URL
@@ -416,7 +432,7 @@ class MediaObject implements ObjectInterface {
 		}
 
 		$stubSrc = $this->stub[$type];
-		$src = $this->templateResolver->resolveReverse($stubSrc, $this->stub['id']);
+		$src = $this->templateResolver->resolveReverse($stubSrc, $this->stub['id'], $this->stub['id-template'] ?? null);
 
 		if (!empty($this->stub['replace'])) {
 			$src = $this->templateResolver->resolveReplacements($src, (array)$this->stub['replace']);
@@ -436,7 +452,7 @@ class MediaObject implements ObjectInterface {
 			return null;
 		}
 
-		return $this->templateResolver->resolveReverse($this->stub['image-src'], $this->stub['id']);
+		return $this->templateResolver->resolveReverse($this->stub['image-src'], $this->stub['id'], $this->stub['id-template'] ?? null);
 	}
 
 	/**

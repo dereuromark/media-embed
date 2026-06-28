@@ -250,3 +250,7 @@ The default `StreamHttpClient` rejects non-public local/private IP targets, vali
 #### oEmbed
 
 oEmbed discovery supports JSON and XML responses, direct endpoint templates, response caching, and `OEmbedResponse::toArray()`.
+
+#### Compound IDs for multi-segment providers
+
+Providers whose embed needs more than one URL segment (e.g. Apple Podcasts, Deezer, Audiomack, Bandcamp, Mixcloud, Metatube, Odysee, PeerTube, Vooplayer) now return a composite `id()` (e.g. `playlist/1479458365`, `us/rimscast/1436041526`) instead of a single token. Store this full value if you persist `id()` for later `parseId()` reverse lookups. `parseId()` now returns `null` (and `parseIdOrFail()` throws) when a given ID cannot reconstruct a complete embed source, rather than emitting an iframe with unresolved placeholders.

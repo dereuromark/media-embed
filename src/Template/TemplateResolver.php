@@ -35,18 +35,83 @@ final class TemplateResolver {
 	/**
 	 * Resolve template for reverse lookup (using ID instead of match).
 	 *
-	 * Handles both `$r2` (explicit reverse placeholder) and `$2` (fallback).
+	 * Handles `$r2` (explicit reverse placeholder), compound IDs (when an ID template
+	 * such as `$2/$3` is known, the individual capture groups are recovered from the ID
+	 * value) and the simple `$2` fallback.
 	 *
 	 * @param string $template The template string containing placeholders.
-	 * @param string $id The ID to substitute.
+	 * @param string $id The ID value to substitute.
+	 * @param string|null $idTemplate The original ID template (e.g. `$2/$3`) when known.
 	 * @return string The resolved string.
 	 */
-	public function resolveReverse(string $template, string $id): string {
+	public function resolveReverse(string $template, string $id, ?string $idTemplate = null): string {
 		if (str_contains($template, '$r2')) {
 			return str_replace('$r2', $id, $template);
 		}
 
+		if ($idTemplate !== null) {
+			$groups = $this->extractReverseGroups($idTemplate, $id);
+			if ($groups !== null) {
+				// Replace higher placeholder numbers first to avoid partial overlaps.
+				krsort($groups);
+				foreach ($groups as $number => $value) {
+					$template = str_replace('$' . $number, $value, $template);
+				}
+
+				return $template;
+			}
+		}
+
 		return str_replace('$2', $id, $template);
+	}
+
+	/**
+	 * Recover individual capture-group values from a compound ID using its template.
+	 *
+	 * Given an ID template like `$2/$3/$4` and the value `artist/album/song`, returns
+	 * `[2 => 'artist', 3 => 'album', 4 => 'song']`. Returns null for single-placeholder
+	 * templates (handled by the simple path) or when the value does not match the template.
+	 *
+	 * @param string $idTemplate The ID template containing placeholders.
+	 * @param string $id The concrete ID value.
+	 * @return array<int, string>|null
+	 */
+	protected function extractReverseGroups(string $idTemplate, string $id): ?array {
+		$segments = preg_split('/(\$\d+)/', $idTemplate, -1, PREG_SPLIT_DELIM_CAPTURE);
+		if ($segments === false) {
+			return null;
+		}
+
+		$order = [];
+		$regex = '';
+		foreach ($segments as $segment) {
+			if ($segment === '') {
+				continue;
+			}
+			if (preg_match('/^\$(\d+)$/', $segment, $matches)) {
+				$order[] = (int)$matches[1];
+				$regex .= '(.+?)';
+
+				continue;
+			}
+
+			$regex .= preg_quote($segment, '~');
+		}
+
+		if (count($order) < 2) {
+			return null;
+		}
+
+		if (!preg_match('~^' . $regex . '$~', $id, $values)) {
+			return null;
+		}
+
+		$groups = [];
+		foreach ($order as $index => $number) {
+			$groups[$number] = $values[$index + 1];
+		}
+
+		return $groups;
 	}
 
 	/**

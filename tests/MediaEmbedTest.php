@@ -38,7 +38,7 @@ class MediaEmbedTest extends TestCase {
 		'https://player.vimeo.com/video/19570639' => '19570639',
 		'http://www.youtube.com/watch?v=-vGzem8glbE&feature=channel' => '-vGzem8glbE',
 		'http://www.aparat.com/v/sSLMC' => 'sSLMC',
-		'http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/' => '245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
+		'http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/' => 'en/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
 		// Fetch lookup required
 		//'https://www.screencast.com/t/Hh4ulI0M' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
 		// Not available anymore
@@ -51,7 +51,7 @@ class MediaEmbedTest extends TestCase {
 		'https://my.matterport.com/show/?m=Zh14WDtkjdC&lp=1' => 'Zh14WDtkjdC',
 		'https://www.twitch.tv/videos/293684811' => '293684811',
 		'https://clips.twitch.tv/WonderfulPiliableSquirrelBleedPurple' => 'WonderfulPiliableSquirrelBleedPurple',
-		'https://lds.cdn.vooplayer.com/publish/MTEwNTMw' => 'MTEwNTMw',
+		'https://lds.cdn.vooplayer.com/publish/MTEwNTMw' => 'lds/MTEwNTMw',
 		'https://soundcloud.com/kalax/kalax-take-me-back-feat-world-wild-1' => 'kalax/kalax-take-me-back-feat-world-wild-1',
 		'https://www.mixcloud.com/spartacus/party-time/' => 'spartacus/party-time',
 		'https://mixcloud.com/NTSRadio/boiler-room-dekmantel-2014/' => 'NTSRadio/boiler-room-dekmantel-2014',
@@ -93,17 +93,17 @@ class MediaEmbedTest extends TestCase {
 		'https://rumble.com/v1abc12-example-video.html' => 'v1abc12',
 		'https://rumble.com/embed/v1xyz99' => 'v1xyz99',
 		// Odysee
-		'https://odysee.com/$/embed/video-title/abc123def' => 'abc123def',
-		'https://odysee.com/@channel:a/video-title:b' => 'video-title:b',
+		'https://odysee.com/$/embed/video-title/abc123def' => 'video-title/abc123def',
+		'https://odysee.com/@channel:a/video-title:b' => '@channel:a/video-title:b',
 		// Kick
 		'https://kick.com/username/clips/clip_abc123' => 'clip_abc123',
 		'https://kick.com/video/12345-abcd-6789' => '12345-abcd-6789',
 		// Bandcamp
-		'https://publicpractice.bandcamp.com/track/disposable' => 'publicpractice/disposable',
-		'https://someband.bandcamp.com/album/album-name' => 'someband/album-name',
+		'https://publicpractice.bandcamp.com/track/disposable' => 'publicpractice/track/disposable',
+		'https://someband.bandcamp.com/album/album-name' => 'someband/album/album-name',
 		// PeerTube
-		'https://peertube.tv/w/oxKYBCdgGHmQgAxUZe3cv8' => 'oxKYBCdgGHmQgAxUZe3cv8',
-		'https://video.instance.com/videos/watch/def456789' => 'def456789',
+		'https://peertube.tv/w/oxKYBCdgGHmQgAxUZe3cv8' => 'peertube.tv/oxKYBCdgGHmQgAxUZe3cv8',
+		'https://video.instance.com/videos/watch/def456789' => 'video.instance.com/def456789',
 		// TED
 		'https://www.ted.com/talks/sir_ken_robinson_do_schools_kill_creativity' => 'sir_ken_robinson_do_schools_kill_creativity',
 		// Giphy
@@ -124,11 +124,11 @@ class MediaEmbedTest extends TestCase {
 		// BitChute
 		'https://www.bitchute.com/video/UGlrF9o9b-Q/' => 'UGlrF9o9b-Q',
 		// Apple Podcasts (show + episode; id() returns the show id)
-		'https://podcasts.apple.com/us/podcast/rimscast/id1436041526' => '1436041526',
-		'https://podcasts.apple.com/us/podcast/rimscast/id1436041526?i=1000773833962' => '1436041526',
+		'https://podcasts.apple.com/us/podcast/rimscast/id1436041526' => 'us/rimscast/1436041526',
+		'https://podcasts.apple.com/us/podcast/rimscast/id1436041526?i=1000773833962' => 'us/rimscast/1436041526',
 		// Deezer
-		'https://www.deezer.com/en/playlist/1479458365' => '1479458365',
-		'https://www.deezer.com/track/3135556' => '3135556',
+		'https://www.deezer.com/en/playlist/1479458365' => 'playlist/1479458365',
+		'https://www.deezer.com/track/3135556' => 'track/3135556',
 	];
 
 	/**
@@ -388,6 +388,52 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringContainsString(' referrerpolicy="strict-origin-when-cross-origin"', $code);
 		$this->assertStringContainsString(' allow="fullscreen; picture-in-picture"', $code);
 		$this->assertStringContainsString(' allowfullscreen', $code);
+	}
+
+	/**
+	 * parseId() reverse lookup must reconstruct the embed for compound-ID providers.
+	 *
+	 * @dataProvider reverseCompoundProviders
+	 * @param string $host
+	 * @param string $id
+	 * @param string $expectedSrc
+	 * @return void
+	 */
+	#[DataProvider('reverseCompoundProviders')]
+	public function testParseIdReverseResolvesCompoundProviders(string $host, string $id, string $expectedSrc): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseId($id, $host);
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$src = $Object->getEmbedSrc();
+		$this->assertSame($expectedSrc, $src);
+		$this->assertDoesNotMatchRegularExpression('/\\$\\d/', $src, 'Unresolved placeholder in ' . $src);
+	}
+
+	/**
+	 * @return array<array<string>>
+	 */
+	public static function reverseCompoundProviders(): array {
+		return [
+			['mixcloud', 'spartacus/party-time', '//www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2Fspartacus%2Fparty-time%2F&wmode=transparent'],
+			['audiomack', 'officialsisqo/song/thong-song-1', 'https://audiomack.com/embed/song/officialsisqo/thong-song-1?wmode=transparent'],
+			['apple-podcasts', 'us/rimscast/1436041526', 'https://embed.podcasts.apple.com/us/podcast/rimscast/id1436041526?wmode=transparent'],
+			['deezer', 'playlist/1479458365', 'https://widget.deezer.com/widget/auto/playlist/1479458365?wmode=transparent'],
+			['peertube', 'peertube.tv/oxKYBCdgGHmQgAxUZe3cv8', 'https://peertube.tv/videos/embed/oxKYBCdgGHmQgAxUZe3cv8?wmode=transparent'],
+			['bandcamp', 'publicpractice/track/disposable', 'https://bandcamp.com/EmbeddedPlayer/track=publicpractice/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/?wmode=transparent'],
+		];
+	}
+
+	public function testParseIdReturnsNullForUnreconstructableCompoundId(): void {
+		$MediaEmbed = new MediaEmbed();
+		// A legacy/partial ID that cannot rebuild a compound-ID provider must fail cleanly.
+		$this->assertNull($MediaEmbed->parseId('1479458365', 'deezer'));
+	}
+
+	public function testParseIdOrFailThrowsForUnreconstructableCompoundId(): void {
+		$MediaEmbed = new MediaEmbed();
+		$this->expectException(\MediaEmbed\Exception\InvalidUrlException::class);
+		$MediaEmbed->parseIdOrFail('1479458365', 'deezer');
 	}
 
 	public function testApplePodcastsShowEmbed(): void {
