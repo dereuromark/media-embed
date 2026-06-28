@@ -126,6 +126,28 @@ class OEmbedTest extends TestCase {
 		$this->assertNull($endpoint);
 	}
 
+	public function testOEmbedDiscoveryRejectsUnsafeEndpointScheme(): void {
+		$mockClient = $this->createStub(HttpClientInterface::class);
+		$mockClient->method('get')
+			->willReturn('<html><head><link rel="alternate" type="application/json+oembed" href="javascript:alert(1)" /></head></html>');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+		$endpoint = $discovery->discoverEndpoint('https://example.com/page');
+
+		$this->assertNull($endpoint);
+	}
+
+	public function testOEmbedDiscoveryRejectsProtocolRelativeLocalhostEndpoint(): void {
+		$mockClient = $this->createStub(HttpClientInterface::class);
+		$mockClient->method('get')
+			->willReturn('<html><head><link rel="alternate" type="application/json+oembed" href="//localhost/oembed" /></head></html>');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+		$endpoint = $discovery->discoverEndpoint('https://example.com/page');
+
+		$this->assertNull($endpoint);
+	}
+
 	public function testOEmbedDiscoveryFetch(): void {
 		$mockClient = $this->createStub(HttpClientInterface::class);
 		$mockClient->method('get')
@@ -142,6 +164,18 @@ class OEmbedTest extends TestCase {
 		$this->assertNotNull($response);
 		$this->assertSame('video', $response->type);
 		$this->assertSame('Mock Video', $response->title);
+	}
+
+	public function testOEmbedDiscoveryFetchRejectsUnsafeEndpoint(): void {
+		$mockClient = $this->createMock(HttpClientInterface::class);
+		$mockClient->expects($this->never())
+			->method('get');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+
+		$this->assertNull($discovery->fetch('file:///tmp/oembed.json'));
+		$this->assertNull($discovery->fetch('http://127.0.0.1/oembed'));
+		$this->assertNull($discovery->fetch('http://10.0.0.1/oembed'));
 	}
 
 	public function testOEmbedDiscoveryFetchWithDimensions(): void {

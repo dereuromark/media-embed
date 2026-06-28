@@ -408,8 +408,7 @@ use MediaEmbed\Cache\ArrayCache;
 // The built-in ArrayCache is in-memory and lasts for the current request only.
 $cache = new ArrayCache();
 $MediaEmbed = new MediaEmbed();
-$matcher = $MediaEmbed->getUrlMatcher();
-$matcher->setCache($cache);
+$MediaEmbed->setCache($cache);
 
 // The domain index will be cached after first match
 $MediaEmbed->parseUrl('https://youtube.com/watch?v=abc');
@@ -421,10 +420,10 @@ For persistent caching, pass any PSR-16 cache implementation (Redis, Memcached, 
 use Psr\SimpleCache\CacheInterface;
 
 /** @var CacheInterface $yourPsr16Cache */
-$MediaEmbed->getUrlMatcher()->setCache($yourPsr16Cache, ttl: 3600);
+$MediaEmbed = new MediaEmbed(cache: $yourPsr16Cache, cacheTtl: 3600);
 ```
 
-The cache stores the generated provider domain index under an internal key. It is invalidated automatically when `UrlMatcher::setProviders()` is called. The `ttl` argument controls how long persistent caches may retain the index.
+The cache stores the generated provider domain index under an internal key. It is invalidated automatically when providers change. The `cacheTtl` argument controls how long persistent caches may retain the index.
 
 ### oEmbed Discovery
 
@@ -443,7 +442,7 @@ if ($response !== null) {
     echo $response->providerName;
 
     if ($response->hasHtml()) {
-        echo $response->html; // Ready-to-use embed code
+        echo $response->html; // Raw remote provider HTML
     }
 
     if ($response->hasThumbnail()) {
@@ -459,6 +458,8 @@ $response = $discovery->fetch('https://example.com/oembed?url=...');
 ```
 
 Discovered oEmbed endpoint URLs may be absolute, protocol-relative, root-relative, or path-relative. Relative endpoint URLs are resolved against the source page URL before they are fetched.
+Only public `http` and `https` endpoint URLs are fetched; local/private IP endpoints and unsafe schemes are rejected.
+The returned `html` field is raw remote provider HTML. Only render it for providers you trust, or sanitize it first.
 
 The `OEmbedResponse` provides typed access to all oEmbed fields:
 
