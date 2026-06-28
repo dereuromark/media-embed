@@ -2,6 +2,7 @@
 
 namespace MediaEmbed\Test;
 
+use InvalidArgumentException;
 use MediaEmbed\MediaEmbed;
 use MediaEmbed\Object\MediaObject;
 use MediaEmbed\Provider\ProviderConfig;
@@ -286,6 +287,44 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringNotContainsString('bar="quoted"', $code);
 		$this->assertSame('//unsafe.example.com/embed/12345?foo=1&bar="quoted"&wmode=transparent', $Object->getEmbedSrc());
 		$this->assertSame('//unsafe.example.com/embed/12345?foo=1&amp;bar=&quot;quoted&quot;&amp;wmode=transparent', $Object->getEmbedSrcForHtml());
+	}
+
+	public function testSetAttributeRejectsInvalidAttributeName(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid iframe attribute name "x onload"');
+
+		$Object->setAttribute('x onload', 'alert(1)');
+	}
+
+	public function testSetAttributeRejectsEventHandlerAttributeName(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid iframe attribute name "onload"');
+
+		$Object->setAttribute('onload', 'alert(1)');
+	}
+
+	public function testSetAttributeAllowsDataAndAriaAttributes(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$Object->setAttribute([
+			'data-controller' => 'media',
+			'aria-label' => 'Video',
+		]);
+
+		$code = $Object->getEmbedCode();
+
+		$this->assertStringContainsString(' data-controller="media"', $code);
+		$this->assertStringContainsString(' aria-label="Video"', $code);
 	}
 
 	/**
