@@ -15,6 +15,7 @@ use MediaEmbed\Provider\PhpFileLoader;
 use MediaEmbed\Provider\ProviderCollection;
 use MediaEmbed\Provider\ProviderConfig;
 use MediaEmbed\Provider\ProviderLoaderInterface;
+use Psr\SimpleCache\CacheInterface;
 use URLify;
 
 /**
@@ -58,6 +59,16 @@ class MediaEmbed {
 	protected ?UrlMatcher $urlMatcher = null;
 
 	/**
+	 * Optional cache for the URL matcher domain index.
+	 */
+	protected ?CacheInterface $cache = null;
+
+	/**
+	 * URL matcher cache TTL in seconds.
+	 */
+	protected int $cacheTtl = 3600;
+
+	/**
 	 * Get the HTTP client.
 	 *
 	 * @return \MediaEmbed\Http\HttpClientInterface
@@ -85,14 +96,20 @@ class MediaEmbed {
 	 * @param string|null $stubsPath
 	 * @param \MediaEmbed\Http\HttpClientInterface|null $httpClient
 	 * @param \MediaEmbed\Provider\ProviderLoaderInterface|null $providerLoader
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache
+	 * @param int $cacheTtl
 	 */
 	public function __construct(
 		array $config = [],
 		?string $stubsPath = null,
 		?HttpClientInterface $httpClient = null,
 		?ProviderLoaderInterface $providerLoader = null,
+		?CacheInterface $cache = null,
+		int $cacheTtl = 3600,
 	) {
 		$this->httpClient = $httpClient ?? new StreamHttpClient();
+		$this->cache = $cache;
+		$this->cacheTtl = $cacheTtl;
 
 		// Use provided loader or default to PhpFileLoader
 		if ($providerLoader !== null) {
@@ -239,10 +256,25 @@ class MediaEmbed {
 	 */
 	public function getUrlMatcher(): UrlMatcher {
 		if ($this->urlMatcher === null) {
-			$this->urlMatcher = new UrlMatcher($this->providers);
+			$this->urlMatcher = new UrlMatcher($this->providers, $this->cache, $this->cacheTtl);
 		}
 
 		return $this->urlMatcher;
+	}
+
+	/**
+	 * Set the cache used by the URL matcher.
+	 *
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Cache implementation.
+	 * @param int $ttl Cache TTL in seconds.
+	 * @return $this
+	 */
+	public function setCache(?CacheInterface $cache, int $ttl = 3600) {
+		$this->cache = $cache;
+		$this->cacheTtl = $ttl;
+		$this->urlMatcher = null;
+
+		return $this;
 	}
 
 	/**
