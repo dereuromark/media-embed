@@ -18,8 +18,9 @@ class StreamHttpClient implements HttpClientInterface {
 
 	/**
 	 * @param int $timeout Request timeout in seconds.
+	 * @param int $maxBytes Maximum response size in bytes.
 	 */
-	public function __construct(int $timeout = 5) {
+	public function __construct(int $timeout = 5, protected int $maxBytes = 1048576) {
 		$this->timeout = $timeout;
 	}
 
@@ -27,21 +28,60 @@ class StreamHttpClient implements HttpClientInterface {
 	 * @inheritDoc
 	 */
 	public function get(string $url, array $options = []): ?string {
+		if (!$this->isSafeUrl($url)) {
+			return null;
+		}
+
 		$timeout = $options['timeout'] ?? $this->timeout;
+		$maxBytes = $options['max_bytes'] ?? $this->maxBytes;
 
 		$context = stream_context_create([
 			'http' => [
 				'header' => 'Connection: close',
 				'timeout' => $timeout,
+				'follow_location' => 0,
+				'ignore_errors' => false,
 			],
 		]);
 
-		$content = @file_get_contents($url, false, $context);
-		if ($content === false) {
+		$stream = @fopen($url, 'rb', false, $context);
+		if ($stream === false) {
+			return null;
+		}
+
+		$content = stream_get_contents($stream, $maxBytes + 1);
+		fclose($stream);
+		if ($content === false || strlen($content) > $maxBytes) {
 			return null;
 		}
 
 		return $content;
+	}
+
+	/**
+	 * @param string $url URL to validate.
+	 * @return bool
+	 */
+	protected function isSafeUrl(string $url): bool {
+		$parts = parse_url($url);
+		if (!is_array($parts) || empty($parts['scheme']) || empty($parts['host'])) {
+			return false;
+		}
+
+		if (!in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
+			return false;
+		}
+
+		$host = strtolower($parts['host']);
+		if ($host === 'localhost' || str_ends_with($host, '.localhost')) {
+			return false;
+		}
+
+		if (filter_var($host, FILTER_VALIDATE_IP)) {
+			return filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
+		}
+
+		return true;
 	}
 
 }

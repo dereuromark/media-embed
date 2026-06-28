@@ -2,6 +2,7 @@
 
 namespace MediaEmbed\Object;
 
+use InvalidArgumentException;
 use MediaEmbed\Template\TemplateResolver;
 
 /**
@@ -84,8 +85,12 @@ class MediaObject implements ObjectInterface {
 		}
 
 		if ($type === 'iframe-player') {
-			$src = $this->_getObjectSrc($type);
-			$this->_stub['iframe-player'] = $src;
+			if (!empty($this->_stub['reverse'])) {
+				$src = $this->_getObjectSrc($type);
+				$this->_stub['iframe-player'] = $src;
+			} else {
+				$src = $this->templateResolver->resolve($this->_stub['iframe-player'], $this->_match);
+			}
 
 			$this->_objectParams['movie'] = $src;
 			$this->_objectAttributes['data'] = $src;
@@ -264,13 +269,26 @@ class MediaObject implements ObjectInterface {
 
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
+				$this->assertValidAttributeName((string)$p);
 				$this->{$attributes}[$p] = $v;
 			}
 		} else {
+			$this->assertValidAttributeName((string)$param);
 			$this->{$attributes}[$param] = $value;
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @param string $name Attribute name.
+	 * @throws \InvalidArgumentException
+	 * @return void
+	 */
+	protected function assertValidAttributeName(string $name): void {
+		if (!preg_match('/^[^\s"\'=<>\/\x00-\x1F\x7F]+$/', $name) || preg_match('/^on/i', $name)) {
+			throw new InvalidArgumentException(sprintf('Invalid iframe attribute name "%s"', $name));
+		}
 	}
 
 	/**
@@ -374,12 +392,21 @@ class MediaObject implements ObjectInterface {
 		if ($this->_iframeParams) {
 			$c = '?';
 			if (strpos($source, '?') !== false) {
-				$c = '&amp;';
+				$c = '&';
 			}
-			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
+			$source .= $c . http_build_query($this->_iframeParams);
 		}
 
 		return $source;
+	}
+
+	/**
+	 * Get the iframe src URL escaped for HTML attributes.
+	 *
+	 * @return string The escaped src attribute value
+	 */
+	public function getEmbedSrcForHtml(): string {
+		return $this->_esc($this->getEmbedSrc());
 	}
 
 	/**
@@ -468,16 +495,6 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	protected function _buildIframe(): string {
-		$source = $this->templateResolver->resolve($this->_stub['iframe-player'], $this->_match);
-
-		//add custom params
-		if ($this->_iframeParams) {
-			$c = '?';
-			if (strpos($source, '?') !== false) {
-				$c = '&amp;';
-			}
-			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
-		}
 		$attributes = '';
 		//add custom attributes
 
@@ -490,7 +507,7 @@ class MediaObject implements ObjectInterface {
 		}
 
 		// Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
-		return sprintf('<iframe src="%s"%s></iframe>', $source, $attributes);
+		return sprintf('<iframe src="%s"%s></iframe>', $this->getEmbedSrcForHtml(), $attributes);
 	}
 
 	/**

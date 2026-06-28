@@ -65,7 +65,7 @@ final class OEmbedDiscovery {
 			return null;
 		}
 
-		return $this->parseOEmbedLink($html);
+		return $this->parseOEmbedLink($html, $url);
 	}
 
 	/**
@@ -77,6 +77,10 @@ final class OEmbedDiscovery {
 	 * @return \MediaEmbed\OEmbed\OEmbedResponse|null Response or null on failure.
 	 */
 	public function fetch(string $endpointUrl, ?int $maxWidth = null, ?int $maxHeight = null): ?OEmbedResponse {
+		if (!$this->isSafeEndpointUrl($endpointUrl)) {
+			return null;
+		}
+
 		$params = [];
 		if ($maxWidth !== null) {
 			$params['maxwidth'] = $maxWidth;
@@ -109,9 +113,10 @@ final class OEmbedDiscovery {
 	 * Looks for: <link rel="alternate" type="application/json+oembed" href="..." />
 	 *
 	 * @param string $html The HTML to parse.
+	 * @param string $baseUrl Source page URL.
 	 * @return string|null The oEmbed URL or null if not found.
 	 */
-	private function parseOEmbedLink(string $html): ?string {
+	private function parseOEmbedLink(string $html, string $baseUrl): ?string {
 		// Match link tags with oembed type
 		$pattern = '/<link[^>]+type=["\']application\/json\+oembed["\'][^>]*>/i';
 		if (!preg_match($pattern, $html, $match)) {
@@ -131,8 +136,78 @@ final class OEmbedDiscovery {
 
 		$href = $hrefMatch[1];
 
-		// Decode HTML entities
-		return html_entity_decode($href, ENT_QUOTES | ENT_HTML5);
+		$href = html_entity_decode($href, ENT_QUOTES | ENT_HTML5);
+
+		$url = $this->resolveEndpointUrl($href, $baseUrl);
+		if (!$this->isSafeEndpointUrl($url)) {
+			return null;
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Resolve oEmbed href values against the source page URL.
+	 *
+	 * @param string $href Link href from the oEmbed tag.
+	 * @param string $baseUrl Source page URL.
+	 * @return string
+	 */
+	private function resolveEndpointUrl(string $href, string $baseUrl): string {
+		if (parse_url($href, PHP_URL_SCHEME) !== null) {
+			return $href;
+		}
+
+		$base = parse_url($baseUrl);
+		if (empty($base['scheme']) || empty($base['host'])) {
+			return $href;
+		}
+
+		$authority = $base['scheme'] . '://' . $base['host'];
+		if (!empty($base['port'])) {
+			$authority .= ':' . $base['port'];
+		}
+
+		if (str_starts_with($href, '//')) {
+			return $base['scheme'] . ':' . $href;
+		}
+
+		if (str_starts_with($href, '/')) {
+			return $authority . $href;
+		}
+
+		$path = $base['path'] ?? '/';
+		$directory = rtrim(substr($path, 0, (int)strrpos($path, '/') + 1), '/');
+
+		return $authority . $directory . '/' . $href;
+	}
+
+	/**
+	 * Check if an oEmbed endpoint URL is safe to fetch.
+	 *
+	 * @param string $url Endpoint URL.
+	 * @return bool
+	 */
+	private function isSafeEndpointUrl(string $url): bool {
+		$parts = parse_url($url);
+		if (!is_array($parts) || empty($parts['scheme']) || empty($parts['host'])) {
+			return false;
+		}
+
+		if (!in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
+			return false;
+		}
+
+		$host = strtolower($parts['host']);
+		if ($host === 'localhost' || str_ends_with($host, '.localhost')) {
+			return false;
+		}
+
+		if (filter_var($host, FILTER_VALIDATE_IP)) {
+			return filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
+		}
+
+		return true;
 	}
 
 }

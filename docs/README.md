@@ -105,6 +105,8 @@ This should return and embed code like:
 <embed src="https://www.youtube.com/embed/111111?autoplay=1&amp;loop=1" class="iframe-class" data-html5-parameter></iframe>
 ```
 
+Attribute names must be valid iframe attribute names. Whitespace/control characters, HTML syntax characters, and `on*` event-handler attributes are rejected.
+
 ### Adding Custom Providers
 
 You can add your own custom providers in several ways:
@@ -323,6 +325,8 @@ class MockHttpClient implements HttpClientInterface {
 $MediaEmbed = new MediaEmbed([], null, new MockHttpClient());
 ```
 
+The default `StreamHttpClient` only fetches public `http` and `https` URLs, rejects localhost/private literal IP targets, disables redirects, and caps response size. Inject a custom `HttpClientInterface` implementation if you need a different network policy.
+
 ### Provider Loaders
 
 Load providers from different sources using the loader interface:
@@ -444,7 +448,7 @@ if ($response !== null) {
     echo $response->providerName;
 
     if ($response->hasHtml()) {
-        echo $response->html; // Ready-to-use embed code
+        echo $response->html; // Raw remote provider HTML
     }
 
     if ($response->hasThumbnail()) {
@@ -458,6 +462,10 @@ $response = $discovery->discover($url, maxWidth: 640, maxHeight: 480);
 // Or fetch directly from a known endpoint
 $response = $discovery->fetch('https://example.com/oembed?url=...');
 ```
+
+Discovered oEmbed endpoint URLs may be absolute, protocol-relative, root-relative, or path-relative. Relative endpoint URLs are resolved against the source page URL before they are fetched.
+Only public `http` and `https` endpoint URLs are fetched; local/private IP endpoints and unsafe schemes are rejected.
+The returned `html` field is raw remote provider HTML. Only render it for providers you trust, or sanitize it first.
 
 The `OEmbedResponse` provides typed access to all oEmbed fields:
 

@@ -28,6 +28,13 @@ final class UrlMatcher {
 	private array $domainIndex = [];
 
 	/**
+	 * Provider slugs whose URL patterns do not expose a literal domain.
+	 *
+	 * @var array<string>
+	 */
+	private array $unindexedSlugs = [];
+
+	/**
 	 * All providers keyed by slug.
 	 *
 	 * @var array<string, array<string, mixed>>
@@ -70,10 +77,11 @@ final class UrlMatcher {
 		$this->providers = $providers;
 		$this->indexBuilt = false;
 		$this->domainIndex = [];
+		$this->unindexedSlugs = [];
 
 		// Clear cached index when providers change
 		if ($this->cache !== null) {
-			$this->cache->delete(static::CACHE_KEY);
+			$this->cache->delete(self::CACHE_KEY);
 		}
 
 		return $this;
@@ -100,29 +108,66 @@ final class UrlMatcher {
 	 * @return \MediaEmbed\Matcher\MatchResult|null Match result or null if no match.
 	 */
 	public function match(string $url): ?MatchResult {
+		$url = $this->normalizeUrl($url);
+		if ($url === null) {
+			return null;
+		}
+
 		$this->buildIndexIfNeeded();
 
 		// Try fast path first using domain index
 		$domain = $this->extractDomain($url);
-		if ($domain !== null && isset($this->domainIndex[$domain])) {
-			$result = $this->matchAgainstProviders($url, $this->domainIndex[$domain]);
+		if ($domain === null) {
+			return null;
+		}
+
+		$slugs = $this->slugsForDomain($domain);
+		$slugs = array_merge($slugs, $this->unindexedSlugs);
+		if ($slugs) {
+			$result = $this->matchAgainstProviders($url, $domain, $slugs);
 			if ($result !== null) {
 				return $result;
 			}
 		}
 
-		// Fall back to checking all providers
-		return $this->matchAgainstProviders($url, array_keys($this->providers));
+		// Fall back to checking all providers, but reject matches from different hosts.
+		return $this->matchAgainstProviders($url, $domain, array_keys($this->providers));
+	}
+
+	/**
+	 * Normalize and validate a URL before matching.
+	 *
+	 * @param string $url The URL to normalize.
+	 * @return string|null
+	 */
+	private function normalizeUrl(string $url): ?string {
+		$url = trim($url);
+		if ($url === '' || preg_match('/\\s/', $url)) {
+			return null;
+		}
+
+		$parsed = parse_url($url);
+		if (!is_array($parsed) || empty($parsed['scheme']) || empty($parsed['host'])) {
+			return null;
+		}
+
+		$scheme = strtolower($parsed['scheme']);
+		if ($scheme !== 'http' && $scheme !== 'https') {
+			return null;
+		}
+
+		return $url;
 	}
 
 	/**
 	 * Match URL against a specific list of provider slugs.
 	 *
 	 * @param string $url The URL to match.
+	 * @param string $domain Normalized input URL domain.
 	 * @param array<string> $slugs Provider slugs to check.
 	 * @return \MediaEmbed\Matcher\MatchResult|null
 	 */
-	private function matchAgainstProviders(string $url, array $slugs): ?MatchResult {
+	private function matchAgainstProviders(string $url, string $domain, array $slugs): ?MatchResult {
 		$checkedSlugs = [];
 
 		foreach ($slugs as $slug) {
@@ -141,12 +186,52 @@ final class UrlMatcher {
 
 			foreach ($patterns as $pattern) {
 				if (preg_match('~' . $pattern . '~imu', $url, $matches)) {
+					if (!$this->matchBelongsToDomain($matches[0], $domain)) {
+						continue;
+					}
+
 					return new MatchResult($slug, $matches, $provider);
 				}
 			}
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get indexed provider slugs that can match a normalized domain.
+	 *
+	 * @param string $domain Normalized input URL domain.
+	 * @return array<string>
+	 */
+	private function slugsForDomain(string $domain): array {
+		$slugs = [];
+
+		foreach ($this->domainIndex as $indexedDomain => $indexedSlugs) {
+			if ($domain !== $indexedDomain && !str_ends_with($domain, '.' . $indexedDomain)) {
+				continue;
+			}
+
+			$slugs = array_merge($slugs, $indexedSlugs);
+		}
+
+		return array_values(array_unique($slugs));
+	}
+
+	/**
+	 * Check that a regex match belongs to the original input URL domain.
+	 *
+	 * @param string $match Matched URL substring.
+	 * @param string $domain Normalized input URL domain.
+	 * @return bool
+	 */
+	private function matchBelongsToDomain(string $match, string $domain): bool {
+		$matchDomain = $this->extractDomain($match);
+		if ($matchDomain === null) {
+			return true;
+		}
+
+		return $matchDomain === $domain;
 	}
 
 	/**
@@ -161,9 +246,10 @@ final class UrlMatcher {
 
 		// Try to load from cache first
 		if ($this->cache !== null) {
-			$cached = $this->cache->get(static::CACHE_KEY);
+			$cached = $this->cache->get(self::CACHE_KEY);
 			if (is_array($cached)) {
 				$this->domainIndex = $cached;
+				$this->unindexedSlugs = $this->extractUnindexedSlugs();
 				$this->indexBuilt = true;
 
 				return;
@@ -171,13 +257,22 @@ final class UrlMatcher {
 		}
 
 		$this->domainIndex = [];
+		$this->unindexedSlugs = [];
 
 		foreach ($this->providers as $slug => $provider) {
 			$patterns = (array)($provider['url-match'] ?? []);
+			$hasIndexedDomain = false;
 
 			foreach ($patterns as $pattern) {
 				$domains = $this->extractDomainsFromPattern($pattern);
+				if (!$domains) {
+					$this->unindexedSlugs[] = $slug;
+
+					continue;
+				}
+
 				foreach ($domains as $domain) {
+					$hasIndexedDomain = true;
 					if (!isset($this->domainIndex[$domain])) {
 						$this->domainIndex[$domain] = [];
 					}
@@ -186,11 +281,17 @@ final class UrlMatcher {
 					}
 				}
 			}
+
+			if (!$hasIndexedDomain) {
+				$this->unindexedSlugs[] = $slug;
+			}
 		}
+
+		$this->unindexedSlugs = array_values(array_unique($this->unindexedSlugs));
 
 		// Store in cache
 		if ($this->cache !== null) {
-			$this->cache->set(static::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
+			$this->cache->set(self::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
 		}
 
 		$this->indexBuilt = true;
@@ -245,6 +346,28 @@ final class UrlMatcher {
 		}
 
 		return array_unique($domains);
+	}
+
+	/**
+	 * Extract provider slugs whose URL patterns do not expose a literal domain.
+	 *
+	 * @return array<string>
+	 */
+	private function extractUnindexedSlugs(): array {
+		$slugs = [];
+
+		foreach ($this->providers as $slug => $provider) {
+			$patterns = (array)($provider['url-match'] ?? []);
+			foreach ($patterns as $pattern) {
+				if ($this->extractDomainsFromPattern($pattern)) {
+					continue 2;
+				}
+			}
+
+			$slugs[] = $slug;
+		}
+
+		return $slugs;
 	}
 
 	/**
