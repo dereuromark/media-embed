@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace MediaEmbed;
 
+use InvalidArgumentException;
 use MediaEmbed\Exception\FetchException;
 use MediaEmbed\Exception\InvalidUrlException;
 use MediaEmbed\Exception\ProviderConfigException;
 use MediaEmbed\Exception\ProviderNotFoundException;
 use MediaEmbed\Http\HttpClientInterface;
+use MediaEmbed\Http\Psr18HttpClient;
 use MediaEmbed\Http\StreamHttpClient;
 use MediaEmbed\Matcher\MatchResult;
 use MediaEmbed\Matcher\UrlMatcher;
@@ -19,6 +21,8 @@ use MediaEmbed\Provider\ProviderConfig;
 use MediaEmbed\Provider\ProviderLoaderInterface;
 use MediaEmbed\Slugger\SluggerInterface;
 use MediaEmbed\Slugger\UrlifySlugger;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -107,6 +111,8 @@ class MediaEmbed {
 	 * @param \Psr\SimpleCache\CacheInterface|null $cache
 	 * @param int $cacheTtl
 	 * @param \MediaEmbed\Slugger\SluggerInterface|null $slugger
+	 * @param \Psr\Http\Client\ClientInterface|null $psrHttpClient Optional PSR-18 client (used when no $httpClient is given).
+	 * @param \Psr\Http\Message\RequestFactoryInterface|null $requestFactory PSR-17 request factory (required with $psrHttpClient).
 	 */
 	public function __construct(
 		array $config = [],
@@ -116,7 +122,15 @@ class MediaEmbed {
 		?CacheInterface $cache = null,
 		int $cacheTtl = 3600,
 		?SluggerInterface $slugger = null,
+		?ClientInterface $psrHttpClient = null,
+		?RequestFactoryInterface $requestFactory = null,
 	) {
+		if (($psrHttpClient !== null) !== ($requestFactory !== null)) {
+			throw new InvalidArgumentException('A PSR-18 client and a PSR-17 request factory must be provided together.');
+		}
+		if ($httpClient === null && $psrHttpClient !== null && $requestFactory !== null) {
+			$httpClient = new Psr18HttpClient($psrHttpClient, $requestFactory);
+		}
 		$this->httpClient = $httpClient ?? new StreamHttpClient();
 		$this->slugger = $slugger ?? new UrlifySlugger();
 		$this->cache = $cache;

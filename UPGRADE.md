@@ -69,6 +69,11 @@ Existing stored embeds for those providers should be treated as unsupported by 1
 
 The `fromArray()` method preserves legacy array dimension values as either `int` or `string`, including percentage dimensions such as `100%`.
 
+#### Dependencies
+
+- `jbroadway/urlify` is no longer a hard dependency (moved to `suggest`). A built-in ASCII slugger is used when it is absent; inject a custom `MediaEmbed\Slugger\SluggerInterface` to override.
+- `psr/http-client` and `psr/http-factory` are now required. A PSR-18 client can be injected via the new `psrHttpClient` + `requestFactory` constructor arguments; the bundled `StreamHttpClient` remains the default.
+
 ### Migration Examples
 
 #### Adding Custom Providers

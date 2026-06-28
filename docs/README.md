@@ -433,6 +433,17 @@ $MediaEmbed = new MediaEmbed(httpClient: $client);
 
 Per-request HTTP client options can also include `timeout`, `max_bytes`, `max_redirects`, and `user_agent`. Inject a custom `HttpClientInterface` implementation if you need a different network policy.
 
+#### PSR-18 client
+
+You can plug in any PSR-18 client (Guzzle, Symfony HttpClient, ...) together with a PSR-17 request factory instead of implementing `HttpClientInterface`. The bundled `StreamHttpClient` stays the default when none is given:
+
+```php
+$MediaEmbed = new MediaEmbed(
+    psrHttpClient: $psr18Client,
+    requestFactory: $psr17RequestFactory,
+);
+```
+
 ### Provider Loaders
 
 Load providers from different sources using the loader interface:
