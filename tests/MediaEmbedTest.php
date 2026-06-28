@@ -234,6 +234,26 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringNotContainsString(' hidden', $code);
 	}
 
+	public function testEmbedCodeEscapesIframeSource(): void {
+		$MediaEmbed = new MediaEmbed();
+		$MediaEmbed->addProviderConfig(new ProviderConfig(
+			name: 'UnsafeProvider',
+			website: 'https://unsafe.example.com',
+			urlMatch: 'https://unsafe\\.example\\.com/video/([0-9]+)',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '//unsafe.example.com/embed/$2?foo=1&bar="quoted"',
+		));
+
+		$Object = $MediaEmbed->parseUrl('https://unsafe.example.com/video/12345');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getEmbedCode();
+
+		$this->assertStringContainsString('src="//unsafe.example.com/embed/12345?foo=1&amp;bar=&quot;quoted&quot;&amp;wmode=transparent"', $code);
+		$this->assertStringNotContainsString('bar="quoted"', $code);
+	}
+
 	/**
 	 * Test YouTube /live/ URL format
 	 *

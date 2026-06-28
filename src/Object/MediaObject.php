@@ -405,7 +405,7 @@ class MediaObject implements ObjectInterface {
 
 		$attributes = $this->buildAttributeString();
 
-		return sprintf('<iframe src="%s"%s></iframe>', $source, $attributes);
+		return sprintf('<iframe src="%s"%s></iframe>', $this->esc($source), $attributes);
 	}
 
 	/**
