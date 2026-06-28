@@ -324,6 +324,41 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringNotContainsString(' hidden', $code);
 	}
 
+	public function testEmbedCodeIncludesDefaultIframeAttributes(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getEmbedCode();
+
+		$this->assertStringContainsString(' title="YouTube embed"', $code);
+		$this->assertStringContainsString(' loading="lazy"', $code);
+		$this->assertStringContainsString(' referrerpolicy="strict-origin-when-cross-origin"', $code);
+		$this->assertStringContainsString(' allow="fullscreen; picture-in-picture"', $code);
+		$this->assertStringContainsString(' allowfullscreen', $code);
+	}
+
+	public function testEmbedCodeDefaultIframeAttributesCanBeOverridden(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$Object->setAttribute([
+			'title' => 'Custom video title',
+			'loading' => 'eager',
+			'referrerpolicy' => null,
+			'allow' => false,
+			'sandbox' => 'allow-scripts allow-same-origin',
+		]);
+		$code = $Object->getEmbedCode();
+
+		$this->assertStringContainsString(' title="Custom video title"', $code);
+		$this->assertStringContainsString(' loading="eager"', $code);
+		$this->assertStringNotContainsString(' referrerpolicy=', $code);
+		$this->assertStringNotContainsString(' allow=', $code);
+		$this->assertStringContainsString(' sandbox="allow-scripts allow-same-origin"', $code);
+	}
+
 	public function testProviderDefaultIframeParams(): void {
 		$MediaEmbed = new MediaEmbed();
 		$MediaEmbed->addProviderConfig(new ProviderConfig(
