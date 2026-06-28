@@ -441,7 +441,7 @@ if ($response !== null) {
     echo $response->providerName;
 
     if ($response->hasHtml()) {
-        echo $response->html; // Ready-to-use embed code
+        echo $response->html; // Raw remote provider HTML
     }
 
     if ($response->hasThumbnail()) {
@@ -457,6 +457,8 @@ $response = $discovery->fetch('https://example.com/oembed?url=...');
 ```
 
 Discovered oEmbed endpoint URLs may be absolute, protocol-relative, root-relative, or path-relative. Relative endpoint URLs are resolved against the source page URL before they are fetched.
+Only public `http` and `https` endpoint URLs are fetched; local/private IP endpoints and unsafe schemes are rejected.
+The returned `html` field is raw remote provider HTML. Only render it for providers you trust, or sanitize it first.
 
 The `OEmbedResponse` provides typed access to all oEmbed fields:
 
