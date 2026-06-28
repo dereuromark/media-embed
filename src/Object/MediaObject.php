@@ -374,12 +374,21 @@ class MediaObject implements ObjectInterface {
 		if ($this->_iframeParams) {
 			$c = '?';
 			if (strpos($source, '?') !== false) {
-				$c = '&amp;';
+				$c = '&';
 			}
-			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
+			$source .= $c . http_build_query($this->_iframeParams);
 		}
 
 		return $source;
+	}
+
+	/**
+	 * Get the iframe src URL escaped for HTML attributes.
+	 *
+	 * @return string The escaped src attribute value
+	 */
+	public function getEmbedSrcForHtml(): string {
+		return $this->_esc($this->getEmbedSrc());
 	}
 
 	/**
@@ -468,16 +477,6 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	protected function _buildIframe(): string {
-		$source = $this->templateResolver->resolve($this->_stub['iframe-player'], $this->_match);
-
-		//add custom params
-		if ($this->_iframeParams) {
-			$c = '?';
-			if (strpos($source, '?') !== false) {
-				$c = '&amp;';
-			}
-			$source .= $c . http_build_query($this->_iframeParams, '', '&amp;');
-		}
 		$attributes = '';
 		//add custom attributes
 
@@ -490,7 +489,7 @@ class MediaObject implements ObjectInterface {
 		}
 
 		// Transparent hack (http://groups.google.com/group/autoembed/browse_thread/thread/0ecdd9b898e12183)
-		return sprintf('<iframe src="%s"%s></iframe>', $source, $attributes);
+		return sprintf('<iframe src="%s"%s></iframe>', $this->getEmbedSrcForHtml(), $attributes);
 	}
 
 	/**
