@@ -317,9 +317,13 @@ class MediaEmbed {
 			$this->providers = [];
 		}
 		foreach ($stubs as $stub) {
-			$slug = !empty($stub['slug']) && is_string($stub['slug']) ? $stub['slug'] : $this->slug($stub['name']);
-			$stub['slug'] = $slug;
-			$this->providers[$slug] = $stub;
+			$config = ProviderConfig::fromArray($stub);
+			$slug = $config->slug ?? $this->slug($config->name);
+			$array = $config->toArray();
+			if (!isset($array['slug'])) {
+				$array['slug'] = $slug;
+			}
+			$this->providers[$slug] = $array;
 		}
 
 		$this->urlMatcher = null; // Reset matcher when hosts change

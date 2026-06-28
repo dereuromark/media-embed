@@ -444,7 +444,7 @@ use Psr\SimpleCache\CacheInterface;
 $MediaEmbed = new MediaEmbed(cache: $yourPsr16Cache, cacheTtl: 3600);
 ```
 
-The cache stores the generated provider domain index under an internal key. It is invalidated automatically when providers change. The `cacheTtl` argument controls how long persistent caches may retain the index.
+The cache stores the generated provider domain index under an internal key. It is invalidated automatically when providers change. The `cacheTtl` argument controls how long persistent caches may retain the index. The built-in `ArrayCache` honors TTL values and can store `null` values.
 
 ### oEmbed Discovery
 

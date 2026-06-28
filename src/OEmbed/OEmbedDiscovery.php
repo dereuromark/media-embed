@@ -6,6 +6,7 @@ namespace MediaEmbed\OEmbed;
 
 use MediaEmbed\Http\HttpClientInterface;
 use MediaEmbed\Http\StreamHttpClient;
+use MediaEmbed\Http\UrlSafety;
 
 /**
  * Discovers and fetches oEmbed data from URLs.
@@ -91,7 +92,7 @@ final class OEmbedDiscovery {
 
 		if ($params) {
 			$separator = str_contains($endpointUrl, '?') ? '&' : '?';
-			$endpointUrl .= $separator . http_build_query($params);
+			$endpointUrl .= $separator . http_build_query($params, '', '&');
 		}
 
 		$json = $this->httpClient->get($endpointUrl);
@@ -210,25 +211,7 @@ final class OEmbedDiscovery {
 	 * @return bool
 	 */
 	private function isSafeEndpointUrl(string $url): bool {
-		$parts = parse_url($url);
-		if (!is_array($parts) || empty($parts['scheme']) || empty($parts['host'])) {
-			return false;
-		}
-
-		if (!in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
-			return false;
-		}
-
-		$host = strtolower($parts['host']);
-		if ($host === 'localhost' || str_ends_with($host, '.localhost')) {
-			return false;
-		}
-
-		if (filter_var($host, FILTER_VALIDATE_IP)) {
-			return filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
-		}
-
-		return true;
+		return UrlSafety::isPublicHttpUrl($url);
 	}
 
 }

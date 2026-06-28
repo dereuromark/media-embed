@@ -1,71 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 use MediaEmbed\MediaEmbed;
 
 class MediaEmbedBehavior {
 
+	private ?MediaEmbed $mediaEmbed = null;
+
 	/**
-	 * We translate all BBCodes into HTML now.
-	 *
-	 * @param string $string
-	 * @return string
+	 * Translate stored BBCodes into HTML.
 	 */
-	public function prepareForOutput($string) {
-		return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', [$this, '_finalizeVideo'], $string);
+	public function prepareForOutput(string $string): string {
+		return (string)preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', [$this, 'finalizeVideo'], $string);
 	}
 
 	/**
-	 * @param array $params
-	 * @return string
+	 * Simulate a save operation and return normalized video BBCodes.
 	 */
-	protected function _finalizeVideo($params) {
-		if (!isset($this->MediaEmbed)) {
-			$this->MediaEmbed = new MediaEmbed();
-		}
-		$host = $params[1];
-		$id = $params[2];
-		if (!($MediaObject = $this->MediaEmbed->parseId($id, $host))) {
+	public function simulateSave(string $string): string {
+		return (string)preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', [$this, 'processVideo'], $string);
+	}
+
+	/**
+	 * @param array<int, string> $params
+	 */
+	protected function finalizeVideo(array $params): string {
+		$mediaObject = $this->mediaEmbed()->parseId($params[2], $params[1]);
+		if ($mediaObject === null) {
 			return $params[0];
 		}
 
-		return $MediaObject->getEmbedCode();
+		return $mediaObject->getEmbedCode();
 	}
 
 	/**
-	 * We simulate a save operation and simply return the modified string again.
-	 *
-	 * @param string $string
-	 * @return string
+	 * @param array<int, string> $params
 	 */
-	public function simulateSave($string) {
-		return preg_replace_callback('/\[video=?(.*?)\](.*?)\[\/video\]/is', [$this, '_processVideo'], $string);
-	}
-
-	/**
-	 * @param array $params
-	 * @return string
-	 */
-	protected function _processVideo($params) {
-		if (!isset($this->MediaEmbed)) {
-			$this->MediaEmbed = new MediaEmbed();
-		}
+	protected function processVideo(array $params): string {
 		$url = $params[2];
-		if (strpos($url, 'www.') === 0) {
-			$url = 'http://' . $url;
+		if (str_starts_with($url, 'www.')) {
+			$url = 'https://' . $url;
 		}
-		if (!($MediaObject = $this->MediaEmbed->parseUrl($url))) {
+
+		$mediaObject = $this->mediaEmbed()->parseUrl($url);
+		if ($mediaObject === null) {
 			return $params[0];
 		}
-		$slug = $MediaObject->slug();
-		if (!$slug) {
-			$slug = $params[1];
+
+		return '[video=' . $mediaObject->slug() . ']' . $mediaObject->id() . '[/video]';
+	}
+
+	protected function mediaEmbed(): MediaEmbed {
+		if ($this->mediaEmbed === null) {
+			$this->mediaEmbed = new MediaEmbed();
 		}
-		if ($slug) {
-			$slug = '=' . $slug;
-		}
-		$id = $MediaObject->id();
-		$result = '[video' . $slug . ']' . $id . '[/video]';
-		return $result;
+
+		return $this->mediaEmbed;
 	}
 
 }
