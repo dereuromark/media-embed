@@ -218,6 +218,7 @@ class MediaEmbedTest extends TestCase {
 			'autoplay' => 1,
 			'loop' => 1,
 		]);
+		$Object->setParam('rel', 0);
 		$Object->setAttribute([
 			'type' => null,
 			'class' => 'iframe-class',
@@ -227,7 +228,7 @@ class MediaEmbedTest extends TestCase {
 
 		$code = $Object->getEmbedCode();
 
-		$this->assertStringStartsWith('<iframe src="//www.youtube.com/embed/11111111111?wmode=transparent&amp;autoplay=1&amp;loop=1"', $code);
+		$this->assertStringStartsWith('<iframe src="//www.youtube.com/embed/11111111111?wmode=transparent&amp;autoplay=1&amp;loop=1&amp;rel=0"', $code);
 		$this->assertStringContainsString(' class="iframe-class"', $code);
 		$this->assertStringContainsString(' data-html5-parameter', $code);
 		$this->assertStringNotContainsString(' type=', $code);

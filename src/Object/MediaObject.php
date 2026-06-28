@@ -206,10 +206,10 @@ class MediaObject implements ObjectInterface {
 	 *
 	 * @param array<string, mixed>|string $param The name of the param to be set
 	 *   or an array of multiple params to set.
-	 * @param string|null $value The value to set the param to (when $param is string).
+	 * @param string|float|int|bool|null $value The value to set the param to (when $param is string).
 	 * @return $this
 	 */
-	public function setParam(array|string $param, ?string $value = null) {
+	public function setParam(array|string $param, string|float|int|bool|null $value = null) {
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
 				$this->iframeParams[$p] = $v;
@@ -466,7 +466,7 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	protected function esc(string $text): string {
-		return htmlspecialchars($text, ENT_QUOTES, '', false);
+		return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
 	}
 
 	/**

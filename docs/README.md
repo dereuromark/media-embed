@@ -244,8 +244,8 @@ For array-based configs (legacy format):
 - **name** (required): Display name of the provider
 - **website**: Homepage URL of the service
 - **url-match** (required): Array of regex patterns to match URLs
-- **embed-width** (required): Default width in pixels
-- **embed-height** (required): Default height in pixels
+- **embed-width** (required): Default width in pixels or as percentage
+- **embed-height** (required): Default height in pixels or as percentage
 - **iframe-player** (required): URL template for iframe embedding
 - **slug**: Optional custom slug (auto-generated from name if not provided)
 - **image-src**: Optional thumbnail image URL template
