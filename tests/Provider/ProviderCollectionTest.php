@@ -78,6 +78,40 @@ class ProviderCollectionTest extends TestCase {
 		$this->assertFalse($filtered->has('withoutiframe'));
 	}
 
+	public function testFilterByStatusAndCategory(): void {
+		$collection = new ProviderCollection();
+		$collection->add(new ProviderConfig(
+			name: 'LegacyAudio',
+			website: 'https://legacy-audio.example.com',
+			urlMatch: 'pattern1',
+			embedWidth: '640',
+			embedHeight: '360',
+			slug: 'legacy-audio',
+			iframePlayer: '//legacy-audio.example.com/embed/$2',
+			status: ProviderConfig::STATUS_LEGACY,
+			category: ProviderConfig::CATEGORY_AUDIO,
+		));
+		$collection->add(new ProviderConfig(
+			name: 'ActiveVideo',
+			website: 'https://active-video.example.com',
+			urlMatch: 'pattern2',
+			embedWidth: '640',
+			embedHeight: '360',
+			slug: 'active-video',
+			iframePlayer: '//active-video.example.com/embed/$2',
+			status: ProviderConfig::STATUS_ACTIVE,
+			category: ProviderConfig::CATEGORY_VIDEO,
+		));
+
+		$legacy = $collection->withStatus(ProviderConfig::STATUS_LEGACY);
+		$audio = $collection->withCategory(ProviderConfig::CATEGORY_AUDIO);
+
+		$this->assertCount(1, $legacy);
+		$this->assertTrue($legacy->has('legacy-audio'));
+		$this->assertCount(1, $audio);
+		$this->assertTrue($audio->has('legacy-audio'));
+	}
+
 	public function testWhitelist(): void {
 		$data = [
 			[

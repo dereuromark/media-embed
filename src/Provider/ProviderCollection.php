@@ -143,6 +143,24 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	}
 
 	/**
+	 * Filter providers by lifecycle status.
+	 *
+	 * @param string $status Provider status.
+	 */
+	public function withStatus(string $status): self {
+		return $this->filter(fn (ProviderConfig $config) => $config->status === $status);
+	}
+
+	/**
+	 * Filter providers by content category.
+	 *
+	 * @param string $category Provider category.
+	 */
+	public function withCategory(string $category): self {
+		return $this->filter(fn (ProviderConfig $config) => $config->category === $category);
+	}
+
+	/**
 	 * Convert collection to array format.
 	 *
 	 * @return array<string, array<string, mixed>>

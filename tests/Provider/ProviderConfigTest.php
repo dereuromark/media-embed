@@ -25,6 +25,8 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('640', $config->embedWidth);
 		$this->assertSame('360', $config->embedHeight);
 		$this->assertSame('//test.example.com/embed/$2', $config->iframePlayer);
+		$this->assertSame(ProviderConfig::STATUS_ACTIVE, $config->status);
+		$this->assertSame(ProviderConfig::CATEGORY_VIDEO, $config->category);
 	}
 
 	public function testFromArrayWithAllFields(): void {
@@ -41,6 +43,10 @@ class ProviderConfigTest extends TestCase {
 			'fetch-match' => 'data-id="([a-z0-9]+)"',
 			'supports-timestamp' => true,
 			'timestamp-param' => 'start',
+			'status' => ProviderConfig::STATUS_LEGACY,
+			'category' => ProviderConfig::CATEGORY_AUDIO,
+			'example-url' => 'https://full.example.com/watch/abc123',
+			'notes' => 'Legacy audio provider.',
 			'iframe-params' => [
 				'parent' => 'example.com',
 			],
@@ -55,6 +61,10 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('data-id="([a-z0-9]+)"', $config->fetchMatch);
 		$this->assertTrue($config->supportsTimestamp);
 		$this->assertSame('start', $config->timestampParam);
+		$this->assertSame(ProviderConfig::STATUS_LEGACY, $config->status);
+		$this->assertSame(ProviderConfig::CATEGORY_AUDIO, $config->category);
+		$this->assertSame('https://full.example.com/watch/abc123', $config->exampleUrl);
+		$this->assertSame('Legacy audio provider.', $config->notes);
 		$this->assertSame([
 			'parent' => 'example.com',
 		], $config->iframeParams);
@@ -130,7 +140,7 @@ class ProviderConfigTest extends TestCase {
 			'replace' => [
 				'foo' => 'bar',
 			],
-			'status' => 'legacy',
+			'custom-metadata' => 'legacy',
 		];
 
 		$config = ProviderConfig::fromArray($data);
@@ -139,9 +149,9 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame([
 			'foo' => 'bar',
 		], $config->extra['replace']);
-		$this->assertSame('legacy', $config->extra['status']);
+		$this->assertSame('legacy', $config->extra['custom-metadata']);
 		$this->assertSame($data['replace'], $array['replace']);
-		$this->assertSame('legacy', $array['status']);
+		$this->assertSame('legacy', $array['custom-metadata']);
 	}
 
 	public function testFromArrayMissingName(): void {
@@ -194,6 +204,8 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('pattern', $array['url-match']);
 		$this->assertSame(640, $array['embed-width']);
 		$this->assertSame(360, $array['embed-height']);
+		$this->assertSame(ProviderConfig::STATUS_ACTIVE, $array['status']);
+		$this->assertSame(ProviderConfig::CATEGORY_VIDEO, $array['category']);
 		$this->assertSame('//test.com/embed/$2', $array['iframe-player']);
 		$this->assertArrayNotHasKey('slug', $array);
 		$this->assertArrayNotHasKey('supports-timestamp', $array);
@@ -211,13 +223,37 @@ class ProviderConfigTest extends TestCase {
 			extra: [
 				'name' => 'Wrong',
 				'status' => 'legacy',
+				'category' => 'audio',
 			],
 		);
 
 		$array = $config->toArray();
 
 		$this->assertSame('Test', $array['name']);
-		$this->assertSame('legacy', $array['status']);
+		$this->assertSame(ProviderConfig::STATUS_ACTIVE, $array['status']);
+		$this->assertSame(ProviderConfig::CATEGORY_VIDEO, $array['category']);
+	}
+
+	public function testToArrayWithMetadata(): void {
+		$config = new ProviderConfig(
+			name: 'Test',
+			website: 'https://test.com',
+			urlMatch: 'pattern',
+			embedWidth: 640,
+			embedHeight: 360,
+			status: ProviderConfig::STATUS_LEGACY,
+			category: ProviderConfig::CATEGORY_AUDIO,
+			exampleUrl: 'https://test.com/watch/abc',
+			notes: 'Legacy provider.',
+			iframePlayer: '//test.com/embed/$2',
+		);
+
+		$array = $config->toArray();
+
+		$this->assertSame(ProviderConfig::STATUS_LEGACY, $array['status']);
+		$this->assertSame(ProviderConfig::CATEGORY_AUDIO, $array['category']);
+		$this->assertSame('https://test.com/watch/abc', $array['example-url']);
+		$this->assertSame('Legacy provider.', $array['notes']);
 	}
 
 	public function testToArrayWithIframeParams(): void {

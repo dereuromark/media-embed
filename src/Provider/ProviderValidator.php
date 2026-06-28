@@ -14,6 +14,26 @@ final class ProviderValidator {
 	/**
 	 * @var array<string>
 	 */
+	private const ALLOWED_STATUSES = [
+		ProviderConfig::STATUS_ACTIVE,
+		ProviderConfig::STATUS_LEGACY,
+		ProviderConfig::STATUS_DEPRECATED,
+	];
+
+	/**
+	 * @var array<string>
+	 */
+	private const ALLOWED_CATEGORIES = [
+		ProviderConfig::CATEGORY_3D,
+		ProviderConfig::CATEGORY_AUDIO,
+		ProviderConfig::CATEGORY_SOCIAL,
+		ProviderConfig::CATEGORY_STREAMING,
+		ProviderConfig::CATEGORY_VIDEO,
+	];
+
+	/**
+	 * @var array<string>
+	 */
 	private const REQUIRED_FIELDS = [
 		'name',
 		'website',
@@ -40,6 +60,7 @@ final class ProviderValidator {
 			$this->validateUrlMatches($provider, $label, $errors);
 			$this->validateUrlTemplates($provider, $label, $errors);
 			$this->validateFetchMatch($provider, $label, $errors);
+			$this->validateMetadata($provider, $label, $errors);
 			$this->validateSlug($provider, $label, $slugs, $errors);
 		}
 
@@ -131,6 +152,47 @@ final class ProviderValidator {
 		}
 
 		$this->validateRegex($provider['fetch-match'], $label, 'fetch-match', $errors);
+	}
+
+	/**
+	 * @param array<string, mixed> $provider
+	 * @param string $label
+	 * @param array<string> $errors
+	 * @return void
+	 */
+	private function validateMetadata(array $provider, string $label, array &$errors): void {
+		$this->validateStringEnum($provider, $label, 'status', self::ALLOWED_STATUSES, $errors);
+		$this->validateStringEnum($provider, $label, 'category', self::ALLOWED_CATEGORIES, $errors);
+
+		if (array_key_exists('example-url', $provider)) {
+			if (!is_string($provider['example-url']) || $provider['example-url'] === '') {
+				$errors[] = $label . ': field "example-url" must be a non-empty URL string';
+			} else {
+				$this->validateTemplateUrl($provider['example-url'], $label, 'example-url', $errors);
+			}
+		}
+
+		if (array_key_exists('notes', $provider) && (!is_string($provider['notes']) || $provider['notes'] === '')) {
+			$errors[] = $label . ': field "notes" must be a non-empty string';
+		}
+	}
+
+	/**
+	 * @param array<string, mixed> $provider
+	 * @param string $label
+	 * @param string $field
+	 * @param array<string> $allowed
+	 * @param array<string> $errors
+	 * @return void
+	 */
+	private function validateStringEnum(array $provider, string $label, string $field, array $allowed, array &$errors): void {
+		if (!array_key_exists($field, $provider)) {
+			return;
+		}
+
+		if (!is_string($provider[$field]) || !in_array($provider[$field], $allowed, true)) {
+			$errors[] = $label . ': field "' . $field . '" must be one of: ' . implode(', ', $allowed);
+		}
 	}
 
 	/**

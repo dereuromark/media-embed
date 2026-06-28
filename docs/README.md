@@ -250,6 +250,10 @@ $config = new ProviderConfig(
     embedWidth: 640,              // Required: Default width
     embedHeight: 360,             // Required: Default height
     iframePlayer: '//.../$2',     // Required: Iframe URL template
+    status: 'active',             // Optional: active, legacy, deprecated
+    category: 'video',            // Optional: video, audio, social, streaming, 3d
+    exampleUrl: 'https://...',    // Optional: fixture/example URL
+    notes: '...',                 // Optional: generated docs note
     slug: 'myprovider',           // Optional: Custom slug (auto-generated if omitted)
     imageSrc: '//.../$2.jpg',     // Optional: Thumbnail URL template
     supportsTimestamp: false,     // Optional: Timestamp support (like YouTube)
@@ -268,6 +272,10 @@ For array-based configs (legacy format):
 - **embed-width** (required): Default width in pixels or as percentage
 - **embed-height** (required): Default height in pixels or as percentage
 - **iframe-player** (required): URL template for iframe embedding
+- **status**: Optional provider lifecycle status (`active`, `legacy`, `deprecated`)
+- **category**: Optional content category (`video`, `audio`, `social`, `streaming`, `3d`)
+- **example-url**: Optional example URL covered by release fixture tests
+- **notes**: Optional provider note shown in generated supported-provider docs
 - **slug**: Optional custom slug (auto-generated from name if not provided)
 - **image-src**: Optional thumbnail image URL template
 - **id**: Optional custom ID template
@@ -319,6 +327,8 @@ $config = $MediaEmbed->getProvider('youtube');
 if ($config !== null) {
     echo $config->name;           // "YouTube"
     echo $config->website;        // "https://www.youtube.com"
+    echo $config->status;         // "active"
+    echo $config->category;       // "video"
     echo $config->embedWidth;     // "480"
 
     if ($config->hasIframeSupport()) {
@@ -422,6 +432,8 @@ $subset = $MediaEmbed->getProviders(['youtube', 'vimeo', 'dailymotion']);
 // Filter by capabilities
 $withIframe = $providers->withIframeSupport();
 $withThumbnails = $providers->withThumbnailSupport();
+$active = $providers->withStatus('active');
+$video = $providers->withCategory('video');
 
 // Iterate over providers
 foreach ($providers as $slug => $config) {
@@ -630,6 +642,7 @@ Provider change checklist:
 - Add or update `tests/Fixture/provider_urls.php` with at least one fixture URL per bundled provider.
 - Include expected slug, parsed ID, and final embed source for each provider fixture.
 - Include a mocked `response` entry in the fixture for providers using `fetch-match`.
+- Set provider `status`, `category`, and `example-url` metadata.
 - Keep `testDefaultProviderPatternsHaveFixtureCoverage()` green for pattern-level coverage.
 - Add a mocked HTTP test for providers using `fetch-match`.
 - Run `composer validate-providers` after editing provider data.

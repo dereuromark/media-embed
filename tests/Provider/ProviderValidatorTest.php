@@ -26,6 +26,10 @@ class ProviderValidatorTest extends TestCase {
 				'iframe-player' => 'javascript:alert($2)',
 				'image-src' => '//broken.example.com/thumb/$0.jpg',
 				'fetch-match' => '(',
+				'status' => 'unknown',
+				'category' => 'unknown',
+				'example-url' => 'javascript:alert(1)',
+				'notes' => '',
 			],
 			[
 				'name' => 'Broken',
@@ -47,6 +51,10 @@ class ProviderValidatorTest extends TestCase {
 		$this->assertContains('Broken: field "image-src" contains an invalid placeholder', $errors);
 		$this->assertContains('Broken: field "website" must be an absolute http(s) URL', $errors);
 		$this->assertContains('Broken: invalid regex in "fetch-match"', $errors);
+		$this->assertContains('Broken: field "status" must be one of: active, legacy, deprecated', $errors);
+		$this->assertContains('Broken: field "category" must be one of: 3d, audio, social, streaming, video', $errors);
+		$this->assertContains('Broken: field "example-url" must be an absolute http(s) URL', $errors);
+		$this->assertContains('Broken: field "notes" must be a non-empty string', $errors);
 		$this->assertContains('Broken: duplicate slug "broken" already used by Broken', $errors);
 	}
 
