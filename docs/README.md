@@ -259,6 +259,8 @@ For array-based configs (legacy format):
 
 **Note:** In regex patterns and templates, `$1` is the full matched URL, `$2` is the first capture group, `$3` is the second, etc.
 
+Provider templates must use valid `$1`, `$2`, ... placeholders and absolute HTTP(S) URLs. Protocol-relative URLs such as `//www.youtube.com/embed/$2` are supported for iframe and image templates. Run `composer validate-providers` after changing provider data to catch invalid regex patterns, unsafe URL schemes, relative template URLs, duplicate slugs, and malformed placeholders.
+
 ## Advanced Usage
 
 ### Exception-Based Error Handling
