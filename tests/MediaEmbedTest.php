@@ -103,6 +103,25 @@ class MediaEmbedTest extends TestCase {
 		// PeerTube
 		'https://peertube.example.org/w/abc123XYZ' => 'abc123XYZ',
 		'https://video.instance.com/videos/watch/def456789' => 'def456789',
+		// TED
+		'https://www.ted.com/talks/sir_ken_robinson_do_schools_kill_creativity' => 'sir_ken_robinson_do_schools_kill_creativity',
+		// Giphy
+		'https://giphy.com/gifs/feels-feelings-l0HlvtIPzPdt2usKs' => 'l0HlvtIPzPdt2usKs',
+		'https://giphy.com/embed/l0HlvtIPzPdt2usKs' => 'l0HlvtIPzPdt2usKs',
+		// Niconico
+		'https://www.nicovideo.jp/watch/sm9' => 'sm9',
+		'https://nico.ms/sm9' => 'sm9',
+		// Audiomack
+		'https://audiomack.com/officialsisqo/song/thong-song-1' => 'officialsisqo/song/thong-song-1',
+		// Spreaker
+		'https://www.spreaker.com/episode/worst-haircut--11728706' => '11728706',
+		'https://www.spreaker.com/episode/11728706' => '11728706',
+		// Sketchfab
+		'https://sketchfab.com/3d-models/the-great-drawing-room-2QpgjMeXKHq6L8KIBAJjRrFV3jg' => '2QpgjMeXKHq6L8KIBAJjRrFV3jg',
+		// Coub
+		'https://coub.com/view/3as0mf' => '3as0mf',
+		// BitChute
+		'https://www.bitchute.com/video/UGlrF9o9b-Q/' => 'UGlrF9o9b-Q',
 	];
 
 	/**
@@ -742,7 +761,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$hosts = $MediaEmbed->getHosts();
-		$this->assertCount(29, $hosts);
+		$this->assertCount(37, $hosts);
 
 		$hosts = $MediaEmbed->getHosts(['vimeo', 'youtube']);
 		$this->assertTrue(count($hosts) === 2);
@@ -967,7 +986,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$providers = $MediaEmbed->getProviders();
-		$this->assertCount(29, $providers);
+		$this->assertCount(37, $providers);
 		$this->assertTrue($providers->has('youtube'));
 		$this->assertTrue($providers->has('vimeo'));
 

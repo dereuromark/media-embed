@@ -178,4 +178,52 @@ return [
 		'id' => 'abc123XYZ',
 		'embedSrc' => 'https://peertube.example.org/videos/embed/abc123XYZ?wmode=transparent',
 	],
+	[
+		'slug' => 'ted',
+		'url' => 'https://www.ted.com/talks/sir_ken_robinson_do_schools_kill_creativity',
+		'id' => 'sir_ken_robinson_do_schools_kill_creativity',
+		'embedSrc' => 'https://embed.ted.com/talks/sir_ken_robinson_do_schools_kill_creativity?wmode=transparent',
+	],
+	[
+		'slug' => 'giphy',
+		'url' => 'https://giphy.com/gifs/feels-feelings-l0HlvtIPzPdt2usKs',
+		'id' => 'l0HlvtIPzPdt2usKs',
+		'embedSrc' => 'https://giphy.com/embed/l0HlvtIPzPdt2usKs?wmode=transparent',
+	],
+	[
+		'slug' => 'niconico',
+		'url' => 'https://www.nicovideo.jp/watch/sm9',
+		'id' => 'sm9',
+		'embedSrc' => 'https://embed.nicovideo.jp/watch/sm9?wmode=transparent',
+	],
+	[
+		'slug' => 'audiomack',
+		'url' => 'https://audiomack.com/officialsisqo/song/thong-song-1',
+		'id' => 'officialsisqo/song/thong-song-1',
+		'embedSrc' => 'https://audiomack.com/embed/song/officialsisqo/thong-song-1?wmode=transparent',
+	],
+	[
+		'slug' => 'spreaker',
+		'url' => 'https://www.spreaker.com/episode/worst-haircut--11728706',
+		'id' => '11728706',
+		'embedSrc' => 'https://widget.spreaker.com/player?episode_id=11728706&wmode=transparent',
+	],
+	[
+		'slug' => 'sketchfab',
+		'url' => 'https://sketchfab.com/3d-models/the-great-drawing-room-2QpgjMeXKHq6L8KIBAJjRrFV3jg',
+		'id' => '2QpgjMeXKHq6L8KIBAJjRrFV3jg',
+		'embedSrc' => 'https://sketchfab.com/models/2QpgjMeXKHq6L8KIBAJjRrFV3jg/embed?wmode=transparent',
+	],
+	[
+		'slug' => 'coub',
+		'url' => 'https://coub.com/view/3as0mf',
+		'id' => '3as0mf',
+		'embedSrc' => 'https://coub.com/embed/3as0mf?wmode=transparent',
+	],
+	[
+		'slug' => 'bitchute',
+		'url' => 'https://www.bitchute.com/video/UGlrF9o9b-Q/',
+		'id' => 'UGlrF9o9b-Q',
+		'embedSrc' => 'https://www.bitchute.com/embed/UGlrF9o9b-Q/?wmode=transparent',
+	],
 ];
