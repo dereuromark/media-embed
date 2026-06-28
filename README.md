@@ -2,9 +2,9 @@
 [![CI](https://github.com/dereuromark/media-embed/workflows/CI/badge.svg)](https://github.com/dereuromark/media-embed/actions?query=workflow%3ACI+branch%3Amaster)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat)](https://phpstan.org/)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.1-8892BF.svg)](https://www.php.net/)
-[![License](https://poser.pugx.org/dereuromark/media-embed/license.svg)](LICENSE)
-[![Latest Stable Version](https://poser.pugx.org/dereuromark/media-embed/v/stable.svg)](https://packagist.org/packages/dereuromark/media-embed)
-[![Total Downloads](https://poser.pugx.org/dereuromark/media-embed/d/total.svg)](https://packagist.org/packages/dereuromark/media-embed)
+[![License](https://img.shields.io/packagist/l/dereuromark/media-embed.svg)](LICENSE)
+[![Latest Stable Version](https://img.shields.io/packagist/v/dereuromark/media-embed.svg)](https://packagist.org/packages/dereuromark/media-embed)
+[![Total Downloads](https://img.shields.io/packagist/dt/dereuromark/media-embed.svg)](https://packagist.org/packages/dereuromark/media-embed)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
 A utility library that generates HTML embed tags for audio or video located on a given URL.
