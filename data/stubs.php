@@ -124,6 +124,7 @@ return [
 		'embed-width' => '420',
 		'embed-height' => '315',
 		'iframe-player' => 'https://www.metatube.com/$2/videos/$3/embed/',
+		'id' => '$2/$3',
 	],
 	[
 		'name' => 'RuTube',
@@ -189,6 +190,7 @@ return [
 		'example-url' => 'https://lds.cdn.vooplayer.com/publish/MTEwNTMw',
 		'url-match' => 'https:\\/\\/(.+)\\.cdn\\.vooplayer\\.com/publish/([0-9A-Za-z-]+)',
 		'iframe-player' => 'https://$2.cdn.vooplayer.com/publish/$3?fallback=true',
+		'id' => '$2/$3',
 		'embed-width' => '480',
 		'embed-height' => '270',
 	],
@@ -376,7 +378,7 @@ return [
 		'embed-width' => '560',
 		'embed-height' => '315',
 		'iframe-player' => 'https://odysee.com/$/embed/$2/$3',
-		'id' => '$3',
+		'id' => '$2/$3',
 	],
 	[
 		'name' => 'Kick',
@@ -405,7 +407,7 @@ return [
 		'embed-width' => '350',
 		'embed-height' => '470',
 		'iframe-player' => 'https://bandcamp.com/EmbeddedPlayer/$3=$2/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/',
-		'id' => '$2/$4',
+		'id' => '$2/$3/$4',
 	],
 	[
 		'name' => 'PeerTube',
@@ -419,7 +421,7 @@ return [
 		'embed-width' => '560',
 		'embed-height' => '315',
 		'iframe-player' => 'https://$2/videos/embed/$3',
-		'id' => '$3',
+		'id' => '$2/$3',
 	],
 	[
 		'name' => 'TED',
@@ -552,7 +554,7 @@ return [
 		'optional-params' => [
 			'i' => 5,
 		],
-		'id' => '$4',
+		'id' => '$2/$3/$4',
 	],
 	[
 		'name' => 'Deezer',
@@ -567,6 +569,6 @@ return [
 		'embed-width' => '700',
 		'embed-height' => '300',
 		'iframe-player' => 'https://widget.deezer.com/widget/auto/$2/$3',
-		'id' => '$3',
+		'id' => '$2/$3',
 	],
 ];

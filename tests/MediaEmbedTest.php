@@ -3,6 +3,7 @@
 namespace MediaEmbed\Test;
 
 use InvalidArgumentException;
+use MediaEmbed\Exception\InvalidUrlException;
 use MediaEmbed\Exception\ProviderConfigException;
 use MediaEmbed\Http\HttpClientInterface;
 use MediaEmbed\Matcher\MatchResult;
@@ -432,7 +433,7 @@ class MediaEmbedTest extends TestCase {
 
 	public function testParseIdOrFailThrowsForUnreconstructableCompoundId(): void {
 		$MediaEmbed = new MediaEmbed();
-		$this->expectException(\MediaEmbed\Exception\InvalidUrlException::class);
+		$this->expectException(InvalidUrlException::class);
 		$MediaEmbed->parseIdOrFail('1479458365', 'deezer');
 	}
 

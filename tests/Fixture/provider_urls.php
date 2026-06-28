@@ -42,7 +42,7 @@ return [
 	[
 		'slug' => 'metatube',
 		'url' => 'https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/',
-		'id' => '245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
+		'id' => 'en/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
 		'embedSrc' => 'https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/embed/?wmode=transparent',
 	],
 	[
@@ -79,7 +79,7 @@ return [
 	[
 		'slug' => 'vooplayer',
 		'url' => 'https://lds.cdn.vooplayer.com/publish/MTEwNTMw',
-		'id' => 'MTEwNTMw',
+		'id' => 'lds/MTEwNTMw',
 		'embedSrc' => 'https://lds.cdn.vooplayer.com/publish/MTEwNTMw?fallback=true&wmode=transparent',
 	],
 	[
@@ -157,7 +157,7 @@ return [
 	[
 		'slug' => 'odysee',
 		'url' => 'https://odysee.com/$/embed/video-title/abc123def',
-		'id' => 'abc123def',
+		'id' => 'video-title/abc123def',
 		'embedSrc' => 'https://odysee.com/$/embed/video-title/abc123def?wmode=transparent',
 	],
 	[
@@ -169,13 +169,13 @@ return [
 	[
 		'slug' => 'bandcamp',
 		'url' => 'https://publicpractice.bandcamp.com/track/disposable',
-		'id' => 'publicpractice/disposable',
+		'id' => 'publicpractice/track/disposable',
 		'embedSrc' => 'https://bandcamp.com/EmbeddedPlayer/track=publicpractice/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/?wmode=transparent',
 	],
 	[
 		'slug' => 'peertube',
 		'url' => 'https://peertube.tv/w/oxKYBCdgGHmQgAxUZe3cv8',
-		'id' => 'oxKYBCdgGHmQgAxUZe3cv8',
+		'id' => 'peertube.tv/oxKYBCdgGHmQgAxUZe3cv8',
 		'embedSrc' => 'https://peertube.tv/videos/embed/oxKYBCdgGHmQgAxUZe3cv8?wmode=transparent',
 	],
 	[
@@ -229,13 +229,13 @@ return [
 	[
 		'slug' => 'apple-podcasts',
 		'url' => 'https://podcasts.apple.com/us/podcast/rimscast/id1436041526',
-		'id' => '1436041526',
+		'id' => 'us/rimscast/1436041526',
 		'embedSrc' => 'https://embed.podcasts.apple.com/us/podcast/rimscast/id1436041526?wmode=transparent',
 	],
 	[
 		'slug' => 'deezer',
 		'url' => 'https://www.deezer.com/en/playlist/1479458365',
-		'id' => '1479458365',
+		'id' => 'playlist/1479458365',
 		'embedSrc' => 'https://widget.deezer.com/widget/auto/playlist/1479458365?wmode=transparent',
 	],
 ];
