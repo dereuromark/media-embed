@@ -325,6 +325,8 @@ class MockHttpClient implements HttpClientInterface {
 $MediaEmbed = new MediaEmbed([], null, new MockHttpClient());
 ```
 
+The default `StreamHttpClient` only fetches public `http` and `https` URLs, rejects localhost/private literal IP targets, disables redirects, and caps response size. Inject a custom `HttpClientInterface` implementation if you need a different network policy.
+
 ### Provider Loaders
 
 Load providers from different sources using the loader interface:
