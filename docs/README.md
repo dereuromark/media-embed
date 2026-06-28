@@ -573,6 +573,14 @@ See [wiki](https://github.com/dereuromark/media-embed/wiki).
 Looking forward for contributions, e.g. adding more yet missing services etc.
 Please provide a simple test URL and test case for any new service.
 
+Provider change checklist:
+
+- Add at least one fixture URL for each non-fetch `url-match` pattern.
+- Add a mocked HTTP test for providers using `fetch-match`.
+- Run `composer validate-providers` after editing provider data.
+- Run `bin/generate-docs` and commit any `docs/supported.md` changes.
+- Confirm generated iframe URLs still match the provider's current embed documentation.
+
 Run tests with
 ```
 composer test
