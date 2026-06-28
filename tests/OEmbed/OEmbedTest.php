@@ -72,7 +72,7 @@ class OEmbedTest extends TestCase {
 	}
 
 	public function testOEmbedDiscoveryParseEndpoint(): void {
-		$mockClient = $this->createMock(HttpClientInterface::class);
+		$mockClient = $this->createStub(HttpClientInterface::class);
 		$mockClient->method('get')
 			->willReturn('<html><head><link rel="alternate" type="application/json+oembed" href="https://example.com/oembed?url=test" /></head></html>');
 
@@ -83,7 +83,7 @@ class OEmbedTest extends TestCase {
 	}
 
 	public function testOEmbedDiscoveryNoEndpoint(): void {
-		$mockClient = $this->createMock(HttpClientInterface::class);
+		$mockClient = $this->createStub(HttpClientInterface::class);
 		$mockClient->method('get')
 			->willReturn('<html><head><title>No oEmbed</title></head></html>');
 
@@ -94,7 +94,7 @@ class OEmbedTest extends TestCase {
 	}
 
 	public function testOEmbedDiscoveryFetch(): void {
-		$mockClient = $this->createMock(HttpClientInterface::class);
+		$mockClient = $this->createStub(HttpClientInterface::class);
 		$mockClient->method('get')
 			->willReturn(json_encode([
 				'type' => 'video',
