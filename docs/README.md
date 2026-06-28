@@ -15,6 +15,8 @@ For stricter error handling, use the `*OrFail()` variants which throw exceptions
 ### Output
 You can then display the HTML code with `getEmbedCode()` or retrieve more information using the getters of `MediaObject`.
 
+`getEmbedSrc()` returns the embed source value without HTML attribute escaping. Use `getEmbedSrcForHtml()` when placing the source into your own iframe `src` attribute. `getEmbedCode()` already uses the HTML-safe value internally.
+
 
 ## Usage
 The simplest usage, when included via composer autoload, would be:
