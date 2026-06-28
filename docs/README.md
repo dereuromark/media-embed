@@ -404,8 +404,7 @@ use MediaEmbed\Cache\ArrayCache;
 // The built-in ArrayCache is in-memory and lasts for the current request only.
 $cache = new ArrayCache();
 $MediaEmbed = new MediaEmbed();
-$matcher = $MediaEmbed->getUrlMatcher();
-$matcher->setCache($cache);
+$MediaEmbed->setCache($cache);
 
 // The domain index will be cached after first match
 $MediaEmbed->parseUrl('https://youtube.com/watch?v=abc');
@@ -417,10 +416,10 @@ For persistent caching, pass any PSR-16 cache implementation (Redis, Memcached, 
 use Psr\SimpleCache\CacheInterface;
 
 /** @var CacheInterface $yourPsr16Cache */
-$MediaEmbed->getUrlMatcher()->setCache($yourPsr16Cache, ttl: 3600);
+$MediaEmbed = new MediaEmbed(cache: $yourPsr16Cache, cacheTtl: 3600);
 ```
 
-The cache stores the generated provider domain index under an internal key. It is invalidated automatically when `UrlMatcher::setProviders()` is called. The `ttl` argument controls how long persistent caches may retain the index.
+The cache stores the generated provider domain index under an internal key. It is invalidated automatically when providers change. The `cacheTtl` argument controls how long persistent caches may retain the index.
 
 ### oEmbed Discovery
 

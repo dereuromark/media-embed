@@ -6,6 +6,8 @@ use DateInterval;
 use MediaEmbed\Cache\ArrayCache;
 use MediaEmbed\Cache\CacheInterface;
 use MediaEmbed\Matcher\UrlMatcher;
+use MediaEmbed\MediaEmbed;
+use MediaEmbed\Provider\ProviderConfig;
 use PHPUnit\Framework\TestCase;
 use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
 
@@ -198,6 +200,36 @@ class CacheTest extends TestCase {
 		], $cache);
 
 		$result = $matcher->match('https://test.example.com/video/123');
+
+		$this->assertNotNull($result);
+		$this->assertTrue($cache->has('media_embed_domain_index'));
+	}
+
+	public function testMediaEmbedUsesConstructorCache(): void {
+		$cache = new ArrayCache();
+		$mediaEmbed = new MediaEmbed(cache: $cache);
+
+		$result = $mediaEmbed->parseUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+
+		$this->assertNotNull($result);
+		$this->assertTrue($cache->has('media_embed_domain_index'));
+	}
+
+	public function testMediaEmbedCacheSurvivesProviderChanges(): void {
+		$cache = new ArrayCache();
+		$mediaEmbed = new MediaEmbed();
+		$mediaEmbed->setCache($cache);
+
+		$mediaEmbed->addProviderConfig(new ProviderConfig(
+			name: 'CacheProvider',
+			website: 'https://cache.example.com',
+			urlMatch: 'https://cache\\.example\\.com/video/([0-9]+)',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '//cache.example.com/embed/$2',
+		));
+
+		$result = $mediaEmbed->parseUrl('https://cache.example.com/video/123');
 
 		$this->assertNotNull($result);
 		$this->assertTrue($cache->has('media_embed_domain_index'));
