@@ -253,6 +253,8 @@ class MediaEmbedTest extends TestCase {
 
 		$this->assertStringContainsString('src="//unsafe.example.com/embed/12345?foo=1&amp;bar=&quot;quoted&quot;&amp;wmode=transparent"', $code);
 		$this->assertStringNotContainsString('bar="quoted"', $code);
+		$this->assertSame('//unsafe.example.com/embed/12345?foo=1&bar="quoted"&amp;wmode=transparent', $Object->getEmbedSrc());
+		$this->assertSame('//unsafe.example.com/embed/12345?foo=1&amp;bar=&quot;quoted&quot;&amp;wmode=transparent', $Object->getEmbedSrcForHtml());
 	}
 
 	/**

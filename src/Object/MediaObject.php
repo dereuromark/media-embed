@@ -327,14 +327,23 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Get the iframe src URL with parameters.
+	 * Get the raw iframe src URL with parameters.
 	 *
-	 * @return string The src attribute
+	 * @return string The unescaped src URL
 	 */
 	public function getEmbedSrc(): string {
 		$source = $this->templateResolver->resolve($this->stub['iframe-player'], $this->match);
 
 		return $this->appendQueryParams($source);
+	}
+
+	/**
+	 * Get the iframe src URL escaped for HTML attributes.
+	 *
+	 * @return string The escaped src attribute value
+	 */
+	public function getEmbedSrcForHtml(): string {
+		return $this->esc($this->getEmbedSrc());
 	}
 
 	/**
@@ -400,12 +409,9 @@ class MediaObject implements ObjectInterface {
 	 * @return string
 	 */
 	protected function buildIframe(): string {
-		$source = $this->templateResolver->resolve($this->stub['iframe-player'], $this->match);
-		$source = $this->appendQueryParams($source);
-
 		$attributes = $this->buildAttributeString();
 
-		return sprintf('<iframe src="%s"%s></iframe>', $this->esc($source), $attributes);
+		return sprintf('<iframe src="%s"%s></iframe>', $this->getEmbedSrcForHtml(), $attributes);
 	}
 
 	/**
