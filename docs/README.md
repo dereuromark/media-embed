@@ -109,6 +109,21 @@ This should return an embed code like:
 
 Attribute names must be valid iframe attribute names. Whitespace/control characters, HTML syntax characters, and `on*` event-handler attributes are rejected.
 
+Provider-specific iframe params can also be configured once when constructing `MediaEmbed`. This is useful for providers such as Twitch that require a domain-specific `parent` query parameter:
+
+```php
+$MediaEmbed = new MediaEmbed([
+    'provider_params' => [
+        'twitch-video' => [
+            'parent' => 'example.com',
+        ],
+        'twitch-clip' => [
+            'parent' => 'example.com',
+        ],
+    ],
+]);
+```
+
 ### Adding Custom Providers
 
 You can add your own custom providers in several ways:
@@ -239,6 +254,9 @@ $config = new ProviderConfig(
     imageSrc: '//.../$2.jpg',     // Optional: Thumbnail URL template
     supportsTimestamp: false,     // Optional: Timestamp support (like YouTube)
     timestampParam: 'start',      // Optional: Embed query parameter for timestamps
+    iframeParams: [               // Optional: Default iframe query parameters
+        'parent' => 'example.com',
+    ],
 );
 ```
 
@@ -256,6 +274,7 @@ For array-based configs (legacy format):
 - **fetch-match**: Optional regex for secondary HTTP lookup
 - **supports-timestamp**: Optional timestamp support flag
 - **timestamp-param**: Optional embed query parameter for timestamp values
+- **iframe-params**: Optional default iframe query parameters
 
 **Note:** In regex patterns and templates, `$1` is the full matched URL, `$2` is the first capture group, `$3` is the second, etc.
 

@@ -27,6 +27,7 @@ final class ProviderConfig {
 	 * @param string|null $fetchMatch Secondary HTTP fetch regex.
 	 * @param bool $supportsTimestamp Whether provider supports timestamps.
 	 * @param string|null $timestampParam Embed query parameter for timestamp values.
+	 * @param array<string, mixed> $iframeParams Default iframe query parameters.
 	 * @param array<string, mixed> $extra Extra provider metadata.
 	 */
 	public function __construct(
@@ -42,6 +43,7 @@ final class ProviderConfig {
 		public readonly ?string $fetchMatch = null,
 		public readonly bool $supportsTimestamp = false,
 		public readonly ?string $timestampParam = null,
+		public readonly array $iframeParams = [],
 		public readonly array $extra = [],
 	) {
 	}
@@ -84,6 +86,7 @@ final class ProviderConfig {
 			'fetch-match',
 			'supports-timestamp',
 			'timestamp-param',
+			'iframe-params',
 		];
 
 		return new self(
@@ -99,6 +102,7 @@ final class ProviderConfig {
 			fetchMatch: $data['fetch-match'] ?? null,
 			supportsTimestamp: !empty($data['supports-timestamp']),
 			timestampParam: $data['timestamp-param'] ?? null,
+			iframeParams: !empty($data['iframe-params']) && is_array($data['iframe-params']) ? $data['iframe-params'] : [],
 			extra: array_diff_key($data, array_flip($knownKeys)),
 		);
 	}
@@ -138,6 +142,9 @@ final class ProviderConfig {
 		}
 		if ($this->timestampParam !== null) {
 			$array['timestamp-param'] = $this->timestampParam;
+		}
+		if ($this->iframeParams) {
+			$array['iframe-params'] = $this->iframeParams;
 		}
 
 		return $array;
