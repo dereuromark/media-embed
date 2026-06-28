@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Cache;
 
+use DateInterval;
+
 /**
  * Simple in-memory array cache.
  *
@@ -27,7 +29,7 @@ final class ArrayCache implements CacheInterface {
 	/**
 	 * @inheritDoc
 	 */
-	public function set(string $key, mixed $value, ?int $ttl = null): bool {
+	public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool {
 		$this->cache[$key] = $value;
 
 		return true;
@@ -56,6 +58,46 @@ final class ArrayCache implements CacheInterface {
 	 */
 	public function clear(): bool {
 		$this->cache = [];
+
+		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @param iterable<string> $keys
+	 */
+	public function getMultiple(iterable $keys, mixed $default = null): iterable {
+		$values = [];
+		foreach ($keys as $key) {
+			$values[$key] = $this->get($key, $default);
+		}
+
+		return $values;
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @param iterable<string, mixed> $values
+	 */
+	public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool {
+		foreach ($values as $key => $value) {
+			$this->set($key, $value, $ttl);
+		}
+
+		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @param iterable<string> $keys
+	 */
+	public function deleteMultiple(iterable $keys): bool {
+		foreach ($keys as $key) {
+			$this->delete($key);
+		}
 
 		return true;
 	}
