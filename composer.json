@@ -20,14 +20,17 @@
 	],
 	"require": {
 		"php": ">=8.1",
-		"jbroadway/urlify": "^1.0.0",
 		"psr/simple-cache": "^3.0"
 	},
 	"require-dev": {
 		"fig-r/psr2r-sniffer": "@stable",
+		"jbroadway/urlify": "^1.0.0",
 		"phpunit/phpunit": "^10.5 || ^11.5 || ^12.1 || ^13.0",
 		"sebastian/diff": "@stable",
 		"phpstan/phpstan": "^2.0"
+	},
+	"suggest": {
+		"jbroadway/urlify": "For best transliteration of non-ASCII provider names into slugs (otherwise a built-in ASCII slugger is used)"
 	},
 	"support": {
 		"issues": "https://github.com/dereuromark/media-embed/issues",

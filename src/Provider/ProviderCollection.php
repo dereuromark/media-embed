@@ -8,8 +8,8 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use MediaEmbed\Exception\ProviderNotFoundException;
+use MediaEmbed\Slugger\UrlifySlugger;
 use Traversable;
-use URLify;
 
 /**
  * Collection of provider configurations.
@@ -209,7 +209,7 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	 * @return string
 	 */
 	private function generateSlug(string $name): string {
-		return URLify::filter($name);
+		return (new UrlifySlugger())->slug($name);
 	}
 
 }

@@ -27,7 +27,9 @@ https://sandbox.dereuromark.de/sandbox/media-embed
 
 ## Requirements
 
-- [jbroadway/urlify](https://github.com/jbroadway/urlify) for slugging
+- PHP 8.1+
+
+Optionally, install [jbroadway/urlify](https://github.com/jbroadway/urlify) for best slugging of non-ASCII provider names. Without it, a built-in ASCII slugger is used. You can also inject your own `MediaEmbed\Slugger\SluggerInterface`.
 
 ### Note
 Please feel free to join in and help out to further improve or complete it.

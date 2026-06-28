@@ -4,12 +4,25 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Provider;
 
-use URLify;
+use MediaEmbed\Slugger\SluggerInterface;
+use MediaEmbed\Slugger\UrlifySlugger;
 
 /**
  * Validates provider configuration arrays.
  */
 final class ProviderValidator {
+
+	/**
+	 * Slugger used to derive a slug from a provider name.
+	 */
+	private SluggerInterface $slugger;
+
+	/**
+	 * @param \MediaEmbed\Slugger\SluggerInterface|null $slugger
+	 */
+	public function __construct(?SluggerInterface $slugger = null) {
+		$this->slugger = $slugger ?? new UrlifySlugger();
+	}
 
 	/**
 	 * @var array<string>
@@ -296,7 +309,7 @@ final class ProviderValidator {
 			if (!is_string($name) || $name === '') {
 				return;
 			}
-			$slug = URLify::filter($name);
+			$slug = $this->slugger->slug($name);
 		}
 
 		if (isset($slugs[$slug])) {

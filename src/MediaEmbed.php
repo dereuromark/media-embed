@@ -17,8 +17,9 @@ use MediaEmbed\Provider\PhpFileLoader;
 use MediaEmbed\Provider\ProviderCollection;
 use MediaEmbed\Provider\ProviderConfig;
 use MediaEmbed\Provider\ProviderLoaderInterface;
+use MediaEmbed\Slugger\SluggerInterface;
+use MediaEmbed\Slugger\UrlifySlugger;
 use Psr\SimpleCache\CacheInterface;
-use URLify;
 
 /**
  * A utility that generates HTML embed tags for audio or video located on a given URL.
@@ -54,6 +55,11 @@ class MediaEmbed {
 	 * HTTP client for fetching remote content.
 	 */
 	protected HttpClientInterface $httpClient;
+
+	/**
+	 * Slugger used to derive provider slugs from names.
+	 */
+	protected SluggerInterface $slugger;
 
 	/**
 	 * URL matcher with domain-based caching.
@@ -100,6 +106,7 @@ class MediaEmbed {
 	 * @param \MediaEmbed\Provider\ProviderLoaderInterface|null $providerLoader
 	 * @param \Psr\SimpleCache\CacheInterface|null $cache
 	 * @param int $cacheTtl
+	 * @param \MediaEmbed\Slugger\SluggerInterface|null $slugger
 	 */
 	public function __construct(
 		array $config = [],
@@ -108,8 +115,10 @@ class MediaEmbed {
 		?ProviderLoaderInterface $providerLoader = null,
 		?CacheInterface $cache = null,
 		int $cacheTtl = 3600,
+		?SluggerInterface $slugger = null,
 	) {
 		$this->httpClient = $httpClient ?? new StreamHttpClient();
+		$this->slugger = $slugger ?? new UrlifySlugger();
 		$this->cache = $cache;
 		$this->cacheTtl = $cacheTtl;
 
@@ -542,7 +551,7 @@ class MediaEmbed {
 	 * @return string
 	 */
 	protected function slug(string $text): string {
-		return URLify::filter($text);
+		return $this->slugger->slug($text);
 	}
 
 }
