@@ -86,7 +86,7 @@ public function video($host, $id, array $options = []) {
     }
     if (!empty($options['attributes'])) {
         foreach ($options['attributes'] as $attribute => $value) {
-            $MediaObject->setAttribute($attribute, $value);
+            $MediaObject = $MediaObject->withAttribute($attribute, $value);
         }
     }
     return $MediaObject->getEmbedCode();
@@ -98,15 +98,15 @@ This example shows you how to add custom attributes to the iframe tag or paramet
 ```php
 $MediaObject = $this->MediaEmbed->parseUrl('https://www.youtube.com/watch?v=111111');
 if ($MediaObject) {
-    $MediaObject->setParam([
+    $MediaObject = $MediaObject->withParam([
         'autoplay' => 1,
         'loop' => 1
-    ]);
-    $MediaObject->setAttribute([
-        'type' => null,
-        'class' => 'iframe-class',
-        'data-html5-parameter' => true
-    ]);
+    ])
+        ->withAttribute([
+            'type' => null,
+            'class' => 'iframe-class',
+            'data-html5-parameter' => true
+        ]);
 
     return $MediaObject->getEmbedCode();
 }
@@ -117,7 +117,7 @@ This should return an embed code like:
 ```
 
 Attribute names must be valid iframe attribute names. Whitespace/control characters, HTML syntax characters, and `on*` event-handler attributes are rejected.
-Default iframe attributes include `title`, `loading="lazy"`, `referrerpolicy="strict-origin-when-cross-origin"`, `allow="fullscreen; picture-in-picture"`, `frameborder="0"`, and `allowfullscreen`. Override any default with `setAttribute()`, or remove it by setting the attribute value to `null` or `false`.
+Default iframe attributes include `title`, `loading="lazy"`, `referrerpolicy="strict-origin-when-cross-origin"`, `allow="fullscreen; picture-in-picture"`, `frameborder="0"`, and `allowfullscreen`. Override any default with `withAttribute()`, or remove it by setting the attribute value to `null` or `false`.
 `sandbox` is not enabled by default because most third-party embeds need provider-specific permissions. Add it explicitly when your target provider supports the restrictions you choose.
 
 Provider-specific iframe params can also be configured once when constructing `MediaEmbed`. This is useful for providers such as Twitch that require a domain-specific `parent` query parameter:

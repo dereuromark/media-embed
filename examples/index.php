@@ -79,10 +79,10 @@ Examples available for <?php echo count($videos); ?> services.
 	<h3>Embedded Media</h3>
 	<?php
 		if ($videoAttributes) {
-			$mediaObject->setAttribute($videoAttributes);
+			$mediaObject = $mediaObject->withAttribute($videoAttributes);
 		}
 		if ($videoParams) {
-			$mediaObject->setParam($videoParams);
+			$mediaObject = $mediaObject->withParam($videoParams);
 		}
 		$embed = $mediaObject->getEmbedCode();
 		echo $embed;

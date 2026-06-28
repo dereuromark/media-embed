@@ -15,6 +15,18 @@ Version 1.0 modernizes the codebase with PHP 8.1+ features, removes deprecated m
 | `getHostOrFail(string $slug)` | `getProviderOrFail(string $slug)` |
 | `setHosts(array $stubs)` | Use constructor with `ProviderLoaderInterface` or `addProviderConfig()` |
 | `object(string $slug)` | `parseId(string $id, string $host)` or `getProvider(string $slug)` |
+| `MediaObject::setParam()` | `MediaObject::withParam()` |
+| `MediaObject::setAttribute()` | `MediaObject::withAttribute()` |
+| `MediaObject::setWidth()` | `MediaObject::withWidth()` |
+| `MediaObject::setHeight()` | `MediaObject::withHeight()` |
+
+`MediaObject` customization methods are now immutable. `withParam()`, `withAttribute()`, `withWidth()`, and `withHeight()` return a new changed instance and leave the original object unchanged, so callers must reassign the return value:
+
+```php
+$object = $object
+    ->withParam('autoplay', 1)
+    ->withAttribute('class', 'iframe-class');
+```
 
 #### Removed Flash Support
 

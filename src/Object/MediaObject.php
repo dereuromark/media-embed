@@ -211,45 +211,49 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Override a default iframe param value.
+	 * Return a new object with an overridden default iframe param value.
 	 *
 	 * @param array<string, mixed>|string $param The name of the param to be set
 	 *   or an array of multiple params to set.
 	 * @param string|float|int|bool|null $value The value to set the param to (when $param is string).
-	 * @return $this
+	 * @return static
 	 */
-	public function setParam(array|string $param, string|float|int|bool|null $value = null) {
+	public function withParam(array|string $param, string|float|int|bool|null $value = null): static {
+		$clone = clone $this;
+
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
-				$this->iframeParams[$p] = $v;
+				$clone->iframeParams[$p] = $v;
 			}
 		} else {
-			$this->iframeParams[$param] = $value;
+			$clone->iframeParams[$param] = $value;
 		}
 
-		return $this;
+		return $clone;
 	}
 
 	/**
-	 * Override a default iframe attribute value.
+	 * Return a new object with an overridden default iframe attribute value.
 	 *
 	 * @param array<string, mixed>|string $param The name of the attribute to be set
 	 *   or an array of multiple attributes to set.
 	 * @param string|int|bool|null $value The value to set (when $param is string).
-	 * @return $this
+	 * @return static
 	 */
-	public function setAttribute(array|string $param, string|int|bool|null $value = null) {
+	public function withAttribute(array|string $param, string|int|bool|null $value = null): static {
+		$clone = clone $this;
+
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
-				$this->assertValidAttributeName((string)$p);
-				$this->iframeAttributes[$p] = $v;
+				$clone->assertValidAttributeName((string)$p);
+				$clone->iframeAttributes[$p] = $v;
 			}
 		} else {
-			$this->assertValidAttributeName($param);
-			$this->iframeAttributes[$param] = $value;
+			$clone->assertValidAttributeName($param);
+			$clone->iframeAttributes[$param] = $value;
 		}
 
-		return $this;
+		return $clone;
 	}
 
 	/**
@@ -264,33 +268,41 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
-	 * Set the height of the object
+	 * Return a new object with a changed height.
 	 *
 	 * @param int $height Height to set the object to
 	 * @param bool $adjustWidth
-	 * @return $this
+	 * @return static
 	 */
-	public function setHeight(int $height, bool $adjustWidth = false) {
+	public function withHeight(int $height, bool $adjustWidth = false): static {
+		$clone = clone $this;
+
 		if ($adjustWidth) {
-			$this->adjustDimensions('width', 'height', $height);
+			$clone->adjustDimensions('width', 'height', $height);
 		}
 
-		return $this->setAttribute('height', $height);
+		$clone->iframeAttributes['height'] = $height;
+
+		return $clone;
 	}
 
 	/**
-	 * Set the width of the object
+	 * Return a new object with a changed width.
 	 *
 	 * @param int $width Width to set the object to
 	 * @param bool $adjustHeight
-	 * @return $this
+	 * @return static
 	 */
-	public function setWidth(int $width, bool $adjustHeight = false) {
+	public function withWidth(int $width, bool $adjustHeight = false): static {
+		$clone = clone $this;
+
 		if ($adjustHeight) {
-			$this->adjustDimensions('height', 'width', $width);
+			$clone->adjustDimensions('height', 'width', $width);
 		}
 
-		return $this->setAttribute('width', $width);
+		$clone->iframeAttributes['width'] = $width;
+
+		return $clone;
 	}
 
 	/**
@@ -311,7 +323,7 @@ class MediaObject implements ObjectInterface {
 		$ratio = $fromLength / $currentFromLength;
 		$newLength = $currentLength * $ratio;
 
-		$this->setAttribute($type, (int)$newLength);
+		$this->iframeAttributes[$type] = (int)$newLength;
 	}
 
 	/**

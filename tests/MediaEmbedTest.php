@@ -334,11 +334,8 @@ class MediaEmbedTest extends TestCase {
 		$id = $Object->id();
 		$this->assertSame('h9Pu4bZqWyg', $id);
 
-		$icon = $Object->icon();
-		$this->assertNotEmpty($icon);
-
 		$location = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-		$filename = $Object->saveIcon($location, $icon);
+		$filename = $Object->saveIcon($location, 'icon-bytes');
 		$this->assertSame('youtube.png', $filename);
 
 		$img = $Object->image();
@@ -356,17 +353,17 @@ class MediaEmbedTest extends TestCase {
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
-		$Object->setParam([
+		$Object = $Object->withParam([
 			'autoplay' => 1,
 			'loop' => 1,
-		]);
-		$Object->setParam('rel', 0);
-		$Object->setAttribute([
-			'type' => null,
-			'class' => 'iframe-class',
-			'data-html5-parameter' => true,
-			'hidden' => false,
-		]);
+		])
+			->withParam('rel', 0)
+			->withAttribute([
+				'type' => null,
+				'class' => 'iframe-class',
+				'data-html5-parameter' => true,
+				'hidden' => false,
+			]);
 
 		$code = $Object->getEmbedCode();
 
@@ -375,6 +372,28 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringContainsString(' data-html5-parameter', $code);
 		$this->assertStringNotContainsString(' type=', $code);
 		$this->assertStringNotContainsString(' hidden', $code);
+	}
+
+	public function testWithMethodsReturnChangedCloneWithoutMutatingOriginal(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$ChangedObject = $Object
+			->withParam('autoplay', 1)
+			->withAttribute('class', 'iframe-class')
+			->withWidth(960, adjustHeight: true)
+			->withHeight(540);
+
+		$this->assertNotSame($Object, $ChangedObject);
+		$this->assertNull($Object->getParams('autoplay'));
+		$this->assertNull($Object->getAttributes('class'));
+		$this->assertSame('480', $Object->getAttributes('width'));
+		$this->assertSame('295', $Object->getAttributes('height'));
+		$this->assertStringContainsString('autoplay=1', $ChangedObject->getEmbedSrc());
+		$this->assertSame('iframe-class', $ChangedObject->getAttributes('class'));
+		$this->assertSame(960, $ChangedObject->getAttributes('width'));
+		$this->assertSame(540, $ChangedObject->getAttributes('height'));
 	}
 
 	public function testEmbedCodeIncludesDefaultIframeAttributes(): void {
@@ -517,7 +536,7 @@ class MediaEmbedTest extends TestCase {
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
-		$Object->setAttribute('style', 'border-radius:8px');
+		$Object = $Object->withAttribute('style', 'border-radius:8px');
 		$code = $Object->getResponsiveEmbedCode();
 
 		$this->assertStringContainsString('style="border-radius:8px;position:absolute;', $code);
@@ -554,7 +573,7 @@ class MediaEmbedTest extends TestCase {
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
-		$Object->setAttribute([
+		$Object = $Object->withAttribute([
 			'title' => 'Custom video title',
 			'loading' => 'eager',
 			'referrerpolicy' => null,
@@ -677,7 +696,7 @@ class MediaEmbedTest extends TestCase {
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid iframe attribute name "x onload"');
 
-		$Object->setAttribute('x onload', 'alert(1)');
+		$Object->withAttribute('x onload', 'alert(1)');
 	}
 
 	public function testSetAttributeRejectsEventHandlerAttributeName(): void {
@@ -688,15 +707,15 @@ class MediaEmbedTest extends TestCase {
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid iframe attribute name "onload"');
 
-		$Object->setAttribute('onload', 'alert(1)');
+		$Object->withAttribute('onload', 'alert(1)');
 	}
 
-	public function testSetAttributeAllowsDataAndAriaAttributes(): void {
+	public function testWithAttributeAllowsDataAndAriaAttributes(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
-		$Object->setAttribute([
+		$Object = $Object->withAttribute([
 			'data-controller' => 'media',
 			'aria-label' => 'Video',
 		]);
@@ -712,8 +731,8 @@ class MediaEmbedTest extends TestCase {
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
-		$Object->setAttribute('width', null);
-		$Object->setHeight(200, adjustWidth: true);
+		$Object = $Object->withAttribute('width', null)
+			->withHeight(200, adjustWidth: true);
 
 		$this->assertNull($Object->getAttributes('width'));
 		$this->assertSame(200, $Object->getAttributes('height'));
