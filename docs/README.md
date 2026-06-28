@@ -107,6 +107,8 @@ This should return an embed code like:
 <iframe src="//www.youtube.com/embed/111111?wmode=transparent&amp;autoplay=1&amp;loop=1" width="480" height="295" frameborder="0" allowfullscreen class="iframe-class" data-html5-parameter></iframe>
 ```
 
+Attribute names must be valid iframe attribute names. Whitespace/control characters, HTML syntax characters, and `on*` event-handler attributes are rejected.
+
 ### Adding Custom Providers
 
 You can add your own custom providers in several ways:
