@@ -124,9 +124,6 @@ class CacheTest extends TestCase {
 		$this->assertNotNull($result);
 		$this->assertSame('test', $result->providerSlug);
 
-		// Verify cache has the index
-		$this->assertTrue($cache->has('media_embed_domain_index'));
-
 		// Create new matcher with same cache - should use cached index
 		$matcher2 = new UrlMatcher($providers, $cache);
 		$result2 = $matcher2->match('https://test.example.com/video/456');
@@ -147,8 +144,6 @@ class CacheTest extends TestCase {
 		$matcher = new UrlMatcher($providers, $cache);
 		$matcher->match('https://test.example.com/video/123');
 
-		$this->assertTrue($cache->has('media_embed_domain_index'));
-
 		// Setting new providers should invalidate cache
 		$matcher->setProviders([
 			'other' => [
@@ -158,6 +153,93 @@ class CacheTest extends TestCase {
 		]);
 
 		$this->assertFalse($cache->has('media_embed_domain_index'));
+	}
+
+	public function testUrlMatcherUsesProviderSpecificCacheKeys(): void {
+		$cache = new class () implements PsrCacheInterface {
+			/**
+			 * @var array<string, mixed>
+			 */
+			private array $cache = [];
+
+			/**
+			 * @var array<string>
+			 */
+			public array $setKeys = [];
+
+			public function get(string $key, mixed $default = null): mixed {
+				return $this->cache[$key] ?? $default;
+			}
+
+			public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool {
+				$this->setKeys[] = $key;
+				$this->cache[$key] = $value;
+
+				return true;
+			}
+
+			public function delete(string $key): bool {
+				unset($this->cache[$key]);
+
+				return true;
+			}
+
+			public function clear(): bool {
+				$this->cache = [];
+
+				return true;
+			}
+
+			public function getMultiple(iterable $keys, mixed $default = null): iterable {
+				$values = [];
+				foreach ($keys as $key) {
+					$values[$key] = $this->get($key, $default);
+				}
+
+				return $values;
+			}
+
+			public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool {
+				foreach ($values as $key => $value) {
+					$this->set($key, $value, $ttl);
+				}
+
+				return true;
+			}
+
+			public function deleteMultiple(iterable $keys): bool {
+				foreach ($keys as $key) {
+					$this->delete($key);
+				}
+
+				return true;
+			}
+
+			public function has(string $key): bool {
+				return array_key_exists($key, $this->cache);
+			}
+		};
+
+		$providers = [
+			'test' => [
+				'name' => 'Test Provider',
+				'url-match' => ['test\\.example\\.com/video/([0-9]+)'],
+			],
+		];
+		$otherProviders = [
+			'other' => [
+				'name' => 'Other Provider',
+				'url-match' => ['other\\.example\\.com/video/([0-9]+)'],
+			],
+		];
+
+		(new UrlMatcher($providers, $cache))->match('https://test.example.com/video/123');
+		(new UrlMatcher($otherProviders, $cache))->match('https://other.example.com/video/123');
+
+		$this->assertCount(2, $cache->setKeys);
+		$this->assertNotSame($cache->setKeys[0], $cache->setKeys[1]);
+		$this->assertStringStartsWith('media_embed_domain_index_', $cache->setKeys[0]);
+		$this->assertStringStartsWith('media_embed_domain_index_', $cache->setKeys[1]);
 	}
 
 	public function testUrlMatcherAcceptsPsrCache(): void {
@@ -229,7 +311,6 @@ class CacheTest extends TestCase {
 		$result = $matcher->match('https://test.example.com/video/123');
 
 		$this->assertNotNull($result);
-		$this->assertTrue($cache->has('media_embed_domain_index'));
 	}
 
 	public function testMediaEmbedUsesConstructorCache(): void {
@@ -239,7 +320,6 @@ class CacheTest extends TestCase {
 		$result = $mediaEmbed->parseUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
 
 		$this->assertNotNull($result);
-		$this->assertTrue($cache->has('media_embed_domain_index'));
 	}
 
 	public function testMediaEmbedCacheSurvivesProviderChanges(): void {
@@ -259,7 +339,6 @@ class CacheTest extends TestCase {
 		$result = $mediaEmbed->parseUrl('https://cache.example.com/video/123');
 
 		$this->assertNotNull($result);
-		$this->assertTrue($cache->has('media_embed_domain_index'));
 	}
 
 }

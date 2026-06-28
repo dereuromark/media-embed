@@ -75,14 +75,17 @@ final class UrlMatcher {
 	 * @return $this
 	 */
 	public function setProviders(array $providers) {
+		if ($this->cache !== null) {
+			$this->cache->delete($this->cacheKey());
+		}
+
 		$this->providers = $providers;
 		$this->indexBuilt = false;
 		$this->domainIndex = [];
 		$this->unindexedSlugs = [];
 
-		// Clear cached index when providers change
 		if ($this->cache !== null) {
-			$this->cache->delete(self::CACHE_KEY);
+			$this->cache->delete($this->cacheKey());
 		}
 
 		return $this;
@@ -247,7 +250,7 @@ final class UrlMatcher {
 
 		// Try to load from cache first
 		if ($this->cache !== null) {
-			$cached = $this->cache->get(self::CACHE_KEY);
+			$cached = $this->cache->get($this->cacheKey());
 			if (is_array($cached)) {
 				$this->domainIndex = $cached;
 				$this->unindexedSlugs = $this->extractUnindexedSlugs();
@@ -292,10 +295,36 @@ final class UrlMatcher {
 
 		// Store in cache
 		if ($this->cache !== null) {
-			$this->cache->set(self::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
+			$this->cache->set($this->cacheKey(), $this->domainIndex, $this->cacheTtl);
 		}
 
 		$this->indexBuilt = true;
+	}
+
+	/**
+	 * Build a provider-data-specific cache key for the domain index.
+	 *
+	 * @return string
+	 */
+	private function cacheKey(): string {
+		return self::CACHE_KEY . '_' . substr(hash('sha256', serialize($this->normalizedProviderData($this->providers))), 0, 16);
+	}
+
+	/**
+	 * Normalize provider data before hashing it for cache keys.
+	 *
+	 * @param array<string, mixed> $data
+	 * @return array<string, mixed>
+	 */
+	private function normalizedProviderData(array $data): array {
+		ksort($data);
+		foreach ($data as $key => $value) {
+			if (is_array($value)) {
+				$data[$key] = $this->normalizedProviderData($value);
+			}
+		}
+
+		return $data;
 	}
 
 	/**

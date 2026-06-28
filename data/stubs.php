@@ -305,7 +305,7 @@ return [
 		'website' => 'https://streamable.com',
 		'status' => 'active',
 		'category' => 'video',
-		'example-url' => 'https://streamable.com/abc123',
+		'example-url' => 'https://streamable.com/moo',
 		'url-match' => [
 			'https?://(?:www\\.)?streamable\\.com/(?:e/)?([A-Za-z0-9]+)',
 		],
@@ -394,7 +394,7 @@ return [
 		'website' => 'https://bandcamp.com',
 		'status' => 'active',
 		'category' => 'audio',
-		'example-url' => 'https://artist.bandcamp.com/track/song-title',
+		'example-url' => 'https://publicpractice.bandcamp.com/track/disposable',
 		'url-match' => [
 			'https?://([a-z0-9-]+)\\.bandcamp\\.com/(track|album)/([a-z0-9-]+)',
 		],
@@ -408,7 +408,7 @@ return [
 		'website' => 'https://joinpeertube.org',
 		'status' => 'active',
 		'category' => 'video',
-		'example-url' => 'https://peertube.example.org/w/abc123XYZ',
+		'example-url' => 'https://peertube.tv/w/oxKYBCdgGHmQgAxUZe3cv8',
 		'url-match' => [
 			'https?://([a-z0-9.-]+)/(?:videos/watch|w)/([a-zA-Z0-9-]+)',
 		],

@@ -26,6 +26,17 @@ Removed from provider configuration:
 
 If you have custom providers using these keys, remove them.
 
+#### Removed Dead Providers
+
+The bundled provider list no longer includes providers whose public URLs or embed endpoints were no longer usable during the 1.0 cleanup:
+
+- ClipFish
+- ClipFish Search
+- ClipFish Show
+- Ustream
+
+Existing stored embeds for those providers should be treated as unsupported by 1.0 unless applications register their own custom replacement provider.
+
 #### Property Visibility Changes
 
 | Property | Change |
@@ -42,6 +53,7 @@ If you have custom providers using these keys, remove them.
 - `UrlMatcher` cache arguments now accept `Psr\SimpleCache\CacheInterface`
 - `MediaEmbed\Cache\CacheInterface` now extends PSR-16 and includes multi-key cache methods
 - `MediaEmbed::__construct()` accepts optional `cache` and `cacheTtl` arguments
+- `UrlMatcher` persistent cache keys include a provider-data hash instead of using one shared static key
 
 The `fromArray()` method preserves legacy array values as strings, including percentage dimensions such as `100%`.
 
@@ -176,6 +188,9 @@ $provider = $mediaEmbed->getProvider('youtube');
 
 echo $provider->name;           // "YouTube"
 echo $provider->website;        // "https://www.youtube.com"
+echo $provider->status;         // "active"
+echo $provider->category;       // "video"
+echo $provider->exampleUrl;     // Example URL used by release fixtures
 echo $provider->embedWidth;     // 480
 echo $provider->embedHeight;    // 295
 echo $provider->iframePlayer;   // "//www.youtube.com/embed/$2"
@@ -201,4 +216,37 @@ foreach ($providers as $provider) {
 $providers->has('youtube');  // true
 $providers->get('youtube');  // ProviderConfig
 $providers->slugs();         // ['youtube', 'vimeo', ...]
+$providers->withStatus('active');
+$providers->withCategory('video');
 ```
+
+#### URL Matching Helpers
+
+Validate and classify URLs without creating a `MediaObject`:
+
+```php
+$mediaEmbed->supportsUrl($url);       // bool
+$match = $mediaEmbed->matchUrl($url); // MatchResult|null
+$provider = $mediaEmbed->getProviderForUrl($url); // ProviderConfig|null
+```
+
+#### Safer Default Iframe Attributes
+
+Generated iframe embeds now include safer defaults:
+
+- `title="{Provider} embed"`
+- `loading="lazy"`
+- `referrerpolicy="strict-origin-when-cross-origin"`
+- `allow="fullscreen; picture-in-picture"`
+- `frameborder="0"`
+- `allowfullscreen`
+
+`sandbox` remains opt-in because many third-party embeds need provider-specific permissions.
+
+#### Hardened Fetching
+
+The default `StreamHttpClient` rejects non-public local/private IP targets, validates redirects before following them, caps response size, and exposes timeout, redirect, size, and user-agent options.
+
+#### oEmbed
+
+oEmbed discovery supports JSON and XML responses, direct endpoint templates, response caching, and `OEmbedResponse::toArray()`.

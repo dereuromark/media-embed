@@ -12,6 +12,15 @@ For stricter error handling, use the `*OrFail()` variants which throw exceptions
 - `parseUrlOrFail()` - throws `InvalidUrlException` or `FetchException`
 - `parseIdOrFail()` - throws `InvalidUrlException` or `ProviderNotFoundException`
 
+Use the matching helpers when you need to validate or classify a URL without creating an embed object:
+
+```php
+if ($MediaEmbed->supportsUrl($url)) {
+    $match = $MediaEmbed->matchUrl($url);
+    $provider = $MediaEmbed->getProviderForUrl($url);
+}
+```
+
 ### Output
 You can then display the HTML code with `getEmbedCode()` or retrieve more information using the getters of `MediaObject`.
 
@@ -426,7 +435,7 @@ $MediaEmbed = new MediaEmbed();
 
 // Get all providers
 $providers = $MediaEmbed->getProviders();
-echo count($providers); // e.g., 137
+echo count($providers); // e.g., 29
 
 // Filter to specific providers
 $subset = $MediaEmbed->getProviders(['youtube', 'vimeo', 'dailymotion']);
@@ -474,6 +483,7 @@ $MediaEmbed = new MediaEmbed(cache: $yourPsr16Cache, cacheTtl: 3600);
 ```
 
 The cache stores the generated provider domain index under an internal key. It is invalidated automatically when providers change. The `cacheTtl` argument controls how long persistent caches may retain the index. The built-in `ArrayCache` honors TTL values and can store `null` values.
+The internal key includes a hash of the provider definitions, so persistent caches do not reuse stale indexes after provider data changes.
 
 ### oEmbed Discovery
 

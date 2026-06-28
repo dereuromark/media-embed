@@ -10,6 +10,7 @@ use MediaEmbed\Exception\ProviderConfigException;
 use MediaEmbed\Exception\ProviderNotFoundException;
 use MediaEmbed\Http\HttpClientInterface;
 use MediaEmbed\Http\StreamHttpClient;
+use MediaEmbed\Matcher\MatchResult;
 use MediaEmbed\Matcher\UrlMatcher;
 use MediaEmbed\Object\MediaObject;
 use MediaEmbed\Provider\PhpFileLoader;
@@ -248,6 +249,41 @@ class MediaEmbed {
 		$stub['match'] = $this->lastMatch;
 
 		return $this->object($stub, $config + $this->config);
+	}
+
+	/**
+	 * Match a URL against the registered providers without creating a media object.
+	 *
+	 * @param string $url Href to check for embedded video
+	 * @return \MediaEmbed\Matcher\MatchResult|null
+	 */
+	public function matchUrl(string $url): ?MatchResult {
+		return $this->getUrlMatcher()->match($url);
+	}
+
+	/**
+	 * Check whether a URL is supported by any registered provider.
+	 *
+	 * @param string $url Href to check for embedded video
+	 * @return bool
+	 */
+	public function supportsUrl(string $url): bool {
+		return $this->matchUrl($url) !== null;
+	}
+
+	/**
+	 * Get the provider configuration that matches a URL.
+	 *
+	 * @param string $url Href to check for embedded video
+	 * @return \MediaEmbed\Provider\ProviderConfig|null
+	 */
+	public function getProviderForUrl(string $url): ?ProviderConfig {
+		$result = $this->matchUrl($url);
+		if ($result === null) {
+			return null;
+		}
+
+		return ProviderConfig::fromArray($result->providerStub);
 	}
 
 	/**
