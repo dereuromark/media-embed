@@ -5,6 +5,7 @@ namespace MediaEmbed\Test;
 use InvalidArgumentException;
 use MediaEmbed\Exception\ProviderConfigException;
 use MediaEmbed\Http\HttpClientInterface;
+use MediaEmbed\Matcher\MatchResult;
 use MediaEmbed\MediaEmbed;
 use MediaEmbed\Object\MediaObject;
 use MediaEmbed\Provider\ProviderConfig;
@@ -80,7 +81,7 @@ class MediaEmbedTest extends TestCase {
 		'https://open.spotify.com/album/1DFixLWuPkv3KT3TnV35m3' => '1DFixLWuPkv3KT3TnV35m3',
 		'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M' => '37i9dQZF1DXcBWIGoYBM5M',
 		// Streamable
-		'https://streamable.com/abc123' => 'abc123',
+		'https://streamable.com/moo' => 'moo',
 		'https://www.streamable.com/xyz789' => 'xyz789',
 		'https://streamable.com/e/def456' => 'def456',
 		// Bilibili
@@ -98,10 +99,10 @@ class MediaEmbedTest extends TestCase {
 		'https://kick.com/username/clips/clip_abc123' => 'clip_abc123',
 		'https://kick.com/video/12345-abcd-6789' => '12345-abcd-6789',
 		// Bandcamp
-		'https://artist.bandcamp.com/track/song-title' => 'artist/song-title',
+		'https://publicpractice.bandcamp.com/track/disposable' => 'publicpractice/disposable',
 		'https://someband.bandcamp.com/album/album-name' => 'someband/album-name',
 		// PeerTube
-		'https://peertube.example.org/w/abc123XYZ' => 'abc123XYZ',
+		'https://peertube.tv/w/oxKYBCdgGHmQgAxUZe3cv8' => 'oxKYBCdgGHmQgAxUZe3cv8',
 		'https://video.instance.com/videos/watch/def456789' => 'def456789',
 		// TED
 		'https://www.ted.com/talks/sir_ken_robinson_do_schools_kill_creativity' => 'sir_ken_robinson_do_schools_kill_creativity',
@@ -160,6 +161,32 @@ class MediaEmbedTest extends TestCase {
 		$result = $MediaEmbed->parseUrl('javascript:https://www.youtube.com/watch?v=yiSjHJnc9CY');
 
 		$this->assertNull($result);
+	}
+
+	public function testMatchUrl(): void {
+		$MediaEmbed = new MediaEmbed();
+		$result = $MediaEmbed->matchUrl('https://www.youtube.com/watch?v=yiSjHJnc9CY');
+
+		$this->assertInstanceOf(MatchResult::class, $result);
+		$this->assertSame('youtube', $result->providerSlug);
+		$this->assertSame('yiSjHJnc9CY', $result->getId());
+	}
+
+	public function testSupportsUrl(): void {
+		$MediaEmbed = new MediaEmbed();
+
+		$this->assertTrue($MediaEmbed->supportsUrl('https://www.youtube.com/watch?v=yiSjHJnc9CY'));
+		$this->assertFalse($MediaEmbed->supportsUrl('https://example.com/no-provider'));
+	}
+
+	public function testGetProviderForUrl(): void {
+		$MediaEmbed = new MediaEmbed();
+		$provider = $MediaEmbed->getProviderForUrl('https://www.youtube.com/watch?v=yiSjHJnc9CY');
+
+		$this->assertInstanceOf(ProviderConfig::class, $provider);
+		$this->assertSame('youtube', $provider->slug);
+		$this->assertSame('YouTube', $provider->name);
+		$this->assertNull($MediaEmbed->getProviderForUrl('https://example.com/no-provider'));
 	}
 
 	/**
@@ -244,8 +271,8 @@ class MediaEmbedTest extends TestCase {
 		return [
 			['https://www.mixcloud.com/spartacus/party-time/', '//www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2Fspartacus%2Fparty-time%2F&wmode=transparent'],
 			['https://open.spotify.com/track/4iV5W9uYEdYUVa79Axb7Rh', 'https://open.spotify.com/embed/track/4iV5W9uYEdYUVa79Axb7Rh?wmode=transparent'],
-			['https://artist.bandcamp.com/track/song-title', 'https://bandcamp.com/EmbeddedPlayer/track=artist/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/?wmode=transparent'],
-			['https://peertube.example.org/w/abc123XYZ', 'https://peertube.example.org/videos/embed/abc123XYZ?wmode=transparent'],
+			['https://publicpractice.bandcamp.com/track/disposable', 'https://bandcamp.com/EmbeddedPlayer/track=publicpractice/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/?wmode=transparent'],
+			['https://peertube.tv/w/oxKYBCdgGHmQgAxUZe3cv8', 'https://peertube.tv/videos/embed/oxKYBCdgGHmQgAxUZe3cv8?wmode=transparent'],
 			['https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/', 'https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/embed/?wmode=transparent'],
 			['https://lds.cdn.vooplayer.com/publish/MTEwNTMw', 'https://lds.cdn.vooplayer.com/publish/MTEwNTMw?fallback=true&wmode=transparent'],
 			['https://instagram.com/reel/XYZ789abc/', 'https://www.instagram.com/reel/XYZ789abc/embed?wmode=transparent'],

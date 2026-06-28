@@ -132,9 +132,9 @@ return [
 	],
 	[
 		'slug' => 'streamable',
-		'url' => 'https://streamable.com/abc123',
-		'id' => 'abc123',
-		'embedSrc' => 'https://streamable.com/e/abc123?wmode=transparent',
+		'url' => 'https://streamable.com/moo',
+		'id' => 'moo',
+		'embedSrc' => 'https://streamable.com/e/moo?wmode=transparent',
 	],
 	[
 		'slug' => 'bilibili',
@@ -168,15 +168,15 @@ return [
 	],
 	[
 		'slug' => 'bandcamp',
-		'url' => 'https://artist.bandcamp.com/track/song-title',
-		'id' => 'artist/song-title',
-		'embedSrc' => 'https://bandcamp.com/EmbeddedPlayer/track=artist/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/?wmode=transparent',
+		'url' => 'https://publicpractice.bandcamp.com/track/disposable',
+		'id' => 'publicpractice/disposable',
+		'embedSrc' => 'https://bandcamp.com/EmbeddedPlayer/track=publicpractice/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/?wmode=transparent',
 	],
 	[
 		'slug' => 'peertube',
-		'url' => 'https://peertube.example.org/w/abc123XYZ',
-		'id' => 'abc123XYZ',
-		'embedSrc' => 'https://peertube.example.org/videos/embed/abc123XYZ?wmode=transparent',
+		'url' => 'https://peertube.tv/w/oxKYBCdgGHmQgAxUZe3cv8',
+		'id' => 'oxKYBCdgGHmQgAxUZe3cv8',
+		'embedSrc' => 'https://peertube.tv/videos/embed/oxKYBCdgGHmQgAxUZe3cv8?wmode=transparent',
 	],
 	[
 		'slug' => 'ted',
