@@ -3,6 +3,7 @@
 namespace MediaEmbed\Test;
 
 use InvalidArgumentException;
+use MediaEmbed\Exception\ProviderConfigException;
 use MediaEmbed\Http\HttpClientInterface;
 use MediaEmbed\MediaEmbed;
 use MediaEmbed\Object\MediaObject;
@@ -424,6 +425,21 @@ class MediaEmbedTest extends TestCase {
 		$this->assertSame('//unsafe.example.com/embed/12345?foo=1&amp;bar=&quot;quoted&quot;&amp;wmode=transparent', $Object->getEmbedSrcForHtml());
 	}
 
+	public function testGetEmbedSrcUsesRawQuerySeparator(): void {
+		$separator = ini_get('arg_separator.output');
+		ini_set('arg_separator.output', '&amp;');
+
+		try {
+			$MediaEmbed = new MediaEmbed();
+			$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+			$this->assertInstanceOf(MediaObject::class, $Object);
+
+			$this->assertSame('//www.youtube.com/embed/11111111111?wmode=transparent', $Object->getEmbedSrc());
+		} finally {
+			ini_set('arg_separator.output', $separator);
+		}
+	}
+
 	public function testSetAttributeRejectsInvalidAttributeName(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
@@ -460,6 +476,18 @@ class MediaEmbedTest extends TestCase {
 
 		$this->assertStringContainsString(' data-controller="media"', $code);
 		$this->assertStringContainsString(' aria-label="Video"', $code);
+	}
+
+	public function testAdjustDimensionsSkipsMissingCurrentDimension(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$Object->setAttribute('width', null);
+		$Object->setHeight(200, adjustWidth: true);
+
+		$this->assertNull($Object->getAttributes('width'));
+		$this->assertSame(200, $Object->getAttributes('height'));
 	}
 
 	/**
@@ -644,6 +672,47 @@ class MediaEmbedTest extends TestCase {
 		$Object = $MediaEmbed->parseUrl('https://custom.example.com/video/12345');
 		$this->assertInstanceOf(MediaObject::class, $Object);
 		$this->assertSame('12345', $Object->id());
+	}
+
+	public function testAddProviderConfigRequiresIframePlayer(): void {
+		$MediaEmbed = new MediaEmbed();
+		$customProvider = new ProviderConfig(
+			name: 'NoIframeProvider',
+			website: 'https://no-iframe.example.com',
+			urlMatch: ['https?://(?:www\.)?no-iframe\.example\.com/video/([0-9]+)'],
+			embedWidth: 640,
+			embedHeight: 360,
+		);
+
+		$this->expectException(ProviderConfigException::class);
+		$this->expectExceptionMessage('Provider configuration is missing required field: iframe-player');
+
+		$MediaEmbed->addProviderConfig($customProvider);
+	}
+
+	public function testCustomProvidersConfigHonorsExplicitSlug(): void {
+		$customProviders = [
+			[
+				'name' => 'Display Name Provider',
+				'slug' => 'stable-provider',
+				'website' => 'https://stable.example.com',
+				'url-match' => [
+					'https?://stable\.example\.com/v/([a-z0-9]+)',
+				],
+				'embed-width' => '500',
+				'embed-height' => '300',
+				'iframe-player' => '//stable.example.com/embed/$2',
+			],
+		];
+
+		$MediaEmbed = new MediaEmbed(['custom_providers' => $customProviders]);
+
+		$this->assertNotNull($MediaEmbed->getProvider('stable-provider'));
+		$this->assertNull($MediaEmbed->getProvider('display-name-provider'));
+
+		$Object = $MediaEmbed->parseUrl('https://stable.example.com/v/abc123');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+		$this->assertSame('stable-provider', $Object->slug());
 	}
 
 	/**

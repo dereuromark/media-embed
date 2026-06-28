@@ -76,6 +76,49 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('400', $config->embedHeight);
 	}
 
+	public function testFromArrayPreservesIntegerDimensions(): void {
+		$data = [
+			'name' => 'IntegerProvider',
+			'website' => 'https://integer.example.com',
+			'url-match' => 'integer\\.example\\.com/([a-z0-9]+)',
+			'embed-width' => 640,
+			'embed-height' => 360,
+			'iframe-player' => '//integer.example.com/embed/$2',
+		];
+
+		$config = ProviderConfig::fromArray($data);
+
+		$this->assertSame(640, $config->embedWidth);
+		$this->assertSame(360, $config->embedHeight);
+	}
+
+	public function testFromArrayRejectsInvalidDimensionType(): void {
+		$this->expectException(ProviderConfigException::class);
+		$this->expectExceptionMessage('Provider configuration field "embed-width" has invalid value. Expected integer or string.');
+
+		ProviderConfig::fromArray([
+			'name' => 'InvalidDimensionProvider',
+			'website' => 'https://invalid-dimension.example.com',
+			'url-match' => 'invalid-dimension\\.example\\.com/([a-z0-9]+)',
+			'embed-width' => [],
+			'embed-height' => 360,
+			'iframe-player' => '//invalid-dimension.example.com/embed/$2',
+		]);
+	}
+
+	public function testFromArrayRequiresIframePlayer(): void {
+		$this->expectException(ProviderConfigException::class);
+		$this->expectExceptionMessage('Provider configuration is missing required field: iframe-player');
+
+		ProviderConfig::fromArray([
+			'name' => 'NoIframeProvider',
+			'website' => 'https://no-iframe.example.com',
+			'url-match' => 'no-iframe\\.example\\.com/([a-z0-9]+)',
+			'embed-width' => 640,
+			'embed-height' => 360,
+		]);
+	}
+
 	public function testFromArrayPreservesExtraProviderMetadata(): void {
 		$data = [
 			'name' => 'ExtraProvider',

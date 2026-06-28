@@ -44,6 +44,7 @@ class ProviderCollectionTest extends TestCase {
 			embedWidth: 640,
 			embedHeight: 360,
 			slug: 'test-provider',
+			iframePlayer: '//test.com/embed/$2',
 		);
 
 		$collection->add($config);
@@ -53,25 +54,23 @@ class ProviderCollectionTest extends TestCase {
 	}
 
 	public function testFilter(): void {
-		$data = [
-			[
-				'name' => 'WithIframe',
-				'website' => 'https://iframe.example.com',
-				'url-match' => 'pattern1',
-				'embed-width' => '640',
-				'embed-height' => '360',
-				'iframe-player' => '//iframe.example.com/embed/$2',
-			],
-			[
-				'name' => 'WithoutIframe',
-				'website' => 'https://no-iframe.example.com',
-				'url-match' => 'pattern2',
-				'embed-width' => '640',
-				'embed-height' => '360',
-			],
-		];
+		$collection = new ProviderCollection();
+		$collection->add(new ProviderConfig(
+			name: 'WithIframe',
+			website: 'https://iframe.example.com',
+			urlMatch: 'pattern1',
+			embedWidth: '640',
+			embedHeight: '360',
+			iframePlayer: '//iframe.example.com/embed/$2',
+		));
+		$collection->add(new ProviderConfig(
+			name: 'WithoutIframe',
+			website: 'https://no-iframe.example.com',
+			urlMatch: 'pattern2',
+			embedWidth: '640',
+			embedHeight: '360',
+		));
 
-		$collection = ProviderCollection::fromArray($data);
 		$filtered = $collection->withIframeSupport();
 
 		$this->assertCount(1, $filtered);
@@ -87,6 +86,7 @@ class ProviderCollectionTest extends TestCase {
 				'url-match' => 'pattern1',
 				'embed-width' => '640',
 				'embed-height' => '360',
+				'iframe-player' => '//keep.example.com/embed/$2',
 			],
 			[
 				'name' => 'Remove',
@@ -94,6 +94,7 @@ class ProviderCollectionTest extends TestCase {
 				'url-match' => 'pattern2',
 				'embed-width' => '640',
 				'embed-height' => '360',
+				'iframe-player' => '//remove.example.com/embed/$2',
 			],
 		];
 
@@ -112,6 +113,7 @@ class ProviderCollectionTest extends TestCase {
 				'url-match' => 'pattern',
 				'embed-width' => '640',
 				'embed-height' => '360',
+				'iframe-player' => '//one.example.com/embed/$2',
 			],
 		];
 
@@ -135,6 +137,7 @@ class ProviderCollectionTest extends TestCase {
 				'url-match' => 'pattern',
 				'embed-width' => '640',
 				'embed-height' => '360',
+				'iframe-player' => '//alpha.example.com/embed/$2',
 			],
 			[
 				'name' => 'Beta',
@@ -142,6 +145,7 @@ class ProviderCollectionTest extends TestCase {
 				'url-match' => 'pattern',
 				'embed-width' => '640',
 				'embed-height' => '360',
+				'iframe-player' => '//beta.example.com/embed/$2',
 			],
 		];
 

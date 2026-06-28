@@ -68,4 +68,22 @@ class ProviderValidatorTest extends TestCase {
 		$this->assertContains('Broken: field "website" must be a non-empty URL string', $errors);
 	}
 
+	public function testValidateReportsNullRequiredField(): void {
+		$providers = [
+			[
+				'name' => 'Broken',
+				'website' => 'https://broken.example.com',
+				'url-match' => 'broken\\.example\\.com/([0-9]+)',
+				'embed-width' => 640,
+				'embed-height' => 360,
+				'iframe-player' => null,
+			],
+		];
+
+		$validator = new ProviderValidator();
+		$errors = $validator->validate($providers);
+
+		$this->assertContains('Broken: missing required field "iframe-player"', $errors);
+	}
+
 }

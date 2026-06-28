@@ -159,6 +159,17 @@ class OEmbedTest extends TestCase {
 		$this->assertNull($endpoint);
 	}
 
+	public function testOEmbedDiscoverySkipsUnsafeEndpointAndUsesLaterSafeEndpoint(): void {
+		$mockClient = $this->createStub(HttpClientInterface::class);
+		$mockClient->method('get')
+			->willReturn('<html><head><link rel="alternate" type="application/json+oembed" href="javascript:alert(1)" /><link rel="alternate" type="application/json+oembed" href="https://example.com/oembed?url=test" /></head></html>');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+		$endpoint = $discovery->discoverEndpoint('https://example.com/page');
+
+		$this->assertSame('https://example.com/oembed?url=test', $endpoint);
+	}
+
 	public function testOEmbedDiscoveryRejectsProtocolRelativeLocalhostEndpoint(): void {
 		$mockClient = $this->createStub(HttpClientInterface::class);
 		$mockClient->method('get')

@@ -72,6 +72,15 @@ final class ProviderConfig {
 		if (!isset($data['embed-height'])) {
 			throw ProviderConfigException::missingField('embed-height', $data);
 		}
+		if (!array_key_exists('iframe-player', $data) || $data['iframe-player'] === null || $data['iframe-player'] === '') {
+			throw ProviderConfigException::missingField('iframe-player', $data);
+		}
+		if (!is_string($data['iframe-player'])) {
+			throw ProviderConfigException::invalidField('iframe-player', $data['iframe-player'], 'string', $data);
+		}
+
+		$embedWidth = self::dimensionFromArray($data, 'embed-width');
+		$embedHeight = self::dimensionFromArray($data, 'embed-height');
 
 		$knownKeys = [
 			'name',
@@ -93,10 +102,10 @@ final class ProviderConfig {
 			name: $data['name'],
 			website: $data['website'],
 			urlMatch: $data['url-match'],
-			embedWidth: (string)$data['embed-width'],
-			embedHeight: (string)$data['embed-height'],
+			embedWidth: $embedWidth,
+			embedHeight: $embedHeight,
 			slug: $data['slug'] ?? null,
-			iframePlayer: $data['iframe-player'] ?? null,
+			iframePlayer: $data['iframe-player'],
 			imageSrc: $data['image-src'] ?? null,
 			id: $data['id'] ?? null,
 			fetchMatch: $data['fetch-match'] ?? null,
@@ -105,6 +114,21 @@ final class ProviderConfig {
 			iframeParams: !empty($data['iframe-params']) && is_array($data['iframe-params']) ? $data['iframe-params'] : [],
 			extra: array_diff_key($data, array_flip($knownKeys)),
 		);
+	}
+
+	/**
+	 * @param array<string, mixed> $data Provider configuration array.
+	 * @param string $field Dimension field name.
+	 * @throws \MediaEmbed\Exception\ProviderConfigException When the dimension is invalid.
+	 * @return string|int
+	 */
+	protected static function dimensionFromArray(array $data, string $field): string|int {
+		$value = $data[$field];
+		if (is_int($value) || is_string($value)) {
+			return $value;
+		}
+
+		throw ProviderConfigException::invalidField($field, $value, 'integer or string', $data);
 	}
 
 	/**

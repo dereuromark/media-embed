@@ -6,6 +6,7 @@ namespace MediaEmbed;
 
 use MediaEmbed\Exception\FetchException;
 use MediaEmbed\Exception\InvalidUrlException;
+use MediaEmbed\Exception\ProviderConfigException;
 use MediaEmbed\Exception\ProviderNotFoundException;
 use MediaEmbed\Http\HttpClientInterface;
 use MediaEmbed\Http\StreamHttpClient;
@@ -316,7 +317,8 @@ class MediaEmbed {
 			$this->providers = [];
 		}
 		foreach ($stubs as $stub) {
-			$slug = $this->slug($stub['name']);
+			$slug = !empty($stub['slug']) && is_string($stub['slug']) ? $stub['slug'] : $this->slug($stub['name']);
+			$stub['slug'] = $slug;
 			$this->providers[$slug] = $stub;
 		}
 
@@ -447,6 +449,9 @@ class MediaEmbed {
 	 */
 	public function addProviderConfig(ProviderConfig $config, bool $override = false) {
 		$slug = $config->slug ?? $this->slug($config->name);
+		if ($config->iframePlayer === null || $config->iframePlayer === '') {
+			throw ProviderConfigException::missingField('iframe-player', $config->toArray());
+		}
 
 		if (!$override && isset($this->providers[$slug])) {
 			return $this;

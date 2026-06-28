@@ -298,6 +298,9 @@ class MediaObject implements ObjectInterface {
 	protected function adjustDimensions(string $type, string $fromType, int $fromLength): void {
 		$currentLength = (int)$this->getAttributes($type);
 		$currentFromLength = (int)$this->getAttributes($fromType);
+		if ($currentLength === 0 || $currentFromLength === 0) {
+			return;
+		}
 
 		$ratio = $fromLength / $currentFromLength;
 		$newLength = $currentLength * $ratio;
@@ -443,7 +446,7 @@ class MediaObject implements ObjectInterface {
 
 		$separator = str_contains($url, '?') ? '&' : '?';
 
-		return $url . $separator . http_build_query($this->iframeParams);
+		return $url . $separator . http_build_query($this->iframeParams, '', '&');
 	}
 
 	/**

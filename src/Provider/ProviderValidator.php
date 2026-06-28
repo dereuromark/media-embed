@@ -68,7 +68,7 @@ final class ProviderValidator {
 	 */
 	private function validateRequiredFields(array $provider, string $label, array &$errors): void {
 		foreach (self::REQUIRED_FIELDS as $field) {
-			if (!array_key_exists($field, $provider) || $provider[$field] === '' || $provider[$field] === []) {
+			if (!array_key_exists($field, $provider) || $provider[$field] === null || $provider[$field] === '' || $provider[$field] === []) {
 				$errors[] = $label . ': missing required field "' . $field . '"';
 			}
 		}

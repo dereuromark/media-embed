@@ -161,31 +161,6 @@ final class UrlMatcher {
 	}
 
 	/**
-	 * Normalize and validate a URL before matching.
-	 *
-	 * @param string $url The URL to normalize.
-	 * @return string|null
-	 */
-	private function normalizeUrl(string $url): ?string {
-		$url = trim($url);
-		if ($url === '' || preg_match('/\\s/', $url)) {
-			return null;
-		}
-
-		$parsed = parse_url($url);
-		if (!is_array($parsed) || empty($parsed['scheme']) || empty($parsed['host'])) {
-			return null;
-		}
-
-		$scheme = strtolower($parsed['scheme']);
-		if ($scheme !== 'http' && $scheme !== 'https') {
-			return null;
-		}
-
-		return $url;
-	}
-
-	/**
 	 * Match URL against a specific list of provider slugs.
 	 *
 	 * @param string $url The URL to match.
