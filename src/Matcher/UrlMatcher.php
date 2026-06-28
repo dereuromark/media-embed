@@ -16,7 +16,8 @@ final class UrlMatcher {
 
 	/**
 	 * Cache key for the domain index.
-     * @var string
+	 *
+	 * @var string
 	 */
 	private const CACHE_KEY = 'media_embed_domain_index';
 
@@ -73,7 +74,7 @@ final class UrlMatcher {
 
 		// Clear cached index when providers change
 		if ($this->cache !== null) {
-			$this->cache->delete(static::CACHE_KEY);
+			$this->cache->delete(self::CACHE_KEY);
 		}
 
 		return $this;
@@ -161,7 +162,7 @@ final class UrlMatcher {
 
 		// Try to load from cache first
 		if ($this->cache !== null) {
-			$cached = $this->cache->get(static::CACHE_KEY);
+			$cached = $this->cache->get(self::CACHE_KEY);
 			if (is_array($cached)) {
 				$this->domainIndex = $cached;
 				$this->indexBuilt = true;
@@ -190,7 +191,7 @@ final class UrlMatcher {
 
 		// Store in cache
 		if ($this->cache !== null) {
-			$this->cache->set(static::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
+			$this->cache->set(self::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
 		}
 
 		$this->indexBuilt = true;

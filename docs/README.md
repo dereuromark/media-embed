@@ -100,9 +100,9 @@ if ($MediaObject) {
     return $MediaObject->getEmbedCode();
 }
 ```
-This should return and embed code like:
+This should return an embed code like:
 ```html
-<embed src="https://www.youtube.com/embed/111111?autoplay=1&amp;loop=1" class="iframe-class" data-html5-parameter></iframe>
+<iframe src="https://www.youtube.com/embed/111111?autoplay=1&amp;loop=1" class="iframe-class" data-html5-parameter></iframe>
 ```
 
 ### Adding Custom Providers
@@ -307,8 +307,8 @@ $config = new ProviderConfig(
     name: 'MyService',
     website: 'https://myservice.com',
     urlMatch: 'https://myservice\\.com/v/([a-z0-9]+)',
-    embedWidth: '640',
-    embedHeight: '360',
+    embedWidth: 640,
+    embedHeight: 360,
     iframePlayer: '//myservice.com/embed/$2',
 );
 

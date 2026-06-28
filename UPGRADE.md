@@ -36,10 +36,10 @@ If you have custom providers using these keys, remove them.
 
 #### Type Changes
 
-- `ProviderConfig::$embedWidth` - Now `int` (was `int|string`)
-- `ProviderConfig::$embedHeight` - Now `int` (was `int|string`)
+- `ProviderConfig::$embedWidth` - Now accepts `int|string` (was `string`)
+- `ProviderConfig::$embedHeight` - Now accepts `int|string` (was `string`)
 
-The `fromArray()` method automatically casts string values to integers.
+The `fromArray()` method preserves legacy array values as strings, including percentage dimensions such as `100%`.
 
 ### Migration Examples
 
