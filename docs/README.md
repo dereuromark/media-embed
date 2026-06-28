@@ -412,39 +412,10 @@ $matcher->setCache($cache);
 $MediaEmbed->parseUrl('https://youtube.com/watch?v=abc');
 ```
 
-For persistent caching, implement `CacheInterface` with your preferred cache backend (Redis, Memcached, filesystem, etc.):
+For persistent caching, pass any PSR-16 cache implementation (Redis, Memcached, filesystem, etc.):
 
 ```php
-use MediaEmbed\Cache\CacheInterface;
-use Psr\SimpleCache\CacheInterface as Psr16Cache;
-
-class Psr16Adapter implements CacheInterface {
-    public function __construct(private Psr16Cache $cache) {}
-
-    public function get(string $key, mixed $default = null): mixed {
-        return $this->cache->get($key, $default);
-    }
-
-    public function set(string $key, mixed $value, ?int $ttl = null): bool {
-        return $this->cache->set($key, $value, $ttl);
-    }
-
-    public function delete(string $key): bool {
-        return $this->cache->delete($key);
-    }
-
-    public function has(string $key): bool {
-        return $this->cache->has($key);
-    }
-
-    public function clear(): bool {
-        return $this->cache->clear();
-    }
-}
-
-// Use with any PSR-16 cache
-$cache = new Psr16Adapter($yourPsr16Cache);
-$MediaEmbed->getUrlMatcher()->setCache($cache, ttl: 3600);
+$MediaEmbed->getUrlMatcher()->setCache($yourPsr16Cache, ttl: 3600);
 ```
 
 ### oEmbed Discovery

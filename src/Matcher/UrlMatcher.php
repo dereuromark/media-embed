@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Matcher;
 
-use MediaEmbed\Cache\CacheInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * URL matcher with optional domain-based caching for faster lookups.
@@ -52,7 +52,7 @@ final class UrlMatcher {
 
 	/**
 	 * @param array<string, array<string, mixed>> $providers Providers keyed by slug.
-	 * @param \MediaEmbed\Cache\CacheInterface|null $cache Optional cache for persisting domain index.
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Optional cache for persisting domain index.
 	 * @param int $cacheTtl Cache TTL in seconds.
 	 */
 	public function __construct(array $providers = [], ?CacheInterface $cache = null, int $cacheTtl = 3600) {
@@ -83,7 +83,7 @@ final class UrlMatcher {
 	/**
 	 * Set the cache implementation.
 	 *
-	 * @param \MediaEmbed\Cache\CacheInterface|null $cache Cache implementation.
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Cache implementation.
 	 * @param int $ttl Cache TTL in seconds.
 	 * @return $this
 	 */

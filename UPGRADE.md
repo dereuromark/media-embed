@@ -39,6 +39,8 @@ If you have custom providers using these keys, remove them.
 
 - `ProviderConfig::$embedWidth` - Now accepts `int|string` (was `string`)
 - `ProviderConfig::$embedHeight` - Now accepts `int|string` (was `string`)
+- `UrlMatcher` cache arguments now accept `Psr\SimpleCache\CacheInterface`
+- `MediaEmbed\Cache\CacheInterface` now extends PSR-16 and includes multi-key cache methods
 
 The `fromArray()` method preserves legacy array values as strings, including percentage dimensions such as `100%`.
 
