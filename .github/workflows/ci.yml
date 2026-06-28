@@ -95,6 +95,9 @@ jobs:
       - name: Run phpcs
         run: composer cs-check
 
+      - name: Validate providers
+        run: composer validate-providers
+
       - name: Run link checker
         run: |
           sudo npm install -g markdown-link-check

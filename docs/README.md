@@ -620,3 +620,8 @@ Update list of services in `docs/supported.md` with
 ```
 bin/generate-docs
 ```
+
+Validate provider configuration data with
+```
+composer validate-providers
+```
