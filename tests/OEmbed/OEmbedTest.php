@@ -82,6 +82,39 @@ class OEmbedTest extends TestCase {
 		$this->assertSame('https://example.com/oembed?url=test', $endpoint);
 	}
 
+	public function testOEmbedDiscoveryResolvesRootRelativeEndpoint(): void {
+		$mockClient = $this->createStub(HttpClientInterface::class);
+		$mockClient->method('get')
+			->willReturn('<html><head><link rel="alternate" type="application/json+oembed" href="/oembed?url=test" /></head></html>');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+		$endpoint = $discovery->discoverEndpoint('https://example.com/video/123');
+
+		$this->assertSame('https://example.com/oembed?url=test', $endpoint);
+	}
+
+	public function testOEmbedDiscoveryResolvesPathRelativeEndpoint(): void {
+		$mockClient = $this->createStub(HttpClientInterface::class);
+		$mockClient->method('get')
+			->willReturn('<html><head><link rel="alternate" type="application/json+oembed" href="oembed?url=test" /></head></html>');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+		$endpoint = $discovery->discoverEndpoint('https://example.com/videos/123');
+
+		$this->assertSame('https://example.com/videos/oembed?url=test', $endpoint);
+	}
+
+	public function testOEmbedDiscoveryResolvesProtocolRelativeEndpoint(): void {
+		$mockClient = $this->createStub(HttpClientInterface::class);
+		$mockClient->method('get')
+			->willReturn('<html><head><link rel="alternate" type="application/json+oembed" href="//cdn.example.com/oembed?url=test" /></head></html>');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+		$endpoint = $discovery->discoverEndpoint('https://example.com/video/123');
+
+		$this->assertSame('https://cdn.example.com/oembed?url=test', $endpoint);
+	}
+
 	public function testOEmbedDiscoveryNoEndpoint(): void {
 		$mockClient = $this->createStub(HttpClientInterface::class);
 		$mockClient->method('get')

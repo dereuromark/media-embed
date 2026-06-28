@@ -117,33 +117,54 @@ final class OEmbedDiscovery {
 	 * @return string|null The oEmbed URL or null if not found.
 	 */
 	private function parseOEmbedLink(string $html, string $baseUrl): ?string {
-		// Match link tags with oembed type
-		$pattern = '/<link[^>]+type=["\']application\/json\+oembed["\'][^>]*>/i';
-		if (!preg_match($pattern, $html, $match)) {
-			// Try alternate pattern with type before rel
-			$pattern = '/<link[^>]+rel=["\']alternate["\'][^>]+type=["\']application\/json\+oembed["\'][^>]*>/i';
-			if (!preg_match($pattern, $html, $match)) {
-				return null;
+		if (!preg_match_all('/<link\\s+[^>]*>/i', $html, $matches)) {
+			return null;
+		}
+
+		foreach ($matches[0] as $linkTag) {
+			$attributes = $this->parseLinkAttributes($linkTag);
+			$rel = strtolower($attributes['rel'] ?? '');
+			$relTokens = preg_split('/\\s+/', $rel, -1, PREG_SPLIT_NO_EMPTY);
+
+			if (!in_array('alternate', $relTokens ?: [], true)) {
+				continue;
 			}
+			if (strtolower($attributes['type'] ?? '') !== 'application/json+oembed') {
+				continue;
+			}
+			if (empty($attributes['href'])) {
+				continue;
+			}
+
+			$href = html_entity_decode($attributes['href'], ENT_QUOTES | ENT_HTML5);
+			$url = $this->resolveEndpointUrl($href, $baseUrl);
+			if (!$this->isSafeEndpointUrl($url)) {
+				continue;
+			}
+
+			return $url;
 		}
 
-		$linkTag = $match[0];
+		return null;
+	}
 
-		// Extract href attribute
-		if (!preg_match('/href=["\']([^"\']+)["\']/i', $linkTag, $hrefMatch)) {
-			return null;
+	/**
+	 * Parse quoted attributes from a link tag.
+	 *
+	 * @param string $linkTag Link tag HTML.
+	 * @return array<string, string>
+	 */
+	private function parseLinkAttributes(string $linkTag): array {
+		if (!preg_match_all('/([a-z][a-z0-9:_-]*)\\s*=\\s*([\'"])(.*?)\\2/is', $linkTag, $matches, PREG_SET_ORDER)) {
+			return [];
 		}
 
-		$href = $hrefMatch[1];
-
-		$href = html_entity_decode($href, ENT_QUOTES | ENT_HTML5);
-
-		$url = $this->resolveEndpointUrl($href, $baseUrl);
-		if (!$this->isSafeEndpointUrl($url)) {
-			return null;
+		$attributes = [];
+		foreach ($matches as $match) {
+			$attributes[strtolower($match[1])] = $match[3];
 		}
 
-		return $url;
+		return $attributes;
 	}
 
 	/**
