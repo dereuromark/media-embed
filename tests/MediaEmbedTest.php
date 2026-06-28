@@ -338,6 +338,92 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringContainsString(' allowfullscreen', $code);
 	}
 
+	public function testPrivacyModeUsesNoCookieHostForYoutube(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111', ['privacy' => true]);
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame('//www.youtube-nocookie.com/embed/11111111111?wmode=transparent', $Object->getEmbedSrc());
+	}
+
+	public function testPrivacyModeIsOptInForYoutube(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertStringContainsString('//www.youtube.com/embed/11111111111', $Object->getEmbedSrc());
+		$this->assertStringNotContainsString('nocookie', $Object->getEmbedSrc());
+	}
+
+	public function testPrivacyModeAddsParamsForVimeo(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://vimeo.com/channels/staffpicks/99585787', ['privacy' => true]);
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertStringContainsString('dnt=1', $Object->getEmbedSrc());
+	}
+
+	public function testResponsiveEmbedCodeWrapsIframeWithDefaultRatio(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getResponsiveEmbedCode();
+
+		$this->assertStringStartsWith('<div style="position:relative;width:100%;height:0;padding-bottom:56.25%;overflow:hidden;">', $code);
+		$this->assertStringContainsString('<iframe', $code);
+		$this->assertStringContainsString('style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"', $code);
+		$this->assertStringEndsWith('</div>', $code);
+	}
+
+	public function testResponsiveEmbedCodeDoesNotMutateObjectState(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$Object->getResponsiveEmbedCode();
+
+		$this->assertNull($Object->getAttributes('style'));
+		$this->assertStringNotContainsString('position:absolute', $Object->getEmbedCode());
+	}
+
+	public function testResponsiveEmbedCodePreservesExistingStyle(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$Object->setAttribute('style', 'border-radius:8px');
+		$code = $Object->getResponsiveEmbedCode();
+
+		$this->assertStringContainsString('style="border-radius:8px;position:absolute;', $code);
+	}
+
+	public function testResponsiveEmbedCodeSupportsCustomRatio(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertStringContainsString('padding-bottom:75%;', $Object->getResponsiveEmbedCode('4:3'));
+	}
+
+	public function testResponsiveEmbedCodeRejectsInvalidRatio(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->expectException(InvalidArgumentException::class);
+		$Object->getResponsiveEmbedCode('16x9');
+	}
+
+	public function testResponsiveEmbedCodeRejectsZeroRatioComponent(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->expectException(InvalidArgumentException::class);
+		$Object->getResponsiveEmbedCode('16:0');
+	}
+
 	public function testEmbedCodeDefaultIframeAttributesCanBeOverridden(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');

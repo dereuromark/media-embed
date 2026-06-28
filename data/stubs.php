@@ -40,6 +40,7 @@ return [
 		'embed-height' => '295',
 		'image-src' => '//img.youtube.com/vi/$2/0.jpg',
 		'iframe-player' => '//www.youtube.com/embed/$2',
+		'privacy-player' => '//www.youtube-nocookie.com/embed/$2',
 		'id' => '$2',
 		'supports-timestamp' => true,
 		'timestamp-param' => 'start',
@@ -87,6 +88,9 @@ return [
 		'embed-width' => '400',
 		'embed-height' => '302',
 		'iframe-player' => '//player.vimeo.com/video/$2',
+		'privacy-params' => [
+			'dnt' => 1,
+		],
 	],
 	[
 		'name' => 'Aparat',

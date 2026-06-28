@@ -82,6 +82,10 @@ class MediaObject implements ObjectInterface {
 
 		$this->setDefaultParams($stub);
 
+		if (!empty($this->config['privacy'])) {
+			$this->applyPrivacyMode();
+		}
+
 		if (!empty($this->stub['reverse']) && isset($this->stub['iframe-player'])) {
 			$src = $this->getObjectSrc('iframe-player');
 			$this->stub['iframe-player'] = $src;
@@ -346,6 +350,39 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
+	 * Convert the url to a responsive iframe embed wrapped in an aspect-ratio container.
+	 *
+	 * The iframe is absolutely positioned to fill a wrapper whose height is driven by
+	 * the given aspect ratio, so the embed scales fluidly with its parent width.
+	 *
+	 * @param string $ratio Aspect ratio as "width:height" (e.g. "16:9", "4:3", "1:1").
+	 * @throws \InvalidArgumentException When the ratio is malformed or has a zero component.
+	 * @return string The responsive embed HTML
+	 */
+	public function getResponsiveEmbedCode(string $ratio = '16:9'): string {
+		[$ratioWidth, $ratioHeight] = $this->parseRatio($ratio);
+		$paddingBottom = $ratioHeight / $ratioWidth * 100;
+
+		// Build the iframe with a responsive style without mutating persistent object state,
+		// preserving any style a caller may already have set.
+		$originalAttributes = $this->iframeAttributes;
+		$existingStyle = isset($this->iframeAttributes['style']) ? rtrim((string)$this->iframeAttributes['style'], ';') . ';' : '';
+		$this->iframeAttributes['style'] = $existingStyle . 'position:absolute;top:0;left:0;width:100%;height:100%;border:0;';
+
+		try {
+			$iframe = $this->buildIframe();
+		} finally {
+			$this->iframeAttributes = $originalAttributes;
+		}
+
+		return sprintf(
+			'<div style="position:relative;width:100%%;height:0;padding-bottom:%s%%;overflow:hidden;">%s</div>',
+			rtrim(rtrim(sprintf('%.4f', $paddingBottom), '0'), '.'),
+			$iframe,
+		);
+	}
+
+	/**
 	 * Get the raw iframe src URL with parameters.
 	 *
 	 * @return string The unescaped src URL
@@ -514,6 +551,48 @@ class MediaObject implements ObjectInterface {
 	 */
 	protected function esc(string $text): string {
 		return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
+	}
+
+	/**
+	 * Switch the embed to its privacy-friendly variant when the provider declares one.
+	 *
+	 * A provider may declare a `privacy-player` URL template (e.g. youtube-nocookie.com)
+	 * and/or `privacy-params` (e.g. Vimeo `dnt=1`) that are applied when the
+	 * `privacy` config flag is enabled.
+	 *
+	 * @return void
+	 */
+	protected function applyPrivacyMode(): void {
+		if (!empty($this->stub['privacy-player'])) {
+			$this->stub['iframe-player'] = $this->stub['privacy-player'];
+		}
+
+		if (!empty($this->stub['privacy-params']) && is_array($this->stub['privacy-params'])) {
+			foreach ($this->stub['privacy-params'] as $key => $value) {
+				$this->iframeParams[$key] = $value;
+			}
+		}
+	}
+
+	/**
+	 * Parse a "width:height" aspect ratio into its integer components.
+	 *
+	 * @param string $ratio Aspect ratio as "width:height".
+	 * @throws \InvalidArgumentException When the ratio is malformed or has a zero component.
+	 * @return array{0: int, 1: int}
+	 */
+	protected function parseRatio(string $ratio): array {
+		if (!preg_match('/^\s*(\d+)\s*:\s*(\d+)\s*$/', $ratio, $matches)) {
+			throw new InvalidArgumentException(sprintf('Invalid aspect ratio "%s", expected "width:height"', $ratio));
+		}
+
+		$width = (int)$matches[1];
+		$height = (int)$matches[2];
+		if ($width === 0 || $height === 0) {
+			throw new InvalidArgumentException(sprintf('Aspect ratio "%s" must not contain a zero component', $ratio));
+		}
+
+		return [$width, $height];
 	}
 
 	/**

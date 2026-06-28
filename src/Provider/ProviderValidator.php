@@ -202,7 +202,7 @@ final class ProviderValidator {
 	 * @return void
 	 */
 	private function validateUrlTemplates(array $provider, string $label, array &$errors): void {
-		foreach (['website', 'iframe-player', 'image-src'] as $field) {
+		foreach (['website', 'iframe-player', 'image-src', 'privacy-player'] as $field) {
 			if (!array_key_exists($field, $provider)) {
 				continue;
 			}

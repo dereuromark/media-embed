@@ -126,6 +126,39 @@ $MediaEmbed = new MediaEmbed([
 ]);
 ```
 
+### Privacy mode (no-cookie embeds)
+
+Pass `'privacy' => true` to opt into privacy-friendly embeds for providers that support them. YouTube switches to the `youtube-nocookie.com` host and Vimeo adds the `dnt=1` (do-not-track) parameter:
+
+```php
+$MediaObject = $this->MediaEmbed->parseUrl('https://www.youtube.com/watch?v=111111', ['privacy' => true]);
+// src => //www.youtube-nocookie.com/embed/111111?wmode=transparent
+```
+
+You can also enable it globally for every embed via the constructor:
+
+```php
+$MediaEmbed = new MediaEmbed(['privacy' => true]);
+```
+
+Providers declare their privacy variant via the optional `privacy-player` (alternate URL template) and `privacy-params` (extra query params) stub keys, so custom providers can opt in too.
+
+### Responsive embeds
+
+`getResponsiveEmbedCode()` wraps the iframe in a fluid aspect-ratio container so it scales with its parent width. The default ratio is `16:9`; pass any `width:height` ratio:
+
+```php
+$MediaObject = $this->MediaEmbed->parseUrl('https://www.youtube.com/watch?v=111111');
+echo $MediaObject->getResponsiveEmbedCode();      // 16:9
+echo $MediaObject->getResponsiveEmbedCode('4:3'); // custom ratio
+```
+
+This returns the iframe wrapped in a positioned container:
+
+```html
+<div style="position:relative;width:100%;height:0;padding-bottom:56.25%;overflow:hidden;"><iframe src="..." ... style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe></div>
+```
+
 ### Adding Custom Providers
 
 You can add your own custom providers in several ways:
