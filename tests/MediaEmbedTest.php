@@ -340,6 +340,68 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringNotContainsString(' hidden', $code);
 	}
 
+	public function testProviderDefaultIframeParams(): void {
+		$MediaEmbed = new MediaEmbed();
+		$MediaEmbed->addProviderConfig(new ProviderConfig(
+			name: 'ParamProvider',
+			website: 'https://param.example.com',
+			urlMatch: 'https://param\\.example\\.com/video/([0-9]+)',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '//param.example.com/embed/$2',
+			iframeParams: [
+				'parent' => 'example.com',
+			],
+		));
+
+		$Object = $MediaEmbed->parseUrl('https://param.example.com/video/12345');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertStringContainsString('parent=example.com', $Object->getEmbedSrc());
+	}
+
+	public function testConfiguredProviderParamsOverrideDefaults(): void {
+		$MediaEmbed = new MediaEmbed([
+			'provider_params' => [
+				'paramprovider' => [
+					'parent' => 'configured.example.com',
+				],
+			],
+		]);
+		$MediaEmbed->addProviderConfig(new ProviderConfig(
+			name: 'ParamProvider',
+			website: 'https://param.example.com',
+			urlMatch: 'https://param\\.example\\.com/video/([0-9]+)',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '//param.example.com/embed/$2',
+			iframeParams: [
+				'parent' => 'default.example.com',
+			],
+		));
+
+		$Object = $MediaEmbed->parseUrl('https://param.example.com/video/12345');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertStringContainsString('parent=configured.example.com', $Object->getEmbedSrc());
+		$this->assertStringNotContainsString('parent=default.example.com', $Object->getEmbedSrc());
+	}
+
+	public function testTwitchParentParamCanBeConfigured(): void {
+		$MediaEmbed = new MediaEmbed([
+			'provider_params' => [
+				'twitch-video' => [
+					'parent' => 'example.com',
+				],
+			],
+		]);
+
+		$Object = $MediaEmbed->parseUrl('https://www.twitch.tv/videos/293684811');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertStringContainsString('parent=example.com', $Object->getEmbedSrc());
+	}
+
 	public function testEmbedCodeEscapesIframeSource(): void {
 		$MediaEmbed = new MediaEmbed();
 		$MediaEmbed->addProviderConfig(new ProviderConfig(

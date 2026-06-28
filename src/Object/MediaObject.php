@@ -474,6 +474,12 @@ class MediaObject implements ObjectInterface {
 		$this->iframeParams = [
 			'wmode' => 'transparent',
 		];
+		if (!empty($stub['iframe-params']) && is_array($stub['iframe-params'])) {
+			$this->iframeParams += $stub['iframe-params'];
+		}
+		if (!empty($stub['slug']) && !empty($this->config['provider_params'][$stub['slug']]) && is_array($this->config['provider_params'][$stub['slug']])) {
+			$this->iframeParams = $this->config['provider_params'][$stub['slug']] + $this->iframeParams;
+		}
 		$this->iframeAttributes = [
 			'type' => 'text/html',
 			'width' => $stub['embed-width'],
