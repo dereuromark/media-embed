@@ -28,6 +28,13 @@ final class UrlMatcher {
 	private array $domainIndex = [];
 
 	/**
+	 * Provider slugs whose URL patterns do not expose a literal domain.
+	 *
+	 * @var array<string>
+	 */
+	private array $unindexedSlugs = [];
+
+	/**
 	 * All providers keyed by slug.
 	 *
 	 * @var array<string, array<string, mixed>>
@@ -70,6 +77,7 @@ final class UrlMatcher {
 		$this->providers = $providers;
 		$this->indexBuilt = false;
 		$this->domainIndex = [];
+		$this->unindexedSlugs = [];
 
 		// Clear cached index when providers change
 		if ($this->cache !== null) {
@@ -100,19 +108,51 @@ final class UrlMatcher {
 	 * @return \MediaEmbed\Matcher\MatchResult|null Match result or null if no match.
 	 */
 	public function match(string $url): ?MatchResult {
+		$url = $this->normalizeUrl($url);
+		if ($url === null) {
+			return null;
+		}
+
 		$this->buildIndexIfNeeded();
 
 		// Try fast path first using domain index
 		$domain = $this->extractDomain($url);
-		if ($domain !== null && isset($this->domainIndex[$domain])) {
-			$result = $this->matchAgainstProviders($url, $this->domainIndex[$domain]);
-			if ($result !== null) {
-				return $result;
-			}
+		if ($domain === null) {
+			return null;
 		}
 
-		// Fall back to checking all providers
-		return $this->matchAgainstProviders($url, array_keys($this->providers));
+		$slugs = $this->domainIndex[$domain] ?? [];
+		$slugs = array_merge($slugs, $this->unindexedSlugs);
+		if (!$slugs) {
+			return null;
+		}
+
+		return $this->matchAgainstProviders($url, $slugs);
+	}
+
+	/**
+	 * Normalize and validate a URL before matching.
+	 *
+	 * @param string $url The URL to normalize.
+	 * @return string|null
+	 */
+	private function normalizeUrl(string $url): ?string {
+		$url = trim($url);
+		if ($url === '' || preg_match('/\\s/', $url)) {
+			return null;
+		}
+
+		$parsed = parse_url($url);
+		if (!is_array($parsed) || empty($parsed['scheme']) || empty($parsed['host'])) {
+			return null;
+		}
+
+		$scheme = strtolower($parsed['scheme']);
+		if ($scheme !== 'http' && $scheme !== 'https') {
+			return null;
+		}
+
+		return $url;
 	}
 
 	/**
@@ -164,6 +204,7 @@ final class UrlMatcher {
 			$cached = $this->cache->get(static::CACHE_KEY);
 			if (is_array($cached)) {
 				$this->domainIndex = $cached;
+				$this->unindexedSlugs = $this->extractUnindexedSlugs();
 				$this->indexBuilt = true;
 
 				return;
@@ -171,13 +212,16 @@ final class UrlMatcher {
 		}
 
 		$this->domainIndex = [];
+		$this->unindexedSlugs = [];
 
 		foreach ($this->providers as $slug => $provider) {
 			$patterns = (array)($provider['url-match'] ?? []);
+			$hasIndexedDomain = false;
 
 			foreach ($patterns as $pattern) {
 				$domains = $this->extractDomainsFromPattern($pattern);
 				foreach ($domains as $domain) {
+					$hasIndexedDomain = true;
 					if (!isset($this->domainIndex[$domain])) {
 						$this->domainIndex[$domain] = [];
 					}
@@ -185,6 +229,10 @@ final class UrlMatcher {
 						$this->domainIndex[$domain][] = $slug;
 					}
 				}
+			}
+
+			if (!$hasIndexedDomain) {
+				$this->unindexedSlugs[] = $slug;
 			}
 		}
 
@@ -245,6 +293,28 @@ final class UrlMatcher {
 		}
 
 		return array_unique($domains);
+	}
+
+	/**
+	 * Extract provider slugs whose URL patterns do not expose a literal domain.
+	 *
+	 * @return array<string>
+	 */
+	private function extractUnindexedSlugs(): array {
+		$slugs = [];
+
+		foreach ($this->providers as $slug => $provider) {
+			$patterns = (array)($provider['url-match'] ?? []);
+			foreach ($patterns as $pattern) {
+				if ($this->extractDomainsFromPattern($pattern)) {
+					continue 2;
+				}
+			}
+
+			$slugs[] = $slug;
+		}
+
+		return $slugs;
 	}
 
 	/**

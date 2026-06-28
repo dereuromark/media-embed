@@ -130,6 +130,44 @@ class MediaEmbedTest extends TestCase {
 		$this->assertNull($result);
 	}
 
+	public function testParseUrlRejectsTextContainingSupportedUrl(): void {
+		$MediaEmbed = new MediaEmbed();
+		$result = $MediaEmbed->parseUrl('Watch https://www.youtube.com/watch?v=yiSjHJnc9CY now');
+
+		$this->assertNull($result);
+	}
+
+	public function testParseUrlRejectsWrapperUrlContainingSupportedUrl(): void {
+		$MediaEmbed = new MediaEmbed();
+		$result = $MediaEmbed->parseUrl('https://example.com/?u=https://www.youtube.com/watch?v=yiSjHJnc9CY');
+
+		$this->assertNull($result);
+	}
+
+	public function testParseUrlRejectsNonHttpUrl(): void {
+		$MediaEmbed = new MediaEmbed();
+		$result = $MediaEmbed->parseUrl('javascript:https://www.youtube.com/watch?v=yiSjHJnc9CY');
+
+		$this->assertNull($result);
+	}
+
+	public function testParseUrlSupportsUnindexedCustomProviderPattern(): void {
+		$MediaEmbed = new MediaEmbed();
+		$MediaEmbed->addProvider([
+			'name' => 'UnindexedProvider',
+			'website' => 'https://unindexed.example.com',
+			'url-match' => 'https?://[^/]+/unindexed/([0-9]+)',
+			'embed-src' => '//unindexed.example.com/embed/$2',
+			'embed-width' => 640,
+			'embed-height' => 360,
+			'iframe-player' => '//unindexed.example.com/embed/$2',
+		]);
+
+		$Object = $MediaEmbed->parseUrl('https://video.example.org/unindexed/12345');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+		$this->assertSame('12345', $Object->id());
+	}
+
 	/**
 	 * @dataProvider getUrls
 	 * @param string $url
