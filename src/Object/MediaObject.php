@@ -85,8 +85,12 @@ class MediaObject implements ObjectInterface {
 		}
 
 		if ($type === 'iframe-player') {
-			$src = $this->_getObjectSrc($type);
-			$this->_stub['iframe-player'] = $src;
+			if (!empty($this->_stub['reverse'])) {
+				$src = $this->_getObjectSrc($type);
+				$this->_stub['iframe-player'] = $src;
+			} else {
+				$src = $this->templateResolver->resolve($this->_stub['iframe-player'], $this->_match);
+			}
 
 			$this->_objectParams['movie'] = $src;
 			$this->_objectAttributes['data'] = $src;

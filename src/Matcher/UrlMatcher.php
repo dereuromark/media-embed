@@ -81,7 +81,7 @@ final class UrlMatcher {
 
 		// Clear cached index when providers change
 		if ($this->cache !== null) {
-			$this->cache->delete(static::CACHE_KEY);
+			$this->cache->delete(self::CACHE_KEY);
 		}
 
 		return $this;
@@ -121,13 +121,17 @@ final class UrlMatcher {
 			return null;
 		}
 
-		$slugs = $this->domainIndex[$domain] ?? [];
+		$slugs = $this->slugsForDomain($domain);
 		$slugs = array_merge($slugs, $this->unindexedSlugs);
-		if (!$slugs) {
-			return null;
+		if ($slugs) {
+			$result = $this->matchAgainstProviders($url, $domain, $slugs);
+			if ($result !== null) {
+				return $result;
+			}
 		}
 
-		return $this->matchAgainstProviders($url, $slugs);
+		// Fall back to checking all providers, but reject matches from different hosts.
+		return $this->matchAgainstProviders($url, $domain, array_keys($this->providers));
 	}
 
 	/**
@@ -159,10 +163,11 @@ final class UrlMatcher {
 	 * Match URL against a specific list of provider slugs.
 	 *
 	 * @param string $url The URL to match.
+	 * @param string $domain Normalized input URL domain.
 	 * @param array<string> $slugs Provider slugs to check.
 	 * @return \MediaEmbed\Matcher\MatchResult|null
 	 */
-	private function matchAgainstProviders(string $url, array $slugs): ?MatchResult {
+	private function matchAgainstProviders(string $url, string $domain, array $slugs): ?MatchResult {
 		$checkedSlugs = [];
 
 		foreach ($slugs as $slug) {
@@ -181,12 +186,52 @@ final class UrlMatcher {
 
 			foreach ($patterns as $pattern) {
 				if (preg_match('~' . $pattern . '~imu', $url, $matches)) {
+					if (!$this->matchBelongsToDomain($matches[0], $domain)) {
+						continue;
+					}
+
 					return new MatchResult($slug, $matches, $provider);
 				}
 			}
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get indexed provider slugs that can match a normalized domain.
+	 *
+	 * @param string $domain Normalized input URL domain.
+	 * @return array<string>
+	 */
+	private function slugsForDomain(string $domain): array {
+		$slugs = [];
+
+		foreach ($this->domainIndex as $indexedDomain => $indexedSlugs) {
+			if ($domain !== $indexedDomain && !str_ends_with($domain, '.' . $indexedDomain)) {
+				continue;
+			}
+
+			$slugs = array_merge($slugs, $indexedSlugs);
+		}
+
+		return array_values(array_unique($slugs));
+	}
+
+	/**
+	 * Check that a regex match belongs to the original input URL domain.
+	 *
+	 * @param string $match Matched URL substring.
+	 * @param string $domain Normalized input URL domain.
+	 * @return bool
+	 */
+	private function matchBelongsToDomain(string $match, string $domain): bool {
+		$matchDomain = $this->extractDomain($match);
+		if ($matchDomain === null) {
+			return true;
+		}
+
+		return $matchDomain === $domain;
 	}
 
 	/**
@@ -201,7 +246,7 @@ final class UrlMatcher {
 
 		// Try to load from cache first
 		if ($this->cache !== null) {
-			$cached = $this->cache->get(static::CACHE_KEY);
+			$cached = $this->cache->get(self::CACHE_KEY);
 			if (is_array($cached)) {
 				$this->domainIndex = $cached;
 				$this->unindexedSlugs = $this->extractUnindexedSlugs();
@@ -220,6 +265,12 @@ final class UrlMatcher {
 
 			foreach ($patterns as $pattern) {
 				$domains = $this->extractDomainsFromPattern($pattern);
+				if (!$domains) {
+					$this->unindexedSlugs[] = $slug;
+
+					continue;
+				}
+
 				foreach ($domains as $domain) {
 					$hasIndexedDomain = true;
 					if (!isset($this->domainIndex[$domain])) {
@@ -236,9 +287,11 @@ final class UrlMatcher {
 			}
 		}
 
+		$this->unindexedSlugs = array_values(array_unique($this->unindexedSlugs));
+
 		// Store in cache
 		if ($this->cache !== null) {
-			$this->cache->set(static::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
+			$this->cache->set(self::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
 		}
 
 		$this->indexBuilt = true;
