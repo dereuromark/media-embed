@@ -27,6 +27,7 @@ final class ProviderConfig {
 	 * @param string|null $fetchMatch Secondary HTTP fetch regex.
 	 * @param bool $supportsTimestamp Whether provider supports timestamps.
 	 * @param string|null $timestampParam Embed query parameter for timestamp values.
+	 * @param array<string, mixed> $extra Extra provider metadata.
 	 */
 	public function __construct(
 		public readonly string $name,
@@ -41,6 +42,7 @@ final class ProviderConfig {
 		public readonly ?string $fetchMatch = null,
 		public readonly bool $supportsTimestamp = false,
 		public readonly ?string $timestampParam = null,
+		public readonly array $extra = [],
 	) {
 	}
 
@@ -69,6 +71,21 @@ final class ProviderConfig {
 			throw ProviderConfigException::missingField('embed-height', $data);
 		}
 
+		$knownKeys = [
+			'name',
+			'website',
+			'url-match',
+			'embed-width',
+			'embed-height',
+			'slug',
+			'iframe-player',
+			'image-src',
+			'id',
+			'fetch-match',
+			'supports-timestamp',
+			'timestamp-param',
+		];
+
 		return new self(
 			name: $data['name'],
 			website: $data['website'],
@@ -82,6 +99,7 @@ final class ProviderConfig {
 			fetchMatch: $data['fetch-match'] ?? null,
 			supportsTimestamp: !empty($data['supports-timestamp']),
 			timestampParam: $data['timestamp-param'] ?? null,
+			extra: array_diff_key($data, array_flip($knownKeys)),
 		);
 	}
 
@@ -98,6 +116,7 @@ final class ProviderConfig {
 			'embed-width' => $this->embedWidth,
 			'embed-height' => $this->embedHeight,
 		];
+		$array += $this->extra;
 
 		if ($this->slug !== null) {
 			$array['slug'] = $this->slug;

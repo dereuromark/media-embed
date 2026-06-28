@@ -70,6 +70,31 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('400', $config->embedHeight);
 	}
 
+	public function testFromArrayPreservesExtraProviderMetadata(): void {
+		$data = [
+			'name' => 'ExtraProvider',
+			'website' => 'https://extra.example.com',
+			'url-match' => 'extra\\.example\\.com/([a-z0-9]+)',
+			'embed-width' => '640',
+			'embed-height' => '360',
+			'iframe-player' => '//extra.example.com/embed/$2',
+			'replace' => [
+				'foo' => 'bar',
+			],
+			'status' => 'legacy',
+		];
+
+		$config = ProviderConfig::fromArray($data);
+		$array = $config->toArray();
+
+		$this->assertSame([
+			'foo' => 'bar',
+		], $config->extra['replace']);
+		$this->assertSame('legacy', $config->extra['status']);
+		$this->assertSame($data['replace'], $array['replace']);
+		$this->assertSame('legacy', $array['status']);
+	}
+
 	public function testFromArrayMissingName(): void {
 		$this->expectException(ProviderConfigException::class);
 
@@ -124,6 +149,26 @@ class ProviderConfigTest extends TestCase {
 		$this->assertArrayNotHasKey('slug', $array);
 		$this->assertArrayNotHasKey('supports-timestamp', $array);
 		$this->assertArrayNotHasKey('timestamp-param', $array);
+	}
+
+	public function testToArrayTypedFieldsWinOverExtraFields(): void {
+		$config = new ProviderConfig(
+			name: 'Test',
+			website: 'https://test.com',
+			urlMatch: 'pattern',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '//test.com/embed/$2',
+			extra: [
+				'name' => 'Wrong',
+				'status' => 'legacy',
+			],
+		);
+
+		$array = $config->toArray();
+
+		$this->assertSame('Test', $array['name']);
+		$this->assertSame('legacy', $array['status']);
 	}
 
 	public function testGetUrlMatchPatterns(): void {
