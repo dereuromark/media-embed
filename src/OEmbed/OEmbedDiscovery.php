@@ -65,7 +65,7 @@ final class OEmbedDiscovery {
 			return null;
 		}
 
-		return $this->parseOEmbedLink($html);
+		return $this->parseOEmbedLink($html, $url);
 	}
 
 	/**
@@ -109,9 +109,10 @@ final class OEmbedDiscovery {
 	 * Looks for: <link rel="alternate" type="application/json+oembed" href="..." />
 	 *
 	 * @param string $html The HTML to parse.
+	 * @param string $baseUrl Source page URL.
 	 * @return string|null The oEmbed URL or null if not found.
 	 */
-	private function parseOEmbedLink(string $html): ?string {
+	private function parseOEmbedLink(string $html, string $baseUrl): ?string {
 		// Match link tags with oembed type
 		$pattern = '/<link[^>]+type=["\']application\/json\+oembed["\'][^>]*>/i';
 		if (!preg_match($pattern, $html, $match)) {
@@ -132,7 +133,45 @@ final class OEmbedDiscovery {
 		$href = $hrefMatch[1];
 
 		// Decode HTML entities
-		return html_entity_decode($href, ENT_QUOTES | ENT_HTML5);
+		$href = html_entity_decode($href, ENT_QUOTES | ENT_HTML5);
+
+		return $this->resolveEndpointUrl($href, $baseUrl);
+	}
+
+	/**
+	 * Resolve oEmbed href values against the source page URL.
+	 *
+	 * @param string $href Link href from the oEmbed tag.
+	 * @param string $baseUrl Source page URL.
+	 * @return string
+	 */
+	private function resolveEndpointUrl(string $href, string $baseUrl): string {
+		if (parse_url($href, PHP_URL_SCHEME) !== null) {
+			return $href;
+		}
+
+		$base = parse_url($baseUrl);
+		if (empty($base['scheme']) || empty($base['host'])) {
+			return $href;
+		}
+
+		$authority = $base['scheme'] . '://' . $base['host'];
+		if (!empty($base['port'])) {
+			$authority .= ':' . $base['port'];
+		}
+
+		if (str_starts_with($href, '//')) {
+			return $base['scheme'] . ':' . $href;
+		}
+
+		if (str_starts_with($href, '/')) {
+			return $authority . $href;
+		}
+
+		$path = $base['path'] ?? '/';
+		$directory = rtrim(substr($path, 0, (int)strrpos($path, '/') + 1), '/');
+
+		return $authority . $directory . '/' . $href;
 	}
 
 }

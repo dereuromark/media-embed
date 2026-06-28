@@ -479,6 +479,8 @@ $response = $discovery->discover($url, maxWidth: 640, maxHeight: 480);
 $response = $discovery->fetch('https://example.com/oembed?url=...');
 ```
 
+Discovered oEmbed endpoint URLs may be absolute, protocol-relative, root-relative, or path-relative. Relative endpoint URLs are resolved against the source page URL before they are fetched.
+
 The `OEmbedResponse` provides typed access to all oEmbed fields:
 
 ```php
