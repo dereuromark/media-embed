@@ -82,6 +82,28 @@ class OEmbedTest extends TestCase {
 		$this->assertSame('https://example.com/oembed?url=test', $endpoint);
 	}
 
+	public function testOEmbedDiscoveryParsesCaseInsensitiveAttributesInAnyOrder(): void {
+		$mockClient = $this->createStub(HttpClientInterface::class);
+		$mockClient->method('get')
+			->willReturn('<html><head><link HREF="https://example.com/oembed?url=test" TYPE="application/json+oembed" REL="self alternate" /></head></html>');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+		$endpoint = $discovery->discoverEndpoint('https://example.com/video/123');
+
+		$this->assertSame('https://example.com/oembed?url=test', $endpoint);
+	}
+
+	public function testOEmbedDiscoveryRequiresAlternateRel(): void {
+		$mockClient = $this->createStub(HttpClientInterface::class);
+		$mockClient->method('get')
+			->willReturn('<html><head><link rel="self" type="application/json+oembed" href="https://example.com/oembed?url=test" /></head></html>');
+
+		$discovery = new OEmbedDiscovery($mockClient);
+		$endpoint = $discovery->discoverEndpoint('https://example.com/video/123');
+
+		$this->assertNull($endpoint);
+	}
+
 	public function testOEmbedDiscoveryResolvesRootRelativeEndpoint(): void {
 		$mockClient = $this->createStub(HttpClientInterface::class);
 		$mockClient->method('get')

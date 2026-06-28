@@ -128,6 +128,20 @@ class MediaEmbedTest extends TestCase {
 		$this->assertNull($result);
 	}
 
+	public function testParseUrlRejectsTextContainingSupportedUrl(): void {
+		$MediaEmbed = new MediaEmbed();
+		$result = $MediaEmbed->parseUrl('Watch https://www.youtube.com/watch?v=yiSjHJnc9CY now');
+
+		$this->assertNull($result);
+	}
+
+	public function testParseUrlRejectsNonHttpUrl(): void {
+		$MediaEmbed = new MediaEmbed();
+		$result = $MediaEmbed->parseUrl('javascript:https://www.youtube.com/watch?v=yiSjHJnc9CY');
+
+		$this->assertNull($result);
+	}
+
 	/**
 	 * @dataProvider getUrls
 	 * @param string $url
