@@ -51,6 +51,9 @@
 		},
 		{
 			"pattern": "^https://www.rutube.ru"
+		},
+		{
+			"pattern": "^https://packagist.org/packages/dereuromark/media-embed"
 		}
 	],
 	"aliveStatusCodes": [200, 202, 206, 429]
