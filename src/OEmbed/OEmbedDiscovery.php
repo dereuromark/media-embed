@@ -7,6 +7,8 @@ namespace MediaEmbed\OEmbed;
 use MediaEmbed\Http\HttpClientInterface;
 use MediaEmbed\Http\StreamHttpClient;
 use MediaEmbed\Http\UrlSafety;
+use Psr\SimpleCache\CacheInterface;
+use SimpleXMLElement;
 
 /**
  * Discovers and fetches oEmbed data from URLs.
@@ -26,8 +28,16 @@ final class OEmbedDiscovery {
 
 	/**
 	 * @param \MediaEmbed\Http\HttpClientInterface|null $httpClient HTTP client to use.
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Optional cache for discovered endpoints and responses.
+	 * @param int $cacheTtl Default cache TTL in seconds.
+	 * @param array<string, string> $endpoints Optional host-to-endpoint templates. Use `{url}` as source URL placeholder.
 	 */
-	public function __construct(?HttpClientInterface $httpClient = null) {
+	public function __construct(
+		?HttpClientInterface $httpClient = null,
+		private readonly ?CacheInterface $cache = null,
+		private readonly int $cacheTtl = 3600,
+		private readonly array $endpoints = [],
+	) {
 		$this->httpClient = $httpClient ?? new StreamHttpClient();
 	}
 
@@ -46,7 +56,7 @@ final class OEmbedDiscovery {
 	 * @return \MediaEmbed\OEmbed\OEmbedResponse|null Response or null if not found.
 	 */
 	public function discover(string $url, ?int $maxWidth = null, ?int $maxHeight = null): ?OEmbedResponse {
-		$endpointUrl = $this->discoverEndpoint($url);
+		$endpointUrl = $this->directEndpoint($url) ?? $this->discoverEndpoint($url);
 		if ($endpointUrl === null) {
 			return null;
 		}
@@ -61,12 +71,25 @@ final class OEmbedDiscovery {
 	 * @return string|null The oEmbed endpoint URL or null if not found.
 	 */
 	public function discoverEndpoint(string $url): ?string {
+		$cacheKey = $this->cacheKey('endpoint', [$url]);
+		if ($this->cache !== null) {
+			$cached = $this->cache->get($cacheKey);
+			if (is_string($cached)) {
+				return $cached;
+			}
+		}
+
 		$html = $this->httpClient->get($url);
 		if ($html === null) {
 			return null;
 		}
 
-		return $this->parseOEmbedLink($html, $url);
+		$endpointUrl = $this->parseOEmbedLink($html, $url);
+		if ($endpointUrl !== null && $this->cache !== null) {
+			$this->cache->set($cacheKey, $endpointUrl, $this->cacheTtl);
+		}
+
+		return $endpointUrl;
 	}
 
 	/**
@@ -95,17 +118,105 @@ final class OEmbedDiscovery {
 			$endpointUrl .= $separator . http_build_query($params, '', '&');
 		}
 
-		$json = $this->httpClient->get($endpointUrl);
-		if ($json === null) {
+		$cacheKey = $this->cacheKey('response', [$endpointUrl]);
+		if ($this->cache !== null) {
+			$cached = $this->cache->get($cacheKey);
+			if ($cached instanceof OEmbedResponse) {
+				return $cached;
+			}
+		}
+
+		$content = $this->httpClient->get($endpointUrl);
+		if ($content === null) {
 			return null;
 		}
 
-		$data = json_decode($json, true);
-		if (!is_array($data)) {
+		$response = $this->parseResponse($content);
+		if ($response === null) {
+			return null;
+		}
+
+		if ($this->cache !== null) {
+			$this->cache->set($cacheKey, $response, $response->cacheAge ?? $this->cacheTtl);
+		}
+
+		return $response;
+	}
+
+	/**
+	 * @param string $content Response body.
+	 * @return \MediaEmbed\OEmbed\OEmbedResponse|null
+	 */
+	private function parseResponse(string $content): ?OEmbedResponse {
+		$data = json_decode($content, true);
+		if (is_array($data)) {
+			return OEmbedResponse::fromArray($data);
+		}
+
+		$data = $this->parseXmlResponse($content);
+		if ($data === null) {
 			return null;
 		}
 
 		return OEmbedResponse::fromArray($data);
+	}
+
+	/**
+	 * @param string $content XML response body.
+	 * @return array<string, mixed>|null
+	 */
+	private function parseXmlResponse(string $content): ?array {
+		$previous = libxml_use_internal_errors(true);
+		$xml = simplexml_load_string($content);
+		libxml_clear_errors();
+		libxml_use_internal_errors($previous);
+
+		if (!$xml instanceof SimpleXMLElement) {
+			return null;
+		}
+
+		$data = [];
+		foreach ($xml->children() as $key => $value) {
+			$data[$this->camelToSnake($key)] = (string)$value;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * @param string $key XML element name.
+	 * @return string
+	 */
+	private function camelToSnake(string $key): string {
+		$key = preg_replace('/(?<!^)[A-Z]/', '_$0', $key) ?? $key;
+
+		return strtolower($key);
+	}
+
+	/**
+	 * @param string $url Source URL.
+	 * @return string|null
+	 */
+	private function directEndpoint(string $url): ?string {
+		$parts = parse_url($url);
+		$host = is_array($parts) ? strtolower($parts['host'] ?? '') : '';
+		if ($host === '') {
+			return null;
+		}
+
+		foreach ($this->endpoints as $domain => $endpoint) {
+			$domain = strtolower($domain);
+			if ($host !== $domain && !str_ends_with($host, '.' . $domain)) {
+				continue;
+			}
+
+			$endpointUrl = str_replace('{url}', rawurlencode($url), $endpoint);
+			if ($this->isSafeEndpointUrl($endpointUrl)) {
+				return $endpointUrl;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -212,6 +323,15 @@ final class OEmbedDiscovery {
 	 */
 	private function isSafeEndpointUrl(string $url): bool {
 		return UrlSafety::isPublicHttpUrl($url);
+	}
+
+	/**
+	 * @param string $type Cache key type.
+	 * @param array<string> $parts Cache key parts.
+	 * @return string
+	 */
+	private function cacheKey(string $type, array $parts): string {
+		return 'media_embed_oembed_' . $type . '_' . hash('sha256', implode("\n", $parts));
 	}
 
 }
