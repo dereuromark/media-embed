@@ -34,24 +34,6 @@ return [
 		'embedSrc' => 'https://www.aparat.com/video/video/embed/videohash/sSLMC/vt/frame/?wmode=transparent',
 	],
 	[
-		'slug' => 'clipfish-old',
-		'url' => 'http://www.clipfish.de/player.php?vid=3507980',
-		'id' => '3507980',
-		'embedSrc' => 'https://www.clipfish.de/embed_video/?vid=3507980&wmode=transparent',
-	],
-	[
-		'slug' => 'clipfish-special',
-		'url' => 'http://www.clipfish.de/special/dsds/video/3507980/dsds-recall-anna-und-tobias-harmonieren/',
-		'id' => '3507980',
-		'embedSrc' => 'https://www.clipfish.de/embed_video/?vid=3507980&wmode=transparent',
-	],
-	[
-		'slug' => 'clipfish',
-		'url' => 'http://www.clipfish.de/videoplayer.swf?videoid=abcdef',
-		'id' => 'abcdef',
-		'embedSrc' => 'https://www.clipfish.de/embed_video/?vid=abcdef&wmode=transparent',
-	],
-	[
 		'slug' => 'matterport',
 		'url' => 'https://my.matterport.com/show/?m=Zh14WDtkjdC&lp=1',
 		'id' => 'Zh14WDtkjdC',
@@ -75,13 +57,6 @@ return [
 		'id' => '1d44810a-01f4-4c60-a862-6d114bed50c7',
 		'embedSrc' => 'https://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/1d44810a-01f4-4c60-a862-6d114bed50c7/embed?wmode=transparent',
 		'response' => '<iframe src="https://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/1d44810a-01f4-4c60-a862-6d114bed50c7/embed"></iframe>',
-	],
-	[
-		'slug' => 'ustream',
-		'url' => 'https://www.ustream.tv/channel/america2oficial',
-		'id' => '17916695',
-		'embedSrc' => 'https://www.ustream.tv/embed/17916695?mode=direct&wmode=transparent',
-		'response' => '<iframe src="https://www.ustream.tv/embed/17916695"></iframe>',
 	],
 	[
 		'slug' => 'wistia',

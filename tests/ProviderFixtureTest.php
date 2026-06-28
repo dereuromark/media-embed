@@ -51,11 +51,11 @@ class ProviderFixtureTest extends TestCase {
 		$providers = include dirname(__DIR__) . '/data/stubs.php';
 		$fixtures = include __DIR__ . '/Fixture/provider_urls.php';
 
-		$fixtureSlugs = array_column($fixtures, 'slug');
+		$fixtureUrls = array_column($fixtures, 'url', 'slug');
 		$missing = [];
 		foreach ($providers as $provider) {
 			$slug = $provider['slug'] ?? URLify::filter($provider['name']);
-			if (!in_array($slug, $fixtureSlugs, true)) {
+			if (!isset($fixtureUrls[$slug])) {
 				$missing[] = $slug;
 			}
 		}
@@ -63,6 +63,24 @@ class ProviderFixtureTest extends TestCase {
 		sort($missing);
 
 		$this->assertSame([], $missing);
+	}
+
+	public function testEveryBundledProviderExampleUrlMatchesReleaseFixture(): void {
+		$providers = include dirname(__DIR__) . '/data/stubs.php';
+		$fixtures = include __DIR__ . '/Fixture/provider_urls.php';
+
+		$fixtureUrls = array_column($fixtures, 'url', 'slug');
+		$mismatches = [];
+		foreach ($providers as $provider) {
+			$slug = $provider['slug'] ?? URLify::filter($provider['name']);
+			if (($provider['example-url'] ?? null) !== ($fixtureUrls[$slug] ?? null)) {
+				$mismatches[] = $slug;
+			}
+		}
+
+		sort($mismatches);
+
+		$this->assertSame([], $mismatches);
 	}
 
 	/**

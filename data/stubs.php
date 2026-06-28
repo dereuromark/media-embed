@@ -26,6 +26,9 @@ return [
 	[
 		'name' => 'YouTube',
 		'website' => 'https://www.youtube.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://www.youtube.com/watch?v=yiSjHJnc9CY',
 		'url-match' => [
 			'https?://youtu\\.be/([0-9a-z-_]{11})(?:[?&](?:t|start)=([0-9]+))?',
 			'https?://(?:www\\.)?youtube\\.com/live/([0-9a-z-_A-Z]{11})(?:.*?[?&](?:t|start)=([0-9]+))?',
@@ -44,6 +47,9 @@ return [
 	[
 		'name' => 'Facebook',
 		'website' => 'https://www.facebook.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://www.facebook.com/mega90er/videos/1309058692443747/',
 		'url-match' => [
 			'https://www.facebook.com/[0-9a-z-_.]+/videos/([0-9]+)/',
 			'https://www.facebook.com/[0-9a-zA-Z-_.]+/videos/(?:vb.\\d+)/(\\d+)/',
@@ -56,6 +62,9 @@ return [
 	[
 		'name' => 'Dailymotion',
 		'website' => 'https://www.dailymotion.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music',
 		'url-match' => [
 			'https?://dai\\.ly/([a-z0-9]{1,})',
 			'https?://(?:www\\.)?dailymotion\\.(?:com|alice\\.it)/(?:(?:[^"]*?)?video|swf)/([a-z0-9]{1,18})',
@@ -68,6 +77,9 @@ return [
 	[
 		'name' => 'Vimeo',
 		'website' => 'https://www.vimeo.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://vimeo.com/channels/staffpicks/99585787',
 		'url-match' => [
 			'https?:\\/\\/player\\.vimeo\\.com\\/video\\/([0-9]+(?:\\/[a-zA-Z0-9]+)?)',
 			'https?:\\/\\/(?:www\\.)?vimeo\\.com\\/(?:channels\\/[a-zA-Z0-9]+\\/)?([0-9]+(?:\\/[a-zA-Z0-9]+)?)',
@@ -79,41 +91,20 @@ return [
 	[
 		'name' => 'Aparat',
 		'website' => 'https://www.aparat.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://www.aparat.com/v/sSLMC',
 		'url-match' => 'https?://www.aparat.com/v/([A-Za-z0-9-_]+)(?:/.*)?',
 		'embed-width' => '425',
 		'embed-height' => '354',
 		'iframe-player' => 'https://www.aparat.com/video/video/embed/videohash/$2/vt/frame/',
 	],
 	[
-		'slug' => 'clipfish-old',
-		'name' => 'ClipFish (Old)',
-		'website' => 'https://www.clipfish.de',
-		'url-match' => 'https?://(?:www\\.)?clipfish\\.de/(?:(?:player\\.php|videoplayer\\.swf)\\?(?:[^"]*?)?vid=|video/)([0-9]{1,20})',
-		'embed-width' => '464',
-		'embed-height' => '380',
-		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2',
-	],
-	[
-		'slug' => 'clipfish-special',
-		'name' => 'ClipFish (Special)',
-		'website' => 'https://www.clipfish.de',
-		'url-match' => 'https?://(?:www\\.)?clipfish\\.de/(?:[^"]*?)/video/((?:[a-z0-9]{18})(?:==)?|(?:[a-z0-9]{6,7})(?:==)?)',
-		'embed-width' => '464',
-		'embed-height' => '380',
-		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2',
-	],
-	[
-		'slug' => 'clipfish',
-		'name' => 'ClipFish (New)',
-		'website' => 'https://www.clipfish.de',
-		'url-match' => 'https?://(?:www\\.)?clipfish\\.de/(?:video)?player\\.(?:swf|php)(?:[^"]*?)videoid=((?:[a-z0-9]{18})(?:==)?|(?:[a-z0-9]{6})(?:==)?)',
-		'embed-width' => '464',
-		'embed-height' => '380',
-		'iframe-player' => 'https://www.clipfish.de/embed_video/?vid=$2',
-	],
-	[
 		'name' => 'Matterport',
 		'website' => 'https://matterport.com',
+		'status' => 'active',
+		'category' => '3d',
+		'example-url' => 'https://my.matterport.com/show/?m=Zh14WDtkjdC&lp=1',
 		'url-match' => 'https://my\\.matterport\\.com/show/[?&]m=([0-9a-zA-Z]+)',
 		'embed-width' => '450',
 		'embed-height' => '450',
@@ -122,6 +113,9 @@ return [
 	[
 		'name' => 'Metatube',
 		'website' => 'https://www.metatube.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/',
 		'url-match' => 'https?://www\\.metatube\\.com/([a-z]+)/videos/([a-z0-9-/]+)/',
 		'embed-width' => '420',
 		'embed-height' => '315',
@@ -130,6 +124,9 @@ return [
 	[
 		'name' => 'RuTube',
 		'website' => 'https://www.rutube.ru',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'http://rutube.ru/video/c1b3c6c6ee77def7a8e54553c1fabbb8/',
 		'url-match' => 'https?://(?:www\\.|video\\.)?rutube\\.ru/(?:video/|tracks/\\d+?\\.html\\?(?:(?:pos|related)=1&(?:amp;)?)?v=)?([0-9a-f]{32})',
 		'embed-width' => '470',
 		'embed-height' => '353',
@@ -138,6 +135,9 @@ return [
 	[
 		'name' => 'Screencast',
 		'website' => 'https://www.screencast.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://www.screencast.com/t/Hh4ulI0M',
 		'url-match' => 'https://(?:www\\.)?screencast\\.com/t/([0-9a-zA-Z]+)',
 		'fetch-match' => 'https://www\\.screencast\\.com/users/CamtasiaTraining/folders/Camtasia/media/([a-z0-9-]+)/embed',
 		'embed-width' => '425',
@@ -145,17 +145,11 @@ return [
 		'iframe-player' => 'https://www.screencast.com/users/CamtasiaTraining/folders/Camtasia/media/$2/embed',
 	],
 	[
-		'name' => 'Ustream',
-		'website' => 'https://www.ustream.tv',
-		'url-match' => 'https?://www\\.ustream\\.tv/channel/[0-9a-z-]+',
-		'fetch-match' => 'https?://www\\.ustream\\.tv/embed/([0-9]+)',
-		'embed-width' => '480',
-		'embed-height' => '299',
-		'iframe-player' => 'https://www.ustream.tv/embed/$2?mode=direct',
-	],
-	[
 		'name' => 'Wistia',
 		'website' => 'https://www.wistia.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'http://example.wistia.com/medias/1voyrefhy9',
 		'url-match' => 'https?://[a-z0-9\\-_]*\\.wistia\\.com/medias/([a-z0-9]*)',
 		'embed-width' => '480',
 		'embed-height' => '270',
@@ -164,6 +158,9 @@ return [
 	[
 		'name' => 'Twitch Video',
 		'website' => 'https://www.twitch.tv',
+		'status' => 'active',
+		'category' => 'streaming',
+		'example-url' => 'https://www.twitch.tv/videos/293684811',
 		'url-match' => 'https?://www\\.twitch\\.tv/videos/([0-9]{9})',
 		'embed-width' => '620',
 		'embed-height' => '378',
@@ -172,6 +169,9 @@ return [
 	[
 		'name' => 'Twitch Clip',
 		'website' => 'https://clips.twitch.tv',
+		'status' => 'active',
+		'category' => 'streaming',
+		'example-url' => 'https://clips.twitch.tv/WonderfulPiliableSquirrelBleedPurple',
 		'url-match' => 'https?://clips\\.twitch\\.tv/([A-Za-z]+)',
 		'embed-width' => '620',
 		'embed-height' => '378',
@@ -180,6 +180,9 @@ return [
 	[
 		'name' => 'Vooplayer',
 		'website' => 'https://vooplayer.com/',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://lds.cdn.vooplayer.com/publish/MTEwNTMw',
 		'url-match' => 'https:\\/\\/(.+)\\.cdn\\.vooplayer\\.com/publish/([0-9A-Za-z-]+)',
 		'iframe-player' => 'https://$2.cdn.vooplayer.com/publish/$3?fallback=true',
 		'embed-width' => '480',
@@ -188,6 +191,9 @@ return [
 	[
 		'name' => 'SoundCloud',
 		'website' => 'https://soundcloud.com',
+		'status' => 'active',
+		'category' => 'audio',
+		'example-url' => 'https://soundcloud.com/kalax/kalax-take-me-back-feat-world-wild-1',
 		'url-match' => [
 			'https://soundcloud\\.com/([0-9a-zA-Z-_\\/]+)',
 		],
@@ -199,6 +205,9 @@ return [
 	[
 		'name' => 'Mixcloud',
 		'website' => 'https://www.mixcloud.com',
+		'status' => 'active',
+		'category' => 'audio',
+		'example-url' => 'https://www.mixcloud.com/spartacus/party-time/',
 		'url-match' => [
 			'https?://(?:www\\.)?mixcloud\\.com/([^/]+)/([^/]+)/?',
 		],
@@ -210,6 +219,9 @@ return [
 	[
 		'name' => 'Loom',
 		'website' => 'https://loom.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://www.loom.com/share/bdb8f2009224416ca642a50296430b8f',
 		'url-match' => [
 			'https:\\/\\/www\\.loom\\.com\\/(share|embed)?\\/([0-9a-z-]+)',
 		],
@@ -221,6 +233,9 @@ return [
 	[
 		'name' => 'TikTok',
 		'website' => 'https://www.tiktok.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://www.tiktok.com/@username/video/7123456789012345678',
 		'url-match' => [
 			'https?://(?:www\\.)?tiktok\\.com/@[^/]+/video/([0-9]+)',
 		],
@@ -232,6 +247,9 @@ return [
 	[
 		'name' => 'Instagram',
 		'website' => 'https://www.instagram.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://www.instagram.com/p/ABC123xyz/',
 		'url-match' => [
 			'https?://(?:www\\.)?instagram\\.com/(p|reel|tv)/([A-Za-z0-9_-]+)',
 		],
@@ -243,6 +261,9 @@ return [
 	[
 		'name' => 'Twitter',
 		'website' => 'https://twitter.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://x.com/user/status/1234567890123456789',
 		'url-match' => [
 			'https?://(?:www\\.)?(?:twitter|x)\\.com/[^/]+/status/([0-9]+)',
 		],
@@ -254,6 +275,9 @@ return [
 	[
 		'name' => 'Reddit',
 		'website' => 'https://www.reddit.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://www.reddit.com/r/videos/comments/abc123/some_title/',
 		'url-match' => [
 			'https?://(?:www\\.)?reddit\\.com/r/[^/]+/comments/([A-Za-z0-9]+)',
 		],
@@ -265,6 +289,9 @@ return [
 	[
 		'name' => 'Spotify',
 		'website' => 'https://open.spotify.com',
+		'status' => 'active',
+		'category' => 'audio',
+		'example-url' => 'https://open.spotify.com/track/4iV5W9uYEdYUVa79Axb7Rh',
 		'url-match' => [
 			'https?://open\\.spotify\\.com/(track|album|playlist|episode|show)/([A-Za-z0-9]+)',
 		],
@@ -276,6 +303,9 @@ return [
 	[
 		'name' => 'Streamable',
 		'website' => 'https://streamable.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://streamable.com/abc123',
 		'url-match' => [
 			'https?://(?:www\\.)?streamable\\.com/(?:e/)?([A-Za-z0-9]+)',
 		],
@@ -287,6 +317,9 @@ return [
 	[
 		'name' => 'Bilibili',
 		'website' => 'https://www.bilibili.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://www.bilibili.com/video/BV1xx411c7mD',
 		'url-match' => [
 			'https?://(?:www\\.)?bilibili\\.com/video/(BV[A-Za-z0-9]+)',
 		],
@@ -299,6 +332,10 @@ return [
 		'slug' => 'bilibili-legacy',
 		'name' => 'Bilibili (Legacy)',
 		'website' => 'https://www.bilibili.com',
+		'status' => 'legacy',
+		'category' => 'video',
+		'example-url' => 'https://www.bilibili.com/video/av12345',
+		'notes' => 'Legacy URL format kept for existing links.',
 		'url-match' => [
 			'https?://(?:www\\.)?bilibili\\.com/video/av([0-9]+)',
 		],
@@ -310,6 +347,9 @@ return [
 	[
 		'name' => 'Rumble',
 		'website' => 'https://rumble.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://rumble.com/v1abc12-example-video.html',
 		'url-match' => [
 			'https?://(?:www\\.)?rumble\\.com/embed/([a-z0-9]+)',
 			'https?://(?:www\\.)?rumble\\.com/(v[a-z0-9]+)-[^/]+\\.html',
@@ -322,6 +362,9 @@ return [
 	[
 		'name' => 'Odysee',
 		'website' => 'https://odysee.com',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://odysee.com/$/embed/video-title/abc123def',
 		'url-match' => [
 			'https?://(?:www\\.)?odysee\\.com/(@[^/:]+:[a-z0-9])/([^/:]+:[a-z0-9])',
 			'https?://(?:www\\.)?odysee\\.com/\\$/embed/([^/]+)/([a-z0-9]+)',
@@ -334,6 +377,9 @@ return [
 	[
 		'name' => 'Kick',
 		'website' => 'https://kick.com',
+		'status' => 'active',
+		'category' => 'streaming',
+		'example-url' => 'https://kick.com/username/clips/clip_abc123',
 		'url-match' => [
 			'https?://(?:www\\.)?kick\\.com/[^/]+/clips/([a-zA-Z0-9_-]+)',
 			'https?://(?:www\\.)?kick\\.com/video/([a-z0-9-]+)',
@@ -346,6 +392,9 @@ return [
 	[
 		'name' => 'Bandcamp',
 		'website' => 'https://bandcamp.com',
+		'status' => 'active',
+		'category' => 'audio',
+		'example-url' => 'https://artist.bandcamp.com/track/song-title',
 		'url-match' => [
 			'https?://([a-z0-9-]+)\\.bandcamp\\.com/(track|album)/([a-z0-9-]+)',
 		],
@@ -357,6 +406,9 @@ return [
 	[
 		'name' => 'PeerTube',
 		'website' => 'https://joinpeertube.org',
+		'status' => 'active',
+		'category' => 'video',
+		'example-url' => 'https://peertube.example.org/w/abc123XYZ',
 		'url-match' => [
 			'https?://([a-z0-9.-]+)/(?:videos/watch|w)/([a-zA-Z0-9-]+)',
 		],
