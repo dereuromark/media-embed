@@ -536,4 +536,37 @@ return [
 		'iframe-player' => 'https://www.bitchute.com/embed/$2/',
 		'id' => '$2',
 	],
+	[
+		'name' => 'Apple Podcasts',
+		'website' => 'https://podcasts.apple.com',
+		'status' => 'active',
+		'category' => 'audio',
+		'example-url' => 'https://podcasts.apple.com/us/podcast/rimscast/id1436041526',
+		'url-match' => [
+			'https?://podcasts\\.apple\\.com/([a-z]{2})/podcast/([^/?#]+)/id([0-9]+)\\?i=([0-9]+)',
+			'https?://podcasts\\.apple\\.com/([a-z]{2})/podcast/([^/?#]+)/id([0-9]+)',
+		],
+		'embed-width' => '660',
+		'embed-height' => '450',
+		'iframe-player' => 'https://embed.podcasts.apple.com/$2/podcast/$3/id$4',
+		'optional-params' => [
+			'i' => 5,
+		],
+		'id' => '$4',
+	],
+	[
+		'name' => 'Deezer',
+		'website' => 'https://www.deezer.com',
+		'status' => 'active',
+		'category' => 'audio',
+		'example-url' => 'https://www.deezer.com/en/playlist/1479458365',
+		'notes' => 'Music content only (track, album, playlist, artist); podcasts are not supported.',
+		'url-match' => [
+			'https?://(?:www\\.)?deezer\\.com/(?:[a-z]{2}/)?(track|album|playlist|artist)/([0-9]+)',
+		],
+		'embed-width' => '700',
+		'embed-height' => '300',
+		'iframe-player' => 'https://widget.deezer.com/widget/auto/$2/$3',
+		'id' => '$3',
+	],
 ];

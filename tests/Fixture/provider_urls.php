@@ -226,4 +226,16 @@ return [
 		'id' => 'UGlrF9o9b-Q',
 		'embedSrc' => 'https://www.bitchute.com/embed/UGlrF9o9b-Q/?wmode=transparent',
 	],
+	[
+		'slug' => 'apple-podcasts',
+		'url' => 'https://podcasts.apple.com/us/podcast/rimscast/id1436041526',
+		'id' => '1436041526',
+		'embedSrc' => 'https://embed.podcasts.apple.com/us/podcast/rimscast/id1436041526?wmode=transparent',
+	],
+	[
+		'slug' => 'deezer',
+		'url' => 'https://www.deezer.com/en/playlist/1479458365',
+		'id' => '1479458365',
+		'embedSrc' => 'https://widget.deezer.com/widget/auto/playlist/1479458365?wmode=transparent',
+	],
 ];

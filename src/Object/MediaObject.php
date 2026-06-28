@@ -94,6 +94,8 @@ class MediaObject implements ObjectInterface {
 		if (isset($this->stub['iframe-player'])) {
 			// Handle timestamps for providers that support them.
 			$this->handleTimestampSupport();
+			// Append optional query params derived from capture groups (e.g. Apple Podcasts episode id).
+			$this->handleOptionalParams();
 		}
 	}
 
@@ -593,6 +595,31 @@ class MediaObject implements ObjectInterface {
 		}
 
 		return [$width, $height];
+	}
+
+	/**
+	 * Append optional query params whose value comes from a capture group.
+	 *
+	 * A provider may declare `optional-params` as a map of query-param name to
+	 * placeholder number (e.g. `['i' => 5]` for `$5`). The param is only added when
+	 * the corresponding capture group actually matched, so a single template can serve
+	 * both URL variants (e.g. an Apple Podcasts show URL vs. an episode URL with `?i=`).
+	 *
+	 * @return void
+	 */
+	protected function handleOptionalParams(): void {
+		if (empty($this->stub['optional-params']) || !is_array($this->stub['optional-params'])) {
+			return;
+		}
+
+		foreach ($this->stub['optional-params'] as $param => $placeholder) {
+			$index = (int)$placeholder - 1;
+			if (!isset($this->match[$index]) || $this->match[$index] === '') {
+				continue;
+			}
+
+			$this->iframeParams[(string)$param] = $this->match[$index];
+		}
 	}
 
 	/**

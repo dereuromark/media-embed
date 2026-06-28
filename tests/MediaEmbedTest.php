@@ -123,6 +123,12 @@ class MediaEmbedTest extends TestCase {
 		'https://coub.com/view/3as0mf' => '3as0mf',
 		// BitChute
 		'https://www.bitchute.com/video/UGlrF9o9b-Q/' => 'UGlrF9o9b-Q',
+		// Apple Podcasts (show + episode; id() returns the show id)
+		'https://podcasts.apple.com/us/podcast/rimscast/id1436041526' => '1436041526',
+		'https://podcasts.apple.com/us/podcast/rimscast/id1436041526?i=1000773833962' => '1436041526',
+		// Deezer
+		'https://www.deezer.com/en/playlist/1479458365' => '1479458365',
+		'https://www.deezer.com/track/3135556' => '3135556',
 	];
 
 	/**
@@ -382,6 +388,32 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringContainsString(' referrerpolicy="strict-origin-when-cross-origin"', $code);
 		$this->assertStringContainsString(' allow="fullscreen; picture-in-picture"', $code);
 		$this->assertStringContainsString(' allowfullscreen', $code);
+	}
+
+	public function testApplePodcastsShowEmbed(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://podcasts.apple.com/us/podcast/rimscast/id1436041526');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame('https://embed.podcasts.apple.com/us/podcast/rimscast/id1436041526?wmode=transparent', $Object->getEmbedSrc());
+	}
+
+	public function testApplePodcastsEpisodeAppendsEpisodeId(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://podcasts.apple.com/us/podcast/rimscast/id1436041526?i=1000773833962');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$src = $Object->getEmbedSrc();
+		$this->assertStringContainsString('https://embed.podcasts.apple.com/us/podcast/rimscast/id1436041526?', $src);
+		$this->assertStringContainsString('i=1000773833962', $src);
+	}
+
+	public function testDeezerEmbed(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.deezer.com/en/playlist/1479458365');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame('https://widget.deezer.com/widget/auto/playlist/1479458365?wmode=transparent', $Object->getEmbedSrc());
 	}
 
 	public function testPrivacyModeUsesNoCookieHostForYoutube(): void {
@@ -788,7 +820,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$hosts = $MediaEmbed->getHosts();
-		$this->assertCount(37, $hosts);
+		$this->assertCount(39, $hosts);
 
 		$hosts = $MediaEmbed->getHosts(['vimeo', 'youtube']);
 		$this->assertTrue(count($hosts) === 2);
@@ -1013,7 +1045,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$providers = $MediaEmbed->getProviders();
-		$this->assertCount(37, $providers);
+		$this->assertCount(39, $providers);
 		$this->assertTrue($providers->has('youtube'));
 		$this->assertTrue($providers->has('vimeo'));
 

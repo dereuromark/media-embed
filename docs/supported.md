@@ -1,12 +1,13 @@
 # Supported Media Services
 
-37 services (36 active, 1 legacy)
+39 services (38 active, 1 legacy)
 
 Provider example URLs are covered by the release fixture matrix in `tests/Fixture/provider_urls.php`.
 
 | Service | Status | Category | Capabilities | Notes |
 |---------|--------|----------|--------------|-------|
 | [Aparat](https://www.aparat.com) | active | video | iframe |  |
+| [Apple Podcasts](https://podcasts.apple.com) | active | audio | iframe |  |
 | [Audiomack](https://audiomack.com) | active | audio | iframe |  |
 | [Bandcamp](https://bandcamp.com) | active | audio | iframe |  |
 | [Bilibili](https://www.bilibili.com) | active | video | iframe |  |
@@ -14,6 +15,7 @@ Provider example URLs are covered by the release fixture matrix in `tests/Fixtur
 | [BitChute](https://www.bitchute.com) | active | video | iframe |  |
 | [Coub](https://coub.com) | active | video | iframe |  |
 | [Dailymotion](https://www.dailymotion.com) | active | video | iframe, thumbnail |  |
+| [Deezer](https://www.deezer.com) | active | audio | iframe | Music content only (track, album, playlist, artist); podcasts are not supported. |
 | [Facebook](https://www.facebook.com) | active | social | iframe |  |
 | [Giphy](https://giphy.com) | active | video | iframe, thumbnail |  |
 | [Instagram](https://www.instagram.com) | active | social | iframe |  |
