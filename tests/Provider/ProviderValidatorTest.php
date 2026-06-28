@@ -23,12 +23,13 @@ class ProviderValidatorTest extends TestCase {
 				'url-match' => ['broken\\.example\\.com/([0-9]+', ''],
 				'embed-width' => [],
 				'embed-height' => '360',
-				'iframe-player' => '',
+				'iframe-player' => 'javascript:alert($2)',
+				'image-src' => '//broken.example.com/thumb/$0.jpg',
 				'fetch-match' => '(',
 			],
 			[
 				'name' => 'Broken',
-				'website' => 'https://other.example.com',
+				'website' => '/relative',
 				'url-match' => 'other\\.example\\.com/([0-9]+)',
 				'embed-width' => 640,
 				'embed-height' => 360,
@@ -39,12 +40,32 @@ class ProviderValidatorTest extends TestCase {
 		$validator = new ProviderValidator();
 		$errors = $validator->validate($providers);
 
-		$this->assertContains('Broken: missing required field "iframe-player"', $errors);
 		$this->assertContains('Broken: field "embed-width" must be an integer or string', $errors);
 		$this->assertContains('Broken: invalid regex in "url-match"', $errors);
 		$this->assertContains('Broken: url-match entries must be non-empty strings', $errors);
+		$this->assertContains('Broken: field "iframe-player" must be an absolute http(s) URL', $errors);
+		$this->assertContains('Broken: field "image-src" contains an invalid placeholder', $errors);
+		$this->assertContains('Broken: field "website" must be an absolute http(s) URL', $errors);
 		$this->assertContains('Broken: invalid regex in "fetch-match"', $errors);
 		$this->assertContains('Broken: duplicate slug "broken" already used by Broken', $errors);
+	}
+
+	public function testValidateReportsNonStringTemplateFields(): void {
+		$providers = [
+			[
+				'name' => 'Broken',
+				'website' => ['https://broken.example.com'],
+				'url-match' => 'broken\\.example\\.com/([0-9]+)',
+				'embed-width' => 640,
+				'embed-height' => 360,
+				'iframe-player' => '//broken.example.com/embed/$2',
+			],
+		];
+
+		$validator = new ProviderValidator();
+		$errors = $validator->validate($providers);
+
+		$this->assertContains('Broken: field "website" must be a non-empty URL string', $errors);
 	}
 
 }
