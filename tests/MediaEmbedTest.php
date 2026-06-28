@@ -209,6 +209,31 @@ class MediaEmbedTest extends TestCase {
 		$this->assertStringContainsString('//www.youtube.com/embed/h9Pu4bZqWyg', $src);
 	}
 
+	public function testEmbedCodeWithCustomAttributesAndParams(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$Object->setParam([
+			'autoplay' => 1,
+			'loop' => 1,
+		]);
+		$Object->setAttribute([
+			'type' => null,
+			'class' => 'iframe-class',
+			'data-html5-parameter' => true,
+			'hidden' => false,
+		]);
+
+		$code = $Object->getEmbedCode();
+
+		$this->assertStringStartsWith('<iframe src="//www.youtube.com/embed/11111111111?wmode=transparent&amp;autoplay=1&amp;loop=1"', $code);
+		$this->assertStringContainsString(' class="iframe-class"', $code);
+		$this->assertStringContainsString(' data-html5-parameter', $code);
+		$this->assertStringNotContainsString(' type=', $code);
+		$this->assertStringNotContainsString(' hidden', $code);
+	}
+
 	/**
 	 * Test YouTube /live/ URL format
 	 *
@@ -387,7 +412,6 @@ class MediaEmbedTest extends TestCase {
 				'url-match' => [
 					'https?://test1\.example\.com/v/([a-z0-9]+)',
 				],
-				'embed-src' => '',
 				'embed-width' => '500',
 				'embed-height' => '300',
 				'iframe-player' => '//test1.example.com/embed/$2',
@@ -398,7 +422,6 @@ class MediaEmbedTest extends TestCase {
 				'url-match' => [
 					'https?://test2\.example\.com/watch/([0-9]+)',
 				],
-				'embed-src' => '',
 				'embed-width' => '600',
 				'embed-height' => '400',
 				'iframe-player' => '//test2.example.com/player/$2',
@@ -467,7 +490,6 @@ class MediaEmbedTest extends TestCase {
 				'url-match' => [
 					'https?://file\.example\.com/video/([0-9]+)',
 				],
-				'embed-src' => '',
 				'embed-width' => '700',
 				'embed-height' => '400',
 				'iframe-player' => '//file.example.com/embed/$2',
@@ -499,7 +521,6 @@ class MediaEmbedTest extends TestCase {
 				'url-match' => [
 					'https?://json\.example\.com/video/([0-9]+)',
 				],
-				'embed-src' => '',
 				'embed-width' => '800',
 				'embed-height' => '450',
 				'iframe-player' => '//json.example.com/embed/$2',

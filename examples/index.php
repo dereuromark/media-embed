@@ -22,7 +22,7 @@ ul.no-examples li {
 </style>
 
 <h1>Video Examples</h1>
-<p>The examples use the iframe if possible, and fallback to the embed object if necessary.</p>
+<p>The examples use iframe embeds.</p>
 
 <table><tr><td class="types">
 <h2>Select Type</h2>

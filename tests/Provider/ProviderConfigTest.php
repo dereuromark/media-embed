@@ -22,8 +22,8 @@ class ProviderConfigTest extends TestCase {
 
 		$this->assertSame('TestProvider', $config->name);
 		$this->assertSame('https://test.example.com', $config->website);
-		$this->assertSame(640, $config->embedWidth);
-		$this->assertSame(360, $config->embedHeight);
+		$this->assertSame('640', $config->embedWidth);
+		$this->assertSame('360', $config->embedHeight);
 		$this->assertSame('//test.example.com/embed/$2', $config->iframePlayer);
 	}
 
@@ -50,6 +50,22 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('$2', $config->id);
 		$this->assertSame('data-id="([a-z0-9]+)"', $config->fetchMatch);
 		$this->assertTrue($config->supportsTimestamp);
+	}
+
+	public function testFromArrayPreservesPercentageDimensions(): void {
+		$data = [
+			'name' => 'ResponsiveProvider',
+			'website' => 'https://responsive.example.com',
+			'url-match' => 'responsive\\.example\\.com/([a-z0-9]+)',
+			'embed-width' => '100%',
+			'embed-height' => '400',
+			'iframe-player' => '//responsive.example.com/embed/$2',
+		];
+
+		$config = ProviderConfig::fromArray($data);
+
+		$this->assertSame('100%', $config->embedWidth);
+		$this->assertSame('400', $config->embedHeight);
 	}
 
 	public function testFromArrayMissingName(): void {

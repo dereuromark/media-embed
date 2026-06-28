@@ -433,7 +433,7 @@ class MediaObject implements ObjectInterface {
 		$attributes = '';
 
 		foreach ($this->iframeAttributes as $key => $val) {
-			if ($val === false) {
+			if ($val === false || $val === null) {
 				continue;
 			}
 			$attributes .= ' ' . $key . ($val !== true ? '="' . $this->esc((string)$val) . '"' : '');
