@@ -1,15 +1,25 @@
 host,url,attributes,params
-YouTube, "http://www.youtube.com/watch?v=yiSjHJnc9CY"
-YouTube-Embed, "http://www.youtube.com/embed/yiSjHJnc9CY?rel=0"
-YouTube-Attributes, "http://www.youtube.com/watch?v=yiSjHJnc9CY", "{""class"":""video"",""id"":""video_test"",""data-something"":""test""}", "{""autoplay"":1,""loop"":1,""modestbranding"":1}"
-Dailymotion, "http://www.dailymotion.com/video/xgv8nw_david-guetta-who-s-that-chick_music"
-Dailymotion-Short, "http://dai.ly/x2bqyl6"
-Vimeo, "http://vimeo.com/channels/staffpicks/99585787"
-MyVideo, "http://www.myvideo.de/watch/7645001/Lena_Nach_Poolszene_bald_nackt_im_Playboy"
-ClipFish, "http://www.clipfish.de/musikvideos/video/3486922/nicole-scherzinger-poison"
-videojug, "http://www.videojug.com/film/summer-party-look-with-daniel-sandler"
-Ustream, "http://www.ustream.tv/channel/america2oficial"
-Metatube, "http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/"
-Screencast, "http://www.screencast.com/t/Hh4ulI0M"
-Aparat, "http://www.aparat.com/v/sSLMC"
-Blip, "http://blip.tv/stylestar/shine-6866879"
+YouTube,https://www.youtube.com/watch?v=yiSjHJnc9CY
+YouTube Embed,https://www.youtube.com/embed/yWm4YwqO93I?rel=0
+YouTube Attributes,https://www.youtube.com/watch?v=yiSjHJnc9CY,"{""class"":""video"",""id"":""video_test"",""data-something"":""test""}","{""autoplay"":1,""loop"":1,""modestbranding"":1}"
+Dailymotion,https://www.dailymotion.com/video/x2bqyl6_l-entourloop-ft-ruffian-rugged-madder-than-dat_music
+Dailymotion Short,https://dai.ly/x2bqyl6
+Vimeo,https://vimeo.com/channels/staffpicks/99585787
+Facebook,https://www.facebook.com/mega90er/videos/1309058692443747/
+Instagram,https://www.instagram.com/p/ABC123xyz/
+TikTok,https://www.tiktok.com/@username/video/7123456789012345678
+Twitch Video,https://www.twitch.tv/videos/293684811
+Twitch Clip,https://clips.twitch.tv/WonderfulPiliableSquirrelBleedPurple
+Spotify,https://open.spotify.com/track/4iV5W9uYEdYUVa79Axb7Rh
+SoundCloud,https://soundcloud.com/kalax/kalax-take-me-back-feat-world-wild-1
+Mixcloud,https://www.mixcloud.com/spartacus/party-time/
+Reddit,https://www.reddit.com/r/videos/comments/abc123/some_title/
+Streamable,https://streamable.com/abc123
+Bandcamp,https://artist.bandcamp.com/track/song-title
+PeerTube,https://peertube.example.org/w/abc123XYZ
+Rumble,https://rumble.com/v1abc12-example-video.html
+Odysee,https://odysee.com/$/embed/video-title/abc123def
+Kick,https://kick.com/username/clips/clip_abc123
+Aparat,https://www.aparat.com/v/sSLMC
+Matterport,https://my.matterport.com/show/?m=Zh14WDtkjdC&lp=1
+Metatube,https://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/

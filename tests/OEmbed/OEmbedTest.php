@@ -209,6 +209,8 @@ class OEmbedTest extends TestCase {
 		$this->assertNull($discovery->fetch('file:///tmp/oembed.json'));
 		$this->assertNull($discovery->fetch('http://127.0.0.1/oembed'));
 		$this->assertNull($discovery->fetch('http://10.0.0.1/oembed'));
+		$this->assertNull($discovery->fetch('http://[::1]/oembed'));
+		$this->assertNull($discovery->fetch('http://2130706433/oembed'));
 	}
 
 	public function testOEmbedDiscoveryFetchWithDimensions(): void {
@@ -223,6 +225,27 @@ class OEmbedTest extends TestCase {
 
 		$discovery = new OEmbedDiscovery($mockClient);
 		$discovery->fetch('https://example.com/oembed?url=test', 640, 480);
+	}
+
+	public function testOEmbedDiscoveryFetchUsesRawQuerySeparator(): void {
+		$separator = ini_get('arg_separator.output');
+		ini_set('arg_separator.output', '&amp;');
+
+		try {
+			$mockClient = $this->createMock(HttpClientInterface::class);
+			$mockClient->expects($this->once())
+				->method('get')
+				->with($this->stringContains('maxwidth=640&maxheight=480'))
+				->willReturn(json_encode([
+					'type' => 'video',
+					'version' => '1.0',
+				]));
+
+			$discovery = new OEmbedDiscovery($mockClient);
+			$discovery->fetch('https://example.com/oembed?url=test', 640, 480);
+		} finally {
+			ini_set('arg_separator.output', $separator);
+		}
 	}
 
 }

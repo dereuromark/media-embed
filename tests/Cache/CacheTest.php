@@ -33,6 +33,33 @@ class CacheTest extends TestCase {
 		$this->assertSame(['foo' => 'bar'], $cache->get('test_key'));
 	}
 
+	public function testArrayCacheStoresNullValues(): void {
+		$cache = new ArrayCache();
+
+		$cache->set('null_key', null);
+
+		$this->assertTrue($cache->has('null_key'));
+		$this->assertNull($cache->get('null_key', 'default'));
+	}
+
+	public function testArrayCacheExpiresValues(): void {
+		$cache = new ArrayCache();
+
+		$cache->set('expired_key', 'value', 0);
+
+		$this->assertFalse($cache->has('expired_key'));
+		$this->assertSame('default', $cache->get('expired_key', 'default'));
+	}
+
+	public function testArrayCacheDateIntervalTtl(): void {
+		$cache = new ArrayCache();
+
+		$cache->set('interval_key', 'value', new DateInterval('PT1S'));
+
+		$this->assertTrue($cache->has('interval_key'));
+		$this->assertSame('value', $cache->get('interval_key'));
+	}
+
 	public function testArrayCacheDelete(): void {
 		$cache = new ArrayCache();
 

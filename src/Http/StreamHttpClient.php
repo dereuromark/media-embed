@@ -63,25 +63,7 @@ class StreamHttpClient implements HttpClientInterface {
 	 * @return bool
 	 */
 	protected function isSafeUrl(string $url): bool {
-		$parts = parse_url($url);
-		if (!is_array($parts) || empty($parts['scheme']) || empty($parts['host'])) {
-			return false;
-		}
-
-		if (!in_array(strtolower($parts['scheme']), ['http', 'https'], true)) {
-			return false;
-		}
-
-		$host = strtolower($parts['host']);
-		if ($host === 'localhost' || str_ends_with($host, '.localhost')) {
-			return false;
-		}
-
-		if (filter_var($host, FILTER_VALIDATE_IP)) {
-			return filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
-		}
-
-		return true;
+		return UrlSafety::isPublicHttpUrl($url);
 	}
 
 }

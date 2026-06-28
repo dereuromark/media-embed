@@ -35,6 +35,11 @@ class HttpClientTest extends TestCase {
 		$this->assertNull($client->get('http://127.0.0.1/test'));
 		$this->assertNull($client->get('http://10.0.0.1/test'));
 		$this->assertNull($client->get('http://169.254.169.254/test'));
+		$this->assertNull($client->get('http://[::1]/test'));
+		$this->assertNull($client->get('http://[fd00::1]/test'));
+		$this->assertNull($client->get('http://2130706433/test'));
+		$this->assertNull($client->get('http://0177.0.0.1/test'));
+		$this->assertNull($client->get('http://0x7f000001/test'));
 	}
 
 	public function testGetReturnsNullForInvalidUrl(): void {

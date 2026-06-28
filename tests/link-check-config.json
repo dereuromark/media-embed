@@ -48,6 +48,9 @@
 		},
 		{
 			"pattern": "^https://rumble.com"
+		},
+		{
+			"pattern": "^https://www.rutube.ru"
 		}
 	],
 	"aliveStatusCodes": [200, 202, 206, 429]
