@@ -362,7 +362,22 @@ class MockHttpClient implements HttpClientInterface {
 $MediaEmbed = new MediaEmbed([], null, new MockHttpClient());
 ```
 
-The default `StreamHttpClient` only fetches public `http` and `https` URLs, rejects localhost/private literal IP targets, disables redirects, and caps response size. Inject a custom `HttpClientInterface` implementation if you need a different network policy.
+The default `StreamHttpClient` only fetches public `http` and `https` URLs, rejects localhost/private literal IP targets, caps response size, and validates each redirect target before following it. You can configure timeout, maximum response size, redirect limit, and user agent:
+
+```php
+use MediaEmbed\Http\StreamHttpClient;
+
+$client = new StreamHttpClient(
+    timeout: 5,
+    maxBytes: 1048576,
+    maxRedirects: 3,
+    userAgent: 'my-app/media-embed',
+);
+
+$MediaEmbed = new MediaEmbed(httpClient: $client);
+```
+
+Per-request HTTP client options can also include `timeout`, `max_bytes`, `max_redirects`, and `user_agent`. Inject a custom `HttpClientInterface` implementation if you need a different network policy.
 
 ### Provider Loaders
 
@@ -451,9 +466,10 @@ The cache stores the generated provider domain index under an internal key. It i
 For URLs not covered by built-in providers, use oEmbed auto-discovery:
 
 ```php
+use MediaEmbed\Cache\ArrayCache;
 use MediaEmbed\OEmbed\OEmbedDiscovery;
 
-$discovery = new OEmbedDiscovery();
+$discovery = new OEmbedDiscovery(cache: new ArrayCache());
 
 // Auto-discover and fetch oEmbed data
 $response = $discovery->discover('https://example.com/video/123');
@@ -478,8 +494,21 @@ $response = $discovery->discover($url, maxWidth: 640, maxHeight: 480);
 $response = $discovery->fetch('https://example.com/oembed?url=...');
 ```
 
+If you already know an oEmbed endpoint, configure a direct endpoint template and avoid HTML discovery:
+
+```php
+$discovery = new OEmbedDiscovery(
+    endpoints: [
+        'video.example.com' => 'https://example.com/oembed?url={url}',
+    ],
+);
+
+$response = $discovery->discover('https://video.example.com/watch/123');
+```
+
 Discovered oEmbed endpoint URLs may be absolute, protocol-relative, root-relative, or path-relative. Relative endpoint URLs are resolved against the source page URL before they are fetched.
 Only public `http` and `https` endpoint URLs are fetched; local/private IP endpoints and unsafe schemes are rejected.
+JSON and XML oEmbed responses are supported. When a PSR-16 cache is provided, discovered endpoints are cached with the configured `cacheTtl`, and fetched responses are cached using `cache_age` when the provider sends it.
 The returned `html` field is raw remote provider HTML. Only render it for providers you trust, or sanitize it first.
 
 The `OEmbedResponse` provides typed access to all oEmbed fields:
@@ -507,6 +536,8 @@ $response->isPhoto();
 $response->isRich();
 $response->hasHtml();
 $response->hasThumbnail();
+
+$response->toArray();      // oEmbed array shape
 ```
 
 ### Example with BBCode
@@ -596,7 +627,10 @@ Please provide a simple test URL and test case for any new service.
 
 Provider change checklist:
 
-- Add at least one fixture URL for each non-fetch `url-match` pattern.
+- Add or update `tests/Fixture/provider_urls.php` with at least one fixture URL per bundled provider.
+- Include expected slug, parsed ID, and final embed source for each provider fixture.
+- Include a mocked `response` entry in the fixture for providers using `fetch-match`.
+- Keep `testDefaultProviderPatternsHaveFixtureCoverage()` green for pattern-level coverage.
 - Add a mocked HTTP test for providers using `fetch-match`.
 - Run `composer validate-providers` after editing provider data.
 - Run `bin/generate-docs` and commit any `docs/supported.md` changes.
