@@ -2,10 +2,12 @@
 
 namespace MediaEmbed\Test\Cache;
 
+use DateInterval;
 use MediaEmbed\Cache\ArrayCache;
 use MediaEmbed\Cache\CacheInterface;
 use MediaEmbed\Matcher\UrlMatcher;
 use PHPUnit\Framework\TestCase;
+use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
 
 class CacheTest extends TestCase {
 
@@ -13,6 +15,7 @@ class CacheTest extends TestCase {
 		$cache = new ArrayCache();
 
 		$this->assertInstanceOf(CacheInterface::class, $cache);
+		$this->assertInstanceOf(PsrCacheInterface::class, $cache);
 	}
 
 	public function testArrayCacheSetAndGet(): void {
@@ -50,6 +53,26 @@ class CacheTest extends TestCase {
 		$cache->set('key2', 'value2');
 
 		$cache->clear();
+
+		$this->assertFalse($cache->has('key1'));
+		$this->assertFalse($cache->has('key2'));
+	}
+
+	public function testArrayCacheMultipleOperations(): void {
+		$cache = new ArrayCache();
+
+		$cache->setMultiple([
+			'key1' => 'value1',
+			'key2' => 'value2',
+		]);
+
+		$this->assertSame([
+			'key1' => 'value1',
+			'key2' => 'value2',
+			'key3' => 'default',
+		], $cache->getMultiple(['key1', 'key2', 'key3'], 'default'));
+
+		$cache->deleteMultiple(['key1', 'key2']);
 
 		$this->assertFalse($cache->has('key1'));
 		$this->assertFalse($cache->has('key2'));
@@ -106,6 +129,78 @@ class CacheTest extends TestCase {
 		]);
 
 		$this->assertFalse($cache->has('media_embed_domain_index'));
+	}
+
+	public function testUrlMatcherAcceptsPsrCache(): void {
+		$cache = new class () implements PsrCacheInterface {
+			/**
+			 * @var array<string, mixed>
+			 */
+			private array $cache = [];
+
+			public function get(string $key, mixed $default = null): mixed {
+				return $this->cache[$key] ?? $default;
+			}
+
+			public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool {
+				$this->cache[$key] = $value;
+
+				return true;
+			}
+
+			public function delete(string $key): bool {
+				unset($this->cache[$key]);
+
+				return true;
+			}
+
+			public function clear(): bool {
+				$this->cache = [];
+
+				return true;
+			}
+
+			public function getMultiple(iterable $keys, mixed $default = null): iterable {
+				$values = [];
+				foreach ($keys as $key) {
+					$values[$key] = $this->get($key, $default);
+				}
+
+				return $values;
+			}
+
+			public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool {
+				foreach ($values as $key => $value) {
+					$this->set($key, $value, $ttl);
+				}
+
+				return true;
+			}
+
+			public function deleteMultiple(iterable $keys): bool {
+				foreach ($keys as $key) {
+					$this->delete($key);
+				}
+
+				return true;
+			}
+
+			public function has(string $key): bool {
+				return isset($this->cache[$key]);
+			}
+		};
+
+		$matcher = new UrlMatcher([
+			'test' => [
+				'name' => 'Test Provider',
+				'url-match' => ['test\\.example\\.com/video/([0-9]+)'],
+			],
+		], $cache);
+
+		$result = $matcher->match('https://test.example.com/video/123');
+
+		$this->assertNotNull($result);
+		$this->assertTrue($cache->has('media_embed_domain_index'));
 	}
 
 }
