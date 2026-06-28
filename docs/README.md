@@ -429,6 +429,10 @@ class Psr16Adapter implements CacheInterface {
     public function has(string $key): bool {
         return $this->cache->has($key);
     }
+
+    public function clear(): bool {
+        return $this->cache->clear();
+    }
 }
 
 // Use with any PSR-16 cache
