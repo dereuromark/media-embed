@@ -226,7 +226,7 @@ final class ProviderValidator {
 	 * @return void
 	 */
 	private function validateTemplatePlaceholders(string $template, string $label, string $field, array &$errors): void {
-		if (preg_match('/\\$0(?:\\D|$)/', $template) !== 1) {
+		if (preg_match('/\\$0\\d*/', $template) !== 1) {
 			return;
 		}
 

@@ -75,15 +75,12 @@ final class UrlMatcher {
 	 * @return $this
 	 */
 	public function setProviders(array $providers) {
-		if ($this->cache !== null) {
-			$this->cache->delete($this->cacheKey());
-		}
-
 		$this->providers = $providers;
 		$this->indexBuilt = false;
 		$this->domainIndex = [];
 		$this->unindexedSlugs = [];
 
+		// Clear cached index when providers change.
 		if ($this->cache !== null) {
 			$this->cache->delete($this->cacheKey());
 		}

@@ -468,7 +468,7 @@ $MediaEmbed = new MediaEmbed();
 
 // Get all providers
 $providers = $MediaEmbed->getProviders();
-echo count($providers); // e.g., 29
+echo count($providers); // e.g., 39
 
 // Filter to specific providers
 $subset = $MediaEmbed->getProviders(['youtube', 'vimeo', 'dailymotion']);

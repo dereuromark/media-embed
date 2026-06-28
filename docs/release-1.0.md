@@ -18,7 +18,7 @@ MediaEmbed 1.0 modernizes the library for PHP 8.1+ and focuses on iframe-based e
 
 ## Provider Changes
 
-- Bundled provider list currently contains 29 providers: 28 active and 1 legacy.
+- Bundled provider list currently contains 39 providers: 38 active and 1 legacy.
 - Removed dead providers whose public URLs or embed endpoints were no longer usable:
   - ClipFish
   - ClipFish Search

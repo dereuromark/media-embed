@@ -55,7 +55,7 @@ Existing stored embeds for those providers should be treated as unsupported by 1
 - `MediaEmbed::__construct()` accepts optional `cache` and `cacheTtl` arguments
 - `UrlMatcher` persistent cache keys include a provider-data hash instead of using one shared static key
 
-The `fromArray()` method preserves legacy array values as strings, including percentage dimensions such as `100%`.
+The `fromArray()` method preserves legacy array dimension values as either `int` or `string`, including percentage dimensions such as `100%`.
 
 ### Migration Examples
 
