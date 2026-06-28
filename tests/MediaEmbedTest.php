@@ -35,11 +35,6 @@ class MediaEmbedTest extends TestCase {
 		'http://vimeo.com/245928033/572c32a20d' => '245928033/572c32a20d',
 		'http://vimeo.com/channels/staffpicks/99585787' => '99585787',
 		'https://player.vimeo.com/video/19570639' => '19570639',
-		'http://www.clipfish.de/special/dsds/video/3507980/dsds-recall-anna-und-tobias-harmonieren/' => '3507980',
-		'http://www.clipfish.de/special/kino-trailer/video/3495650/serengeti-filmausschnitt-gepardenkinder-und-die-jagd-der-mutter/' => '3495650',
-		'http://www.clipfish.de/musikvideos/video/3486922/nicole-scherzinger-poison/' => '3486922',
-		'http://www.clipfish.de/player.php?vid=3507980' => '3507980',
-		'http://www.clipfish.de/videoplayer.swf?videoid=abcdef' => 'abcdef',
 		'http://www.youtube.com/watch?v=-vGzem8glbE&feature=channel' => '-vGzem8glbE',
 		'http://www.aparat.com/v/sSLMC' => 'sSLMC',
 		'http://www.metatube.com/en/videos/245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta/' => '245145/J-Alvarez-Tu-Cuerpo-Pide-Fiesta',
@@ -249,18 +244,6 @@ class MediaEmbedTest extends TestCase {
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$this->assertSame('1d44810a-01f4-4c60-a862-6d114bed50c7', $Object->id());
-	}
-
-	public function testUstreamFetchProvider(): void {
-		$httpClient = $this->createStub(HttpClientInterface::class);
-		$httpClient->method('get')
-			->willReturn('<iframe src="https://www.ustream.tv/embed/17916695"></iframe>');
-
-		$MediaEmbed = new MediaEmbed(httpClient: $httpClient);
-		$Object = $MediaEmbed->parseUrl('https://www.ustream.tv/channel/america2oficial');
-		$this->assertInstanceOf(MediaObject::class, $Object);
-
-		$this->assertSame('17916695', $Object->id());
 	}
 
 	/**
@@ -638,7 +621,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$hosts = $MediaEmbed->getHosts();
-		$this->assertTrue(count($hosts) > 30);
+		$this->assertCount(29, $hosts);
 
 		$hosts = $MediaEmbed->getHosts(['vimeo', 'youtube']);
 		$this->assertTrue(count($hosts) === 2);
@@ -863,7 +846,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$providers = $MediaEmbed->getProviders();
-		$this->assertGreaterThan(30, count($providers));
+		$this->assertCount(29, $providers);
 		$this->assertTrue($providers->has('youtube'));
 		$this->assertTrue($providers->has('vimeo'));
 

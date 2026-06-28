@@ -1,6 +1,6 @@
 # Supported Media Services
 
-33 services (28 active, 5 legacy)
+29 services (28 active, 1 legacy)
 
 Provider example URLs are covered by the release fixture matrix in `tests/Fixture/provider_urls.php`.
 
@@ -10,9 +10,6 @@ Provider example URLs are covered by the release fixture matrix in `tests/Fixtur
 | [Bandcamp](https://bandcamp.com) | active | audio | iframe |  |
 | [Bilibili](https://www.bilibili.com) | active | video | iframe |  |
 | [Bilibili (Legacy)](https://www.bilibili.com) | legacy | video | iframe | Legacy URL format kept for existing links. |
-| [ClipFish (New)](https://www.clipfish.de) | legacy | video | iframe | Legacy provider kept for existing stored references. |
-| [ClipFish (Old)](https://www.clipfish.de) | legacy | video | iframe | Legacy provider kept for existing stored references. |
-| [ClipFish (Special)](https://www.clipfish.de) | legacy | video | iframe | Legacy provider kept for existing stored references. |
 | [Dailymotion](https://www.dailymotion.com) | active | video | iframe, thumbnail |  |
 | [Facebook](https://www.facebook.com) | active | social | iframe |  |
 | [Instagram](https://www.instagram.com) | active | social | iframe |  |
@@ -34,7 +31,6 @@ Provider example URLs are covered by the release fixture matrix in `tests/Fixtur
 | [Twitch Clip](https://clips.twitch.tv) | active | streaming | iframe |  |
 | [Twitch Video](https://www.twitch.tv) | active | streaming | iframe |  |
 | [Twitter](https://twitter.com) | active | social | iframe |  |
-| [Ustream](https://www.ustream.tv) | legacy | streaming | iframe, fetch | Legacy provider kept for existing stored references. |
 | [Vimeo](https://www.vimeo.com) | active | video | iframe |  |
 | [Vooplayer](https://vooplayer.com/) | active | video | iframe |  |
 | [Wistia](https://www.wistia.com) | active | video | iframe |  |
