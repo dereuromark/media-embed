@@ -2,6 +2,7 @@
 
 namespace MediaEmbed\Object;
 
+use InvalidArgumentException;
 use MediaEmbed\Template\TemplateResolver;
 
 /**
@@ -264,13 +265,26 @@ class MediaObject implements ObjectInterface {
 
 		if (is_array($param)) {
 			foreach ($param as $p => $v) {
+				$this->assertValidAttributeName((string)$p);
 				$this->{$attributes}[$p] = $v;
 			}
 		} else {
+			$this->assertValidAttributeName((string)$param);
 			$this->{$attributes}[$param] = $value;
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @param string $name Attribute name.
+	 * @throws \InvalidArgumentException
+	 * @return void
+	 */
+	protected function assertValidAttributeName(string $name): void {
+		if (!preg_match('/^[^\s"\'=<>\/\x00-\x1F\x7F]+$/', $name) || preg_match('/^on/i', $name)) {
+			throw new InvalidArgumentException(sprintf('Invalid iframe attribute name "%s"', $name));
+		}
 	}
 
 	/**
