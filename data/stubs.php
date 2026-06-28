@@ -39,6 +39,7 @@ return [
 		'iframe-player' => '//www.youtube.com/embed/$2',
 		'id' => '$2',
 		'supports-timestamp' => true,
+		'timestamp-param' => 'start',
 	],
 	[
 		'name' => 'Facebook',
