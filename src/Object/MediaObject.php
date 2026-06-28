@@ -485,11 +485,27 @@ class MediaObject implements ObjectInterface {
 		}
 		$this->iframeAttributes = [
 			'type' => 'text/html',
+			'title' => $this->titleAttribute(),
 			'width' => $stub['embed-width'],
 			'height' => $stub['embed-height'],
+			'loading' => 'lazy',
+			'referrerpolicy' => 'strict-origin-when-cross-origin',
+			'allow' => 'fullscreen; picture-in-picture',
 			'frameborder' => '0',
 			'allowfullscreen' => true,
 		];
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function titleAttribute(): string {
+		$name = $this->name();
+		if (!$name) {
+			return 'Embedded media';
+		}
+
+		return $name . ' embed';
 	}
 
 	/**

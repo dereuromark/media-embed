@@ -104,10 +104,12 @@ if ($MediaObject) {
 ```
 This should return an embed code like:
 ```html
-<iframe src="//www.youtube.com/embed/111111?wmode=transparent&amp;autoplay=1&amp;loop=1" width="480" height="295" frameborder="0" allowfullscreen class="iframe-class" data-html5-parameter></iframe>
+<iframe src="//www.youtube.com/embed/111111?wmode=transparent&amp;autoplay=1&amp;loop=1" title="YouTube embed" width="480" height="295" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; picture-in-picture" frameborder="0" allowfullscreen class="iframe-class" data-html5-parameter></iframe>
 ```
 
 Attribute names must be valid iframe attribute names. Whitespace/control characters, HTML syntax characters, and `on*` event-handler attributes are rejected.
+Default iframe attributes include `title`, `loading="lazy"`, `referrerpolicy="strict-origin-when-cross-origin"`, `allow="fullscreen; picture-in-picture"`, `frameborder="0"`, and `allowfullscreen`. Override any default with `setAttribute()`, or remove it by setting the attribute value to `null` or `false`.
+`sandbox` is not enabled by default because most third-party embeds need provider-specific permissions. Add it explicitly when your target provider supports the restrictions you choose.
 
 Provider-specific iframe params can also be configured once when constructing `MediaEmbed`. This is useful for providers such as Twitch that require a domain-specific `parent` query parameter:
 
