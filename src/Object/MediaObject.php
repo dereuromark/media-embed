@@ -481,6 +481,43 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
+	 * The matched source (page) URL, when created via URL parsing.
+	 *
+	 * @return string|null
+	 */
+	public function sourceUrl(): ?string {
+		$url = $this->match[0] ?? null;
+		if (!is_string($url) || $url === '') {
+			return null;
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Build the provider's oEmbed endpoint URL for this object, if one is registered.
+	 *
+	 * Requires both a registered `oembed` endpoint on the provider and a known source URL
+	 * (i.e. the object was created via parseUrl(), not parseId()).
+	 *
+	 * @return string|null
+	 */
+	public function oEmbedEndpoint(): ?string {
+		if (empty($this->stub['oembed'])) {
+			return null;
+		}
+		$url = $this->sourceUrl();
+		if ($url === null) {
+			return null;
+		}
+
+		$base = (string)$this->stub['oembed'];
+		$separator = str_contains($base, '?') ? '&' : '?';
+
+		return $base . $separator . 'url=' . rawurlencode($url);
+	}
+
+	/**
 	 * Convenience wrapper for `echo $MediaObject`
 	 *
 	 * @return string

@@ -483,6 +483,66 @@ class MediaEmbedTest extends TestCase {
 		$this->assertSame('https://widget.deezer.com/widget/auto/playlist/1479458365?wmode=transparent', $Object->getEmbedSrc());
 	}
 
+	public function testThumbnailUsesStaticImageSrc(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=h9Pu4bZqWyg');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		// Static image-src, no HTTP request needed.
+		$this->assertSame('//img.youtube.com/vi/h9Pu4bZqWyg/0.jpg', $MediaEmbed->thumbnail($Object));
+
+		// Also resolves correctly for ID-parsed (reverse) objects.
+		$reverse = $MediaEmbed->parseId('h9Pu4bZqWyg', 'youtube');
+		$this->assertInstanceOf(MediaObject::class, $reverse);
+		$this->assertSame('//img.youtube.com/vi/h9Pu4bZqWyg/0.jpg', $MediaEmbed->thumbnail($reverse));
+	}
+
+	public function testOEmbedEndpointBuiltFromRegistry(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://vimeo.com/channels/staffpicks/99585787');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame(
+			'https://vimeo.com/api/oembed.json?url=https%3A%2F%2Fvimeo.com%2Fchannels%2Fstaffpicks%2F99585787',
+			$Object->oEmbedEndpoint(),
+		);
+	}
+
+	public function testOEmbedAndThumbnailFallBackToOEmbedEndpoint(): void {
+		$json = '{"type":"video","version":"1.0","thumbnail_url":"https://i.vimeocdn.com/video/thumb.jpg","html":"<iframe></iframe>"}';
+		$httpClient = new class ($json) implements HttpClientInterface {
+
+			public function __construct(
+				private readonly string $json,
+			) {
+			}
+
+			public function get(string $url, array $options = []): ?string {
+				return $this->json;
+			}
+
+		};
+
+		$MediaEmbed = new MediaEmbed(httpClient: $httpClient);
+		$Object = $MediaEmbed->parseUrl('https://vimeo.com/channels/staffpicks/99585787');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$response = $MediaEmbed->oEmbed($Object);
+		$this->assertNotNull($response);
+		$this->assertSame('https://i.vimeocdn.com/video/thumb.jpg', $response->thumbnailUrl);
+		// Vimeo has no static image-src, so thumbnail() falls back to oEmbed.
+		$this->assertSame('https://i.vimeocdn.com/video/thumb.jpg', $MediaEmbed->thumbnail($Object));
+	}
+
+	public function testOEmbedReturnsNullWithoutRegisteredEndpoint(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://my.matterport.com/show/?m=Zh14WDtkjdC');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertNull($Object->oEmbedEndpoint());
+		$this->assertNull($MediaEmbed->oEmbed($Object));
+	}
+
 	public function testPrivacyModeUsesNoCookieHostForYoutube(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111', ['privacy' => true]);

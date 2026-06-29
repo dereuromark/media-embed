@@ -15,6 +15,8 @@ use MediaEmbed\Http\StreamHttpClient;
 use MediaEmbed\Matcher\MatchResult;
 use MediaEmbed\Matcher\UrlMatcher;
 use MediaEmbed\Object\MediaObject;
+use MediaEmbed\OEmbed\OEmbedDiscovery;
+use MediaEmbed\OEmbed\OEmbedResponse;
 use MediaEmbed\Provider\PhpFileLoader;
 use MediaEmbed\Provider\ProviderCollection;
 use MediaEmbed\Provider\ProviderConfig;
@@ -452,6 +454,52 @@ class MediaEmbed {
 		$this->registerProviders($providers, $reset);
 
 		return $this;
+	}
+
+	/**
+	 * Fetch oEmbed data for a parsed media object using the provider's registered endpoint.
+	 *
+	 * Returns null when the provider has no `oembed` endpoint, the object has no source URL
+	 * (e.g. created via parseId()), or the request/parse fails.
+	 *
+	 * @param \MediaEmbed\Object\MediaObject $object Parsed media object.
+	 * @param int|null $maxWidth Maximum embed width.
+	 * @param int|null $maxHeight Maximum embed height.
+	 * @return \MediaEmbed\OEmbed\OEmbedResponse|null
+	 */
+	public function oEmbed(MediaObject $object, ?int $maxWidth = null, ?int $maxHeight = null): ?OEmbedResponse {
+		$endpoint = $object->oEmbedEndpoint();
+		if ($endpoint === null) {
+			return null;
+		}
+
+		return $this->oEmbedDiscovery()->fetch($endpoint, $maxWidth, $maxHeight);
+	}
+
+	/**
+	 * Resolve a thumbnail URL for a parsed media object.
+	 *
+	 * Prefers the provider's static thumbnail (image-src) and falls back to the oEmbed
+	 * `thumbnail_url` when the provider exposes an oEmbed endpoint.
+	 *
+	 * @param \MediaEmbed\Object\MediaObject $object Parsed media object.
+	 * @return string|null
+	 */
+	public function thumbnail(MediaObject $object): ?string {
+		// getImageSrc() resolves image-src for both URL- and ID-parsed objects.
+		$static = $object->getImageSrc();
+		if ($static !== null && $static !== '') {
+			return $static;
+		}
+
+		return $this->oEmbed($object)?->thumbnailUrl;
+	}
+
+	/**
+	 * @return \MediaEmbed\OEmbed\OEmbedDiscovery
+	 */
+	protected function oEmbedDiscovery(): OEmbedDiscovery {
+		return new OEmbedDiscovery($this->httpClient, $this->cache, $this->cacheTtl);
 	}
 
 	/**

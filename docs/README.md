@@ -529,6 +529,23 @@ $MediaEmbed = new MediaEmbed(cache: $yourPsr16Cache, cacheTtl: 3600);
 The cache stores the generated provider domain index under an internal key. It is invalidated automatically when providers change. The `cacheTtl` argument controls how long persistent caches may retain the index. The built-in `ArrayCache` honors TTL values and can store `null` values.
 The internal key includes a hash of the provider definitions, so persistent caches do not reuse stale indexes after provider data changes.
 
+### Thumbnails and oEmbed for bundled providers
+
+Many bundled providers register an official oEmbed endpoint (YouTube, Vimeo, SoundCloud, Spotify, TikTok, TED, Sketchfab, Audiomack, Spreaker, Mixcloud). For a parsed object you can fetch its oEmbed data or a thumbnail directly:
+
+```php
+$mediaObject = $mediaEmbed->parseUrl('https://vimeo.com/channels/staffpicks/99585787');
+
+$response = $mediaEmbed->oEmbed($mediaObject); // OEmbedResponse|null
+echo $response?->title;
+
+// Thumbnail: prefers the static image-src (e.g. YouTube/Dailymotion), then falls back
+// to the provider's oEmbed thumbnail_url.
+$thumb = $mediaEmbed->thumbnail($mediaObject); // string|null
+```
+
+`oEmbed()` returns null when the provider has no registered endpoint or the object was created via `parseId()` (no source URL). These calls perform an HTTP request, so a PSR-16 cache (and the injected HTTP client) apply.
+
 ### oEmbed Discovery
 
 For URLs not covered by built-in providers, use oEmbed auto-discovery:

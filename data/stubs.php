@@ -40,6 +40,7 @@ return [
 		'embed-height' => '295',
 		'image-src' => '//img.youtube.com/vi/$2/0.jpg',
 		'iframe-player' => '//www.youtube.com/embed/$2',
+		'oembed' => 'https://www.youtube.com/oembed',
 		'privacy-player' => '//www.youtube-nocookie.com/embed/$2',
 		'id' => '$2',
 		'supports-timestamp' => true,
@@ -88,6 +89,7 @@ return [
 		'embed-width' => '400',
 		'embed-height' => '302',
 		'iframe-player' => '//player.vimeo.com/video/$2',
+		'oembed' => 'https://vimeo.com/api/oembed.json',
 		'privacy-params' => [
 			'dnt' => 1,
 		],
@@ -206,6 +208,7 @@ return [
 		'embed-width' => '100%',
 		'embed-height' => '150',
 		'iframe-player' => 'https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2F$2',
+		'oembed' => 'https://soundcloud.com/oembed',
 		'id' => '$2',
 	],
 	[
@@ -220,6 +223,7 @@ return [
 		'embed-width' => '100%',
 		'embed-height' => '120',
 		'iframe-player' => '//www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2F$2%2F$3%2F',
+		'oembed' => 'https://app.mixcloud.com/oembed/',
 		'id' => '$2/$3',
 	],
 	[
@@ -248,6 +252,7 @@ return [
 		'embed-width' => '325',
 		'embed-height' => '580',
 		'iframe-player' => 'https://www.tiktok.com/embed/v2/$2',
+		'oembed' => 'https://www.tiktok.com/oembed',
 		'id' => '$2',
 	],
 	[
@@ -304,6 +309,7 @@ return [
 		'embed-width' => '300',
 		'embed-height' => '380',
 		'iframe-player' => 'https://open.spotify.com/embed/$2/$3',
+		'oembed' => 'https://open.spotify.com/oembed',
 		'id' => '$3',
 	],
 	[
@@ -435,6 +441,7 @@ return [
 		'embed-width' => '560',
 		'embed-height' => '315',
 		'iframe-player' => 'https://embed.ted.com/talks/$2',
+		'oembed' => 'https://www.ted.com/services/v1/oembed.json',
 		'id' => '$2',
 	],
 	[
@@ -479,6 +486,7 @@ return [
 		'embed-width' => '649',
 		'embed-height' => '252',
 		'iframe-player' => 'https://audiomack.com/embed/$3/$2/$4',
+		'oembed' => 'https://audiomack.com/oembed',
 		'id' => '$2/$3/$4',
 	],
 	[
@@ -494,6 +502,7 @@ return [
 		'embed-width' => '100%',
 		'embed-height' => '200',
 		'iframe-player' => 'https://widget.spreaker.com/player?episode_id=$2',
+		'oembed' => 'https://api.spreaker.com/oembed',
 		'id' => '$2',
 	],
 	[
@@ -508,6 +517,7 @@ return [
 		'embed-width' => '640',
 		'embed-height' => '360',
 		'iframe-player' => 'https://sketchfab.com/models/$2/embed',
+		'oembed' => 'https://sketchfab.com/oembed',
 		'id' => '$2',
 	],
 	[
