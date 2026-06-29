@@ -93,11 +93,9 @@ Examples available for <?php echo count($videos); ?> services.
 	<?php
 		$id = $mediaObject->id();
 		$slug = $mediaObject->slug();
+		// parseId() returns null when the stored ID cannot rebuild a complete embed.
 		$reverseLookupObject = $mediaEmbed->parseId($id, $slug);
-		$reverseEmbed = null;
-		if ($reverseLookupObject !== null && !str_contains($reverseLookupObject->getEmbedSrc(), '$')) {
-			$reverseEmbed = $reverseLookupObject->getEmbedCode();
-		}
+		$reverseEmbed = $reverseLookupObject?->getEmbedCode();
 	?>
 
 	<h3>Reverse lookup by video id and host slug</h3>

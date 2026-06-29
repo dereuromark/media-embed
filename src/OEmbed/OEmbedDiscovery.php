@@ -241,7 +241,8 @@ final class OEmbedDiscovery {
 			if (!in_array('alternate', $relTokens ?: [], true)) {
 				continue;
 			}
-			if (strtolower($attributes['type'] ?? '') !== 'application/json+oembed') {
+			$type = strtolower($attributes['type'] ?? '');
+			if (!in_array($type, ['application/json+oembed', 'text/xml+oembed', 'application/xml+oembed'], true)) {
 				continue;
 			}
 			if (empty($attributes['href'])) {

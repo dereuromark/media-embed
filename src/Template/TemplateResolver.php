@@ -69,8 +69,9 @@ final class TemplateResolver {
 	 * Recover individual capture-group values from a compound ID using its template.
 	 *
 	 * Given an ID template like `$2/$3/$4` and the value `artist/album/song`, returns
-	 * `[2 => 'artist', 3 => 'album', 4 => 'song']`. Returns null for single-placeholder
-	 * templates (handled by the simple path) or when the value does not match the template.
+	 * `[2 => 'artist', 3 => 'album', 4 => 'song']`. Also handles single-placeholder
+	 * templates that are not `$2` (e.g. `$3`). Returns null when the template contains no
+	 * placeholder or the value does not match the template.
 	 *
 	 * @param string $idTemplate The ID template containing placeholders.
 	 * @param string $id The concrete ID value.
@@ -98,7 +99,7 @@ final class TemplateResolver {
 			$regex .= preg_quote($segment, '~');
 		}
 
-		if (count($order) < 2) {
+		if ($order === []) {
 			return null;
 		}
 

@@ -69,6 +69,10 @@ class StreamHttpClient implements HttpClientInterface {
 
 			$redirectUrl = $this->redirectUrl($url, $metadata['wrapper_data'] ?? []);
 			if ($redirectUrl === null) {
+				if (!$this->isSuccessful($metadata['wrapper_data'] ?? [])) {
+					return null;
+				}
+
 				return $content;
 			}
 
@@ -124,6 +128,25 @@ class StreamHttpClient implements HttpClientInterface {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Whether the final (non-redirect) response carries a 2xx status code.
+	 *
+	 * @param array<int|string, mixed> $headers
+	 * @return bool
+	 */
+	protected function isSuccessful(array $headers): bool {
+		$status = null;
+		foreach ($headers as $header) {
+			if (!is_string($header) || !preg_match('/^HTTP\/\S+\s+([0-9]{3})\b/i', $header, $matches)) {
+				continue;
+			}
+
+			$status = (int)$matches[1];
+		}
+
+		return $status !== null && $status >= 200 && $status < 300;
 	}
 
 	/**

@@ -436,6 +436,7 @@ class MediaEmbedTest extends TestCase {
 	public static function reverseCompoundProviders(): array {
 		return [
 			['mixcloud', 'spartacus/party-time', '//www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2Fspartacus%2Fparty-time%2F&wmode=transparent'],
+			['loom', 'bdb8f2009224416ca642a50296430b8f', 'https://www.loom.com/embed/bdb8f2009224416ca642a50296430b8f?wmode=transparent'],
 			['audiomack', 'officialsisqo/song/thong-song-1', 'https://audiomack.com/embed/song/officialsisqo/thong-song-1?wmode=transparent'],
 			['apple-podcasts', 'us/rimscast/1436041526', 'https://embed.podcasts.apple.com/us/podcast/rimscast/id1436041526?wmode=transparent'],
 			['deezer', 'playlist/1479458365', 'https://widget.deezer.com/widget/auto/playlist/1479458365?wmode=transparent'],
