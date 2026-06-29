@@ -15,6 +15,7 @@ Version 1.0 modernizes the codebase with PHP 8.1+ features, removes deprecated m
 | `getHostOrFail(string $slug)` | `getProviderOrFail(string $slug)` |
 | `setHosts(array $stubs)` | Use constructor with `ProviderLoaderInterface` or `addProviderConfig()` |
 | `object(string $slug)` | `parseId(string $id, string $host)` or `getProvider(string $slug)` |
+| `embedLocal(string $file)` | Removed (was a non-functional no-op returning `false`); no replacement |
 | `MediaObject::setParam()` | `MediaObject::withParam()` |
 | `MediaObject::setAttribute()` | `MediaObject::withAttribute()` |
 | `MediaObject::setWidth()` | `MediaObject::withWidth()` |
