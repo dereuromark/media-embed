@@ -6,3 +6,6 @@ composer.phar
 phpunit.phar
 .idea/
 .phpunit.result.cache
+docs/superpowers/
+_*.md
+/_*/
