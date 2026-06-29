@@ -405,6 +405,129 @@ class MediaObject implements ObjectInterface {
 	}
 
 	/**
+	 * Convert the url to a GDPR-friendly "click-to-load" (two-click) consent placeholder.
+	 *
+	 * Instead of loading the third-party iframe immediately (which may set cookies or
+	 * contact the provider before consent), this renders a lightweight placeholder whose
+	 * real iframe lives inside a `<template>` and is only swapped in on user click. The
+	 * activation logic is provided by the shared, CSP-friendly snippet returned from
+	 * `placeholderScript()`, which you print once per page. A `<noscript>` fallback embeds
+	 * the real iframe for users without JavaScript.
+	 *
+	 * Pairs with privacy mode: when the object was created with `['privacy' => true]`, the
+	 * templated iframe already uses the provider's privacy variant (e.g. youtube-nocookie).
+	 *
+	 * @param array<string, mixed> $options Supported keys:
+	 *   - `thumbnail` (string|null): preview image URL. **No thumbnail is loaded by
+	 *     default** - a remote thumbnail would contact the third party before consent,
+	 *     defeating the purpose. Pass an explicit (ideally local/proxied) URL, or
+	 *     `MediaEmbed::thumbnail($object)` if loading the provider-hosted thumbnail
+	 *     pre-consent is acceptable for your use case.
+	 *   - `label` (string): button text. Defaults to the provider name.
+	 *   - `class` (string): extra CSS class(es) added to the wrapper (and `<class>` to the
+	 *     button). The stable hooks `media-embed-placeholder` / `media-embed-placeholder__button`
+	 *     are always present so `placeholderScript()` keeps working.
+	 *   - `ratio` (string): aspect ratio as "width:height". Defaults to `16:9`.
+	 * @throws \InvalidArgumentException When the ratio is malformed or has a zero component.
+	 * @return string The placeholder HTML
+	 */
+	public function getPlaceholderEmbedCode(array $options = []): string {
+		$extraClass = isset($options['class']) ? trim((string)$options['class']) : '';
+		$ratio = isset($options['ratio']) ? (string)$options['ratio'] : '16:9';
+		$label = isset($options['label']) ? (string)$options['label'] : ($this->name() ?: 'Embedded media');
+
+		// No thumbnail by default: a remote image would contact the third party before consent.
+		$thumbnail = isset($options['thumbnail']) ? (string)$options['thumbnail'] : '';
+
+		// Always keep the stable hook classes so the shared activation script matches,
+		// regardless of any extra class the caller adds.
+		$wrapperClass = 'media-embed-placeholder' . ($extraClass !== '' ? ' ' . $extraClass : '');
+		$buttonClass = 'media-embed-placeholder__button' . ($extraClass !== '' ? ' ' . $extraClass : '');
+
+		[$ratioWidth, $ratioHeight] = $this->parseRatio($ratio);
+		$paddingBottom = $ratioHeight / $ratioWidth * 100;
+
+		// Build the iframe with a fill style (matching getResponsiveEmbedCode()) so that,
+		// once swapped in, it fills the ratio box without a layout jump. Restore state after.
+		$originalAttributes = $this->iframeAttributes;
+		$existingStyle = isset($this->iframeAttributes['style']) ? rtrim((string)$this->iframeAttributes['style'], ';') . ';' : '';
+		$this->iframeAttributes['style'] = $existingStyle . 'position:absolute;top:0;left:0;width:100%;height:100%;border:0;';
+
+		try {
+			$iframe = $this->buildIframe();
+		} finally {
+			$this->iframeAttributes = $originalAttributes;
+		}
+
+		$buttonStyle = 'position:absolute;inset:0;width:100%;height:100%;border:0;cursor:pointer;'
+			. 'display:flex;align-items:center;justify-content:center;color:#fff;font:inherit;'
+			. 'background:#000 center/cover no-repeat;';
+		if ($thumbnail !== '') {
+			// Escape for the nested CSS url('...') context first, then esc() handles the
+			// surrounding HTML attribute. HTML escaping alone does not protect the CSS string.
+			$buttonStyle .= "background-image:url('" . $this->escCssString($thumbnail) . "');";
+		}
+
+		$ariaLabel = $this->name() !== '' ? sprintf('Load embedded content from %s', $this->name()) : 'Load embedded content';
+
+		return sprintf(
+			'<div class="%s" style="position:relative;width:100%%;height:0;padding-bottom:%s%%;overflow:hidden;">'
+				. '<button type="button" class="%s" style="%s" aria-label="%s">%s</button>'
+				. '<template>%s</template>'
+				. '<noscript>%s</noscript>'
+				. '</div>',
+			$this->esc($wrapperClass),
+			rtrim(rtrim(sprintf('%.4f', $paddingBottom), '0'), '.'),
+			$this->esc($buttonClass),
+			$this->esc($buttonStyle),
+			$this->esc($ariaLabel),
+			$this->esc($label),
+			$iframe,
+			$iframe,
+		);
+	}
+
+	/**
+	 * Escape a string for safe use inside a CSS single-quoted string (e.g. `url('...')`).
+	 *
+	 * Backslash-escapes the closing quote, double quote and backslash, and strips line
+	 * breaks. The result is still HTML-escaped by `esc()` for the surrounding `style`
+	 * attribute; this guards the nested CSS context that HTML escaping does not cover.
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	protected function escCssString(string $value): string {
+		$value = str_replace('\\', '\\\\', $value);
+		$value = str_replace(["'", '"'], ["\\'", '\\"'], $value);
+
+		return str_replace(["\r", "\n"], '', $value);
+	}
+
+	/**
+	 * Return the shared, CSP-friendly activation snippet for click-to-load placeholders.
+	 *
+	 * Print this once per page (e.g. before `</body>`), independent of how many
+	 * placeholders are rendered. It is idempotent (guarded against double execution) and
+	 * uses event delegation, so it also handles placeholders inserted after page load.
+	 * It contains no inline event handlers or `eval`, so it works under a strict CSP
+	 * (add a `nonce`/`sha` to the surrounding `<script>` tag as your policy requires).
+	 *
+	 * @return string The JavaScript snippet (without surrounding `<script>` tags).
+	 */
+	public static function placeholderScript(): string {
+		return '(function(){'
+			. 'if(window.__mediaEmbedPlaceholder)return;'
+			. 'window.__mediaEmbedPlaceholder=true;'
+			. 'document.addEventListener("click",function(e){'
+			. 'var b=e.target.closest(".media-embed-placeholder__button");if(!b)return;'
+			. 'var w=b.closest(".media-embed-placeholder");var t=w&&w.querySelector("template");if(!t)return;'
+			. 'w.replaceChildren(t.content.cloneNode(true));'
+			. '});'
+			. '})();';
+	}
+
+	/**
 	 * Whether the iframe source template is fully resolved (no leftover placeholders).
 	 *
 	 * Used by reverse lookups (`parseId()`) to detect IDs that cannot reconstruct a valid

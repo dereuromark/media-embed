@@ -65,6 +65,20 @@ interface ObjectInterface {
 	public function getResponsiveEmbedCode(string $ratio = '16:9'): string;
 
 	/**
+	 * Returns a GDPR-friendly "click-to-load" consent placeholder.
+	 *
+	 * The real iframe is held in a `<template>` and only loaded on user click via the
+	 * shared snippet from `MediaObject::placeholderScript()`. A `<noscript>` fallback
+	 * embeds the real iframe for users without JavaScript.
+	 *
+	 * @api
+	 *
+	 * @param array<string, mixed> $options Supported: `thumbnail`, `label`, `class`, `ratio`.
+	 * @return string
+	 */
+	public function getPlaceholderEmbedCode(array $options = []): string;
+
+	/**
 	 * Returns the raw embed src URL. Useful when the caller controls escaping.
 	 *
 	 * @api

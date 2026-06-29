@@ -671,6 +671,131 @@ class MediaEmbedTest extends TestCase {
 		$Object->getResponsiveEmbedCode('16:0');
 	}
 
+	public function testPlaceholderEmbedCodeWrapsIframeInTemplate(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getPlaceholderEmbedCode();
+
+		$this->assertStringStartsWith('<div class="media-embed-placeholder" style="position:relative;width:100%;height:0;padding-bottom:56.25%;overflow:hidden;">', $code);
+		$this->assertStringContainsString('<button type="button" class="media-embed-placeholder__button"', $code);
+		$this->assertStringContainsString('<template><iframe', $code);
+		$this->assertStringContainsString('<noscript><iframe', $code);
+		$this->assertStringEndsWith('</div>', $code);
+	}
+
+	public function testPlaceholderEmbedCodeUsesProviderNameByDefault(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getPlaceholderEmbedCode();
+
+		$this->assertStringContainsString('aria-label="Load embedded content from YouTube"', $code);
+		$this->assertStringContainsString('>YouTube</button>', $code);
+	}
+
+	public function testPlaceholderEmbedCodeKeepsStableHookClassesWhenCustomClassGiven(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getPlaceholderEmbedCode(['label' => 'Play video', 'class' => 'consent-box']);
+
+		// Stable hooks must remain so placeholderScript() keeps matching; custom class is additive.
+		$this->assertStringContainsString('<div class="media-embed-placeholder consent-box"', $code);
+		$this->assertStringContainsString('class="media-embed-placeholder__button consent-box"', $code);
+		$this->assertStringContainsString('>Play video</button>', $code);
+	}
+
+	public function testPlaceholderEmbedCodeUsesExplicitThumbnailAsBackground(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getPlaceholderEmbedCode(['thumbnail' => 'https://example.com/thumb.jpg']);
+
+		$this->assertStringContainsString('background-image:url(', $code);
+		$this->assertStringContainsString('https://example.com/thumb.jpg', $code);
+	}
+
+	public function testPlaceholderEmbedCodeOmitsThumbnailByDefault(): void {
+		$MediaEmbed = new MediaEmbed();
+		// Even though YouTube declares a static image-src, no remote thumbnail is loaded
+		// before consent by default - that would contact the third party prematurely.
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getPlaceholderEmbedCode();
+
+		$this->assertStringNotContainsString('background-image:', $code);
+		$this->assertStringNotContainsString('img.youtube.com', $code);
+	}
+
+	public function testPlaceholderEmbedCodeEscapesThumbnailForCssContext(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		// A quote in the URL must not break out of the CSS url('...') string. esc() renders
+		// the apostrophe as &#039; (which the browser decodes back to '); the CSS-context
+		// fix prepends a backslash so the decoded char is an escaped quote (\') = safe.
+		$code = $Object->getPlaceholderEmbedCode(['thumbnail' => "https://evil/x');background:red;//"]);
+
+		// The apostrophe is backslash-escaped (\&#039;), so once the browser decodes the
+		// attribute the CSS sees \' (a literal quote) instead of a string-terminating quote.
+		$this->assertStringContainsString('\\&#039;', $code);
+	}
+
+	public function testPlaceholderEmbedCodeSupportsCustomRatio(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertStringContainsString('padding-bottom:75%;', $Object->getPlaceholderEmbedCode(['ratio' => '4:3']));
+	}
+
+	public function testPlaceholderEmbedCodeRejectsInvalidRatio(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->expectException(InvalidArgumentException::class);
+		$Object->getPlaceholderEmbedCode(['ratio' => '16:0']);
+	}
+
+	public function testPlaceholderEmbedCodeUsesPrivacyVariantWhenEnabled(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111', ['privacy' => true]);
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getPlaceholderEmbedCode();
+
+		$this->assertStringContainsString('youtube-nocookie.com', $code);
+	}
+
+	public function testPlaceholderEmbedCodeFillsRatioBoxWithoutMutatingState(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$code = $Object->getPlaceholderEmbedCode();
+
+		$this->assertStringContainsString('style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"', $code);
+		$this->assertNull($Object->getAttributes('style'));
+		$this->assertStringNotContainsString('position:absolute', $Object->getEmbedCode());
+	}
+
+	public function testPlaceholderScriptIsIdempotentAndDelegated(): void {
+		$script = MediaObject::placeholderScript();
+
+		$this->assertStringContainsString('window.__mediaEmbedPlaceholder', $script);
+		$this->assertStringContainsString('addEventListener("click"', $script);
+		$this->assertStringContainsString('.media-embed-placeholder__button', $script);
+		$this->assertStringNotContainsString('eval', $script);
+	}
+
 	public function testEmbedCodeDefaultIframeAttributesCanBeOverridden(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('https://www.youtube.com/watch?v=11111111111');
