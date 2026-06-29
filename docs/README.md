@@ -168,6 +168,9 @@ This returns the iframe wrapped in a positioned container:
 <div style="position:relative;width:100%;height:0;padding-bottom:56.25%;overflow:hidden;"><iframe src="..." ... style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe></div>
 ```
 
+> [!NOTE]
+> A provider's `embed-width` / `embed-height` may be a pixel `int` or a string such as `100%`, but the runtime setters `withWidth(int)` / `withHeight(int)` accept pixels only - their optional ratio adjustment relies on integer math and cannot derive an aspect ratio from a percentage. Use `getResponsiveEmbedCode()` for fluid sizing instead of a percentage width.
+
 ### Adding Custom Providers
 
 You can add your own custom providers in several ways:

@@ -270,6 +270,11 @@ class MediaObject implements ObjectInterface {
 	/**
 	 * Return a new object with a changed height.
 	 *
+	 * Runtime dimensions are pixels only (int); percentage strings such as `100%` are
+	 * not accepted here because the optional ratio adjustment does integer math and
+	 * cannot derive an aspect ratio from a percentage. For fluid sizing use
+	 * getResponsiveEmbedCode(); percentage defaults belong in the provider stub.
+	 *
 	 * @param int $height Height to set the object to
 	 * @param bool $adjustWidth
 	 * @return static
@@ -288,6 +293,9 @@ class MediaObject implements ObjectInterface {
 
 	/**
 	 * Return a new object with a changed width.
+	 *
+	 * Runtime dimensions are pixels only (int); see withHeight() for why percentages
+	 * are not accepted at runtime and getResponsiveEmbedCode() for fluid sizing.
 	 *
 	 * @param int $width Width to set the object to
 	 * @param bool $adjustHeight
