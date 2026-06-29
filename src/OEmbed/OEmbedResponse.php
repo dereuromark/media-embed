@@ -118,4 +118,38 @@ final class OEmbedResponse {
 		return $this->thumbnailUrl !== null && $this->thumbnailUrl !== '';
 	}
 
+	/**
+	 * Convert response data back to oEmbed array shape.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function toArray(): array {
+		$data = [
+			'type' => $this->type,
+			'version' => $this->version,
+		];
+
+		foreach ([
+			'title' => $this->title,
+			'author_name' => $this->authorName,
+			'author_url' => $this->authorUrl,
+			'provider_name' => $this->providerName,
+			'provider_url' => $this->providerUrl,
+			'cache_age' => $this->cacheAge,
+			'thumbnail_url' => $this->thumbnailUrl,
+			'thumbnail_width' => $this->thumbnailWidth,
+			'thumbnail_height' => $this->thumbnailHeight,
+			'html' => $this->html,
+			'width' => $this->width,
+			'height' => $this->height,
+			'url' => $this->url,
+		] as $key => $value) {
+			if ($value !== null) {
+				$data[$key] = $value;
+			}
+		}
+
+		return $data;
+	}
+
 }

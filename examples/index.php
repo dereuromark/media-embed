@@ -1,13 +1,21 @@
 <?php
-include dirname(dirname(__FILE__)) . '/vendor/autoload.php';
-include dirname(__FILE__) . '/lib/functions.php';
 
-$file = dirname(__FILE__) . '/data/videos.csv';
-$videos = getVideos($file);
+declare(strict_types=1);
+
+use MediaEmbed\MediaEmbed;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/lib/functions.php';
+
+$videos = getVideos(__DIR__ . '/data/videos.csv');
+$mediaEmbed = new MediaEmbed();
+$hosts = $mediaEmbed->getHosts();
+ksort($hosts);
+$selectedType = is_string($_GET['type'] ?? null) ? $_GET['type'] : null;
 ?>
 <style>
 table td {
-	 vertical-align: top;
+	vertical-align: top;
 }
 td.types {
 	width: 300px;
@@ -22,107 +30,86 @@ ul.no-examples li {
 </style>
 
 <h1>Video Examples</h1>
-<p>The examples use the iframe if possible, and fallback to the embed object if necessary.</p>
+<p>The examples use iframe embeds.</p>
 
 <table><tr><td class="types">
 <h2>Select Type</h2>
 <ul>
-<?php
-$MediaEmbed = new \MediaEmbed\MediaEmbed();
-$hosts = $MediaEmbed->getHosts();
-ksort($hosts);
-
-foreach ($videos as $name => $parts) {
-	$url = $parts[0];
-	$attributes = $parts[1];
-	$params = $parts[2];
-?>
-	<li><a href="index.php?type=<?php echo $name; ?>"><?php echo $name; ?></a></li>
-<?php
-}
-?>
+<?php foreach ($videos as $name => $parts): ?>
+	<li><a href="index.php?type=<?php echo h($name); ?>"><?php echo h($name); ?></a></li>
+<?php endforeach; ?>
 </ul>
 
 <ul class="no-examples">
-<?php
-foreach ($hosts as $slug => $host) {
-	if ($host['name'] === '$2' || array_key_exists($host['name'], $videos)) {
-		continue;
-	}
-?>
-	<li><?php echo $host['name']; ?></li>
-<?php
-}
-?>
+<?php foreach ($hosts as $host): ?>
+	<?php if ($host['name'] === '$2' || array_key_exists($host['name'], $videos)): ?>
+		<?php continue; ?>
+	<?php endif; ?>
+	<li><?php echo h((string)$host['name']); ?></li>
+<?php endforeach; ?>
 </ul>
 
 Currently supported services: <?php echo count($hosts); ?><br />
 Examples available for <?php echo count($videos); ?> services.
 </td><td>
-<?php
-	if (!empty($_GET['type']) && isset($videos[$_GET['type']])) {
-		$videoUrl = $videos[$_GET['type']][0];
-		$videoAttributes = $videos[$_GET['type']][1];
-		$videoParams = $videos[$_GET['type']][2];
+<?php if ($selectedType !== null && isset($videos[$selectedType])): ?>
+	<?php
+		$videoUrl = $videos[$selectedType][0];
+		$videoAttributes = $videos[$selectedType][1];
+		$videoParams = $videos[$selectedType][2];
+		$mediaObject = $mediaEmbed->parseUrl($videoUrl);
+		if ($mediaObject === null) {
+			throw new RuntimeException('An error occurred with this type.');
+		}
+	?>
 
-		echo '<h2>"' . $_GET['type'] . '"</h2>';
-		echo '<p>Video URL: ' . $videoUrl . '</p>';
+	<h2><?php echo h($selectedType); ?></h2>
+	<p>Video URL: <?php echo h($videoUrl); ?></p>
+	<?php if ($videoAttributes): ?>
+		<p>Video Attributes: <pre><?php echo h(print_r($videoAttributes, true)); ?></pre></p>
+	<?php endif; ?>
+	<?php if ($videoParams): ?>
+		<p>Video Params: <pre><?php echo h(print_r($videoParams, true)); ?></pre></p>
+	<?php endif; ?>
+
+	<table><tr><td>
+	<h3>Parsing Result</h3>
+	Video ID: <?php echo h($mediaObject->id()); ?>
+
+	<h3>Embedded Media</h3>
+	<?php
 		if ($videoAttributes) {
-			echo '<p>Video Attributes: <pre>' . print_r($videoAttributes, 1) . '</pre></p>';
+			$mediaObject = $mediaObject->withAttribute($videoAttributes);
 		}
 		if ($videoParams) {
-			echo '<p>Video Params: <pre>' . print_r($videoParams, 1) . '</pre></p>';
+			$mediaObject = $mediaObject->withParam($videoParams);
 		}
-
-		$Object = $MediaEmbed->parseUrl($videoUrl);
-		if (!$Object) {
-			throw new Exception('An error occured with this type');
-		}
-
-		echo '<table><tr><td>';
-
-		echo '<h3>Parsing Result</h3>';
-		echo 'Video ID: ' . $Object->id();
-
-		echo '<h3>Embedded Media</h3>';
-		//adding attributes
-		if ($videoAttributes) {
-			$Object->setAttribute($videoAttributes);
-		}
-		//adding params
-		if ($videoParams) {
-			$Object->setParam($videoParams);
-		}
-		$embed = $Object->getEmbedCode();
-  	// or
-		//$embed = (string)$result;
+		$embed = $mediaObject->getEmbedCode();
 		echo $embed;
+	?>
 
-		echo '<div><h3>Embed code:</h3><textarea>' . htmlspecialchars($embed) . '</textarea></div>';
+	<div><h3>Embed code:</h3><textarea><?php echo h($embed); ?></textarea></div>
+	</td><td>
+	<?php
+		$id = $mediaObject->id();
+		$slug = $mediaObject->slug();
+		// parseId() returns null when the stored ID cannot rebuild a complete embed.
+		$reverseLookupObject = $mediaEmbed->parseId($id, $slug);
+		$reverseEmbed = $reverseLookupObject?->getEmbedCode();
+	?>
 
-		echo '</td><td>';
-		$id = $Object->id();
-		$slug = $Object->slug();
-		//remove some params here
-		$Object->setParam('autoplay', 0);
-		$ObjectFromReverseLookup = $MediaEmbed->parseId($id, $slug);
-		echo '<h3>Reverse lookup by video id and host slug</h3>';
-		echo 'Result: ' . ($ObjectFromReverseLookup ? 'OK' : 'ERROR');
+	<h3>Reverse lookup by video id and host slug</h3>
+	Result: <?php echo $reverseEmbed !== null ? 'OK' : 'Not available for this provider'; ?>
 
-		if ($ObjectFromReverseLookup) {
-			echo '<h3>Embedded Media</h3>';
-			$embed = $Object->getEmbedCode();
-
-			echo $embed;
-
-			echo '<div><h3>Embed code:</h3><textarea>' . htmlspecialchars($embed) . '</textarea></div>';
-		}
-
-		echo '</td></tr></table>';
-	}
-?>
+	<?php if ($reverseEmbed !== null): ?>
+		<h3>Embedded Media</h3>
+		<?php echo $reverseEmbed; ?>
+		<div><h3>Embed code:</h3><textarea><?php echo h($reverseEmbed); ?></textarea></div>
+	<?php endif; ?>
+	</td></tr></table>
+<?php endif; ?>
 </td></tr></table>
 
 <p>
-If there are outdated (not working) example URLs or missing types, let me know or provide a PR in <a href="https://github.com/dereuromark/MediaEmbed" target="_blank">GitHub</a> to fix this.
+If there are outdated example URLs or missing types, let us know or provide a PR in <a href="https://github.com/dereuromark/media-embed" target="_blank" rel="noopener">GitHub</a>.
 </p>

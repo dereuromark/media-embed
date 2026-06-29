@@ -38,6 +38,9 @@
 			"pattern": "^https://vooplayer.com"
 		},
 		{
+			"pattern": "^https://coub.com"
+		},
+		{
 			"pattern": "^https://www.msnbc.msn.com"
 		},
 		{
@@ -48,6 +51,12 @@
 		},
 		{
 			"pattern": "^https://rumble.com"
+		},
+		{
+			"pattern": "^https://www.rutube.ru"
+		},
+		{
+			"pattern": "^https://packagist.org/packages/dereuromark/media-embed"
 		}
 	],
 	"aliveStatusCodes": [200, 202, 206, 429]

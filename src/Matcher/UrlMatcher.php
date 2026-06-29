@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Matcher;
 
-use MediaEmbed\Cache\CacheInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * URL matcher with optional domain-based caching for faster lookups.
@@ -16,7 +16,8 @@ final class UrlMatcher {
 
 	/**
 	 * Cache key for the domain index.
-     * @var string
+	 *
+	 * @var string
 	 */
 	private const CACHE_KEY = 'media_embed_domain_index';
 
@@ -58,7 +59,7 @@ final class UrlMatcher {
 
 	/**
 	 * @param array<string, array<string, mixed>> $providers Providers keyed by slug.
-	 * @param \MediaEmbed\Cache\CacheInterface|null $cache Optional cache for persisting domain index.
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Optional cache for persisting domain index.
 	 * @param int $cacheTtl Cache TTL in seconds.
 	 */
 	public function __construct(array $providers = [], ?CacheInterface $cache = null, int $cacheTtl = 3600) {
@@ -79,9 +80,9 @@ final class UrlMatcher {
 		$this->domainIndex = [];
 		$this->unindexedSlugs = [];
 
-		// Clear cached index when providers change
+		// Clear cached index when providers change.
 		if ($this->cache !== null) {
-			$this->cache->delete(self::CACHE_KEY);
+			$this->cache->delete($this->cacheKey());
 		}
 
 		return $this;
@@ -90,7 +91,7 @@ final class UrlMatcher {
 	/**
 	 * Set the cache implementation.
 	 *
-	 * @param \MediaEmbed\Cache\CacheInterface|null $cache Cache implementation.
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Cache implementation.
 	 * @param int $ttl Cache TTL in seconds.
 	 * @return $this
 	 */
@@ -246,7 +247,7 @@ final class UrlMatcher {
 
 		// Try to load from cache first
 		if ($this->cache !== null) {
-			$cached = $this->cache->get(self::CACHE_KEY);
+			$cached = $this->cache->get($this->cacheKey());
 			if (is_array($cached)) {
 				$this->domainIndex = $cached;
 				$this->unindexedSlugs = $this->extractUnindexedSlugs();
@@ -291,10 +292,36 @@ final class UrlMatcher {
 
 		// Store in cache
 		if ($this->cache !== null) {
-			$this->cache->set(self::CACHE_KEY, $this->domainIndex, $this->cacheTtl);
+			$this->cache->set($this->cacheKey(), $this->domainIndex, $this->cacheTtl);
 		}
 
 		$this->indexBuilt = true;
+	}
+
+	/**
+	 * Build a provider-data-specific cache key for the domain index.
+	 *
+	 * @return string
+	 */
+	private function cacheKey(): string {
+		return self::CACHE_KEY . '_' . substr(hash('sha256', serialize($this->normalizedProviderData($this->providers))), 0, 16);
+	}
+
+	/**
+	 * Normalize provider data before hashing it for cache keys.
+	 *
+	 * @param array<string, mixed> $data
+	 * @return array<string, mixed>
+	 */
+	private function normalizedProviderData(array $data): array {
+		ksort($data);
+		foreach ($data as $key => $value) {
+			if (is_array($value)) {
+				$data[$key] = $this->normalizedProviderData($value);
+			}
+		}
+
+		return $data;
 	}
 
 	/**
@@ -309,14 +336,7 @@ final class UrlMatcher {
 			return null;
 		}
 
-		$host = $parsed['host'];
-
-		// Remove www. prefix for matching
-		if (str_starts_with($host, 'www.')) {
-			$host = substr($host, 4);
-		}
-
-		return strtolower($host);
+		return $this->normalizeHost($parsed['host']);
 	}
 
 	/**
@@ -334,18 +354,27 @@ final class UrlMatcher {
 			foreach ($matches[1] as $match) {
 				// Unescape the domain
 				$domain = str_replace('\\.', '.', $match);
-				$domain = strtolower($domain);
-
-				// Remove www. prefix
-				if (str_starts_with($domain, 'www.')) {
-					$domain = substr($domain, 4);
-				}
-
-				$domains[] = $domain;
+				$domains[] = $this->normalizeHost($domain);
 			}
 		}
 
 		return array_unique($domains);
+	}
+
+	/**
+	 * Normalize a hostname by lowercasing and removing www. prefix.
+	 *
+	 * @param string $host
+	 * @return string
+	 */
+	private function normalizeHost(string $host): string {
+		$host = strtolower($host);
+
+		if (str_starts_with($host, 'www.')) {
+			return substr($host, 4);
+		}
+
+		return $host;
 	}
 
 	/**

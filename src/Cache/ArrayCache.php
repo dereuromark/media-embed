@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Cache;
 
+use DateInterval;
+use DateTimeImmutable;
+
 /**
  * Simple in-memory array cache.
  *
@@ -13,7 +16,7 @@ namespace MediaEmbed\Cache;
 final class ArrayCache implements CacheInterface {
 
 	/**
-	 * @var array<string, mixed>
+	 * @var array<string, array{value: mixed, expires: float|null}>
 	 */
 	private array $cache = [];
 
@@ -21,14 +24,21 @@ final class ArrayCache implements CacheInterface {
 	 * @inheritDoc
 	 */
 	public function get(string $key, mixed $default = null): mixed {
-		return $this->cache[$key] ?? $default;
+		if (!$this->has($key)) {
+			return $default;
+		}
+
+		return $this->cache[$key]['value'];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function set(string $key, mixed $value, ?int $ttl = null): bool {
-		$this->cache[$key] = $value;
+	public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool {
+		$this->cache[$key] = [
+			'value' => $value,
+			'expires' => $this->expiresAt($ttl),
+		];
 
 		return true;
 	}
@@ -46,7 +56,18 @@ final class ArrayCache implements CacheInterface {
 	 * @inheritDoc
 	 */
 	public function has(string $key): bool {
-		return isset($this->cache[$key]);
+		if (!array_key_exists($key, $this->cache)) {
+			return false;
+		}
+
+		$expires = $this->cache[$key]['expires'];
+		if ($expires !== null && $expires <= microtime(true)) {
+			unset($this->cache[$key]);
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -58,6 +79,62 @@ final class ArrayCache implements CacheInterface {
 		$this->cache = [];
 
 		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @param iterable<string> $keys
+	 */
+	public function getMultiple(iterable $keys, mixed $default = null): iterable {
+		$values = [];
+		foreach ($keys as $key) {
+			$values[$key] = $this->get($key, $default);
+		}
+
+		return $values;
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @param iterable<string, mixed> $values
+	 */
+	public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool {
+		foreach ($values as $key => $value) {
+			$this->set($key, $value, $ttl);
+		}
+
+		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @param iterable<string> $keys
+	 */
+	public function deleteMultiple(iterable $keys): bool {
+		foreach ($keys as $key) {
+			$this->delete($key);
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param \DateInterval|int|null $ttl
+	 * @return float|null
+	 */
+	private function expiresAt(DateInterval|int|null $ttl): ?float {
+		if ($ttl === null) {
+			return null;
+		}
+
+		if ($ttl instanceof DateInterval) {
+			return (float)(new DateTimeImmutable())->add($ttl)->format('U.u');
+		}
+
+		return microtime(true) + $ttl;
 	}
 
 }

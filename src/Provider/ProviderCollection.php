@@ -8,8 +8,10 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use MediaEmbed\Exception\ProviderNotFoundException;
+use MediaEmbed\Provider\Enum\Category;
+use MediaEmbed\Provider\Enum\Status;
+use MediaEmbed\Slugger\UrlifySlugger;
 use Traversable;
-use URLify;
 
 /**
  * Collection of provider configurations.
@@ -74,9 +76,9 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	/**
 	 * Get a provider by slug or throw exception if not found.
 	 *
-     * @param string $slug Provider slug.
-     * @throws \MediaEmbed\Exception\ProviderNotFoundException
-     * @return \MediaEmbed\Provider\ProviderConfig
+	 * @param string $slug Provider slug.
+	 * @throws \MediaEmbed\Exception\ProviderNotFoundException
+	 * @return \MediaEmbed\Provider\ProviderConfig
 	 */
 	public function getOrFail(string $slug): ProviderConfig {
 		if (!isset($this->providers[$slug])) {
@@ -143,6 +145,28 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	}
 
 	/**
+	 * Filter providers by lifecycle status.
+	 *
+	 * @param \MediaEmbed\Provider\Enum\Status|string $status Provider status (enum or its string value).
+	 */
+	public function withStatus(Status|string $status): self {
+		$status = $status instanceof Status ? $status : Status::tryFrom($status);
+
+		return $this->filter(fn (ProviderConfig $config) => $config->status === $status);
+	}
+
+	/**
+	 * Filter providers by content category.
+	 *
+	 * @param \MediaEmbed\Provider\Enum\Category|string $category Provider category (enum or its string value).
+	 */
+	public function withCategory(Category|string $category): self {
+		$category = $category instanceof Category ? $category : Category::tryFrom($category);
+
+		return $this->filter(fn (ProviderConfig $config) => $config->category === $category);
+	}
+
+	/**
 	 * Convert collection to array format.
 	 *
 	 * @return array<string, array<string, mixed>>
@@ -191,7 +215,7 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	 * @return string
 	 */
 	private function generateSlug(string $name): string {
-		return URLify::filter($name);
+		return (new UrlifySlugger())->slug($name);
 	}
 
 }

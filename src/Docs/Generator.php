@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MediaEmbed\Docs;
 
 use MediaEmbed\MediaEmbed;
@@ -62,23 +64,37 @@ class Generator {
 	 * @return string
 	 */
 	protected function build(): string {
-		$services = [];
+		$rows = [];
+		$counts = [];
 		$hosts = (new MediaEmbed())->getHosts();
 		ksort($hosts);
 
 		foreach ($hosts as $host) {
-			$services[] = ' - ' . $this->name($host);
+			$status = (string)($host['status'] ?? 'active');
+			$category = (string)($host['category'] ?? 'video');
+			$counts[$status] = ($counts[$status] ?? 0) + 1;
+			$rows[] = '| ' . $this->name($host) . ' | ' . $status . ' | ' . $category . ' | ' . $this->capabilities($host) . ' | ' . $this->notes($host) . ' |';
 		}
 
-		$counter = count($services) . ' services';
+		ksort($counts);
+		$summary = [];
+		foreach ($counts as $status => $count) {
+			$summary[] = $count . ' ' . $status;
+		}
 
-		$serviceList = implode(PHP_EOL, $services);
+		$counter = count($rows) . ' services (' . implode(', ', $summary) . ')';
+
+		$serviceList = implode(PHP_EOL, $rows);
 
 		$content = <<<TEXT
 # Supported Media Services
 
 $counter
 
+Provider example URLs are covered by the release fixture matrix in `tests/Fixture/provider_urls.php`.
+
+| Service | Status | Category | Capabilities | Notes |
+|---------|--------|----------|--------------|-------|
 $serviceList
 
 TEXT;
@@ -97,6 +113,38 @@ TEXT;
 		}
 
 		return $array['name'];
+	}
+
+	/**
+	 * @param array<string, mixed> $array
+	 * @return string
+	 */
+	protected function capabilities(array $array): string {
+		$capabilities = ['iframe'];
+
+		if (!empty($array['image-src'])) {
+			$capabilities[] = 'thumbnail';
+		}
+		if (!empty($array['supports-timestamp'])) {
+			$capabilities[] = 'timestamp';
+		}
+		if (!empty($array['fetch-match'])) {
+			$capabilities[] = 'fetch';
+		}
+
+		return implode(', ', $capabilities);
+	}
+
+	/**
+	 * @param array<string, mixed> $array
+	 * @return string
+	 */
+	protected function notes(array $array): string {
+		if (empty($array['notes']) || !is_string($array['notes'])) {
+			return '';
+		}
+
+		return str_replace('|', '\\|', $array['notes']);
 	}
 
 }

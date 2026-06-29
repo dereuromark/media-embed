@@ -1,23 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MediaEmbed;
 
+use InvalidArgumentException;
 use MediaEmbed\Exception\FetchException;
 use MediaEmbed\Exception\InvalidUrlException;
+use MediaEmbed\Exception\ProviderConfigException;
 use MediaEmbed\Exception\ProviderNotFoundException;
 use MediaEmbed\Http\HttpClientInterface;
+use MediaEmbed\Http\Psr18HttpClient;
 use MediaEmbed\Http\StreamHttpClient;
+use MediaEmbed\Matcher\MatchResult;
 use MediaEmbed\Matcher\UrlMatcher;
 use MediaEmbed\Object\MediaObject;
+use MediaEmbed\OEmbed\OEmbedDiscovery;
+use MediaEmbed\OEmbed\OEmbedResponse;
 use MediaEmbed\Provider\PhpFileLoader;
 use MediaEmbed\Provider\ProviderCollection;
 use MediaEmbed\Provider\ProviderConfig;
 use MediaEmbed\Provider\ProviderLoaderInterface;
-use URLify;
-
-if (!defined('DS')) {
-	define('DS', DIRECTORY_SEPARATOR);
-}
+use MediaEmbed\Slugger\SluggerInterface;
+use MediaEmbed\Slugger\UrlifySlugger;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * A utility that generates HTML embed tags for audio or video located on a given URL.
@@ -29,21 +37,25 @@ if (!defined('DS')) {
 class MediaEmbed {
 
 	/**
-	 * @var array<string>
+	 * Last URL match result.
+	 *
+	 * @var array<string>|null
 	 */
-	protected ?array $_match = null;
+	protected ?array $lastMatch = null;
 
 	/**
+	 * Registered provider configurations.
+	 *
 	 * @var array<string, array<string, mixed>>
 	 */
-	protected array $_hosts = [];
+	protected array $providers = [];
 
 	/**
-	 * See MediaObject for details
+	 * Configuration options passed to MediaObject.
 	 *
 	 * @var array<string, mixed>
 	 */
-	public array $config = [];
+	protected array $config = [];
 
 	/**
 	 * HTTP client for fetching remote content.
@@ -51,9 +63,24 @@ class MediaEmbed {
 	protected HttpClientInterface $httpClient;
 
 	/**
+	 * Slugger used to derive provider slugs from names.
+	 */
+	protected SluggerInterface $slugger;
+
+	/**
 	 * URL matcher with domain-based caching.
 	 */
 	protected ?UrlMatcher $urlMatcher = null;
+
+	/**
+	 * Optional cache for the URL matcher domain index.
+	 */
+	protected ?CacheInterface $cache = null;
+
+	/**
+	 * URL matcher cache TTL in seconds.
+	 */
+	protected int $cacheTtl = 3600;
 
 	/**
 	 * Get the HTTP client.
@@ -83,26 +110,45 @@ class MediaEmbed {
 	 * @param string|null $stubsPath
 	 * @param \MediaEmbed\Http\HttpClientInterface|null $httpClient
 	 * @param \MediaEmbed\Provider\ProviderLoaderInterface|null $providerLoader
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache
+	 * @param int $cacheTtl
+	 * @param \MediaEmbed\Slugger\SluggerInterface|null $slugger
+	 * @param \Psr\Http\Client\ClientInterface|null $psrHttpClient Optional PSR-18 client (used when no $httpClient is given).
+	 * @param \Psr\Http\Message\RequestFactoryInterface|null $requestFactory PSR-17 request factory (required with $psrHttpClient).
 	 */
 	public function __construct(
 		array $config = [],
 		?string $stubsPath = null,
 		?HttpClientInterface $httpClient = null,
 		?ProviderLoaderInterface $providerLoader = null,
+		?CacheInterface $cache = null,
+		int $cacheTtl = 3600,
+		?SluggerInterface $slugger = null,
+		?ClientInterface $psrHttpClient = null,
+		?RequestFactoryInterface $requestFactory = null,
 	) {
+		if (($psrHttpClient !== null) !== ($requestFactory !== null)) {
+			throw new InvalidArgumentException('A PSR-18 client and a PSR-17 request factory must be provided together.');
+		}
+		if ($httpClient === null && $psrHttpClient !== null && $requestFactory !== null) {
+			$httpClient = new Psr18HttpClient($psrHttpClient, $requestFactory);
+		}
 		$this->httpClient = $httpClient ?? new StreamHttpClient();
+		$this->slugger = $slugger ?? new UrlifySlugger();
+		$this->cache = $cache;
+		$this->cacheTtl = $cacheTtl;
 
 		// Use provided loader or default to PhpFileLoader
 		if ($providerLoader !== null) {
 			$stubs = $providerLoader->load();
 		} else {
 			if ($stubsPath === null) {
-				$stubsPath = dirname(__DIR__) . DS . 'data' . DS . 'stubs.php';
+				$stubsPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'stubs.php';
 			}
 			$loader = new PhpFileLoader($stubsPath);
 			$stubs = $loader->load();
 		}
-		$this->setHosts($stubs);
+		$this->registerProviders($stubs);
 		$this->config = $config + $this->config;
 
 		// Load custom providers from config file if specified
@@ -113,7 +159,7 @@ class MediaEmbed {
 		// Add custom providers from config array
 		if (!empty($config['custom_providers']) && is_array($config['custom_providers'])) {
 			foreach ($config['custom_providers'] as $provider) {
-				$this->addProvider($provider);
+				$this->addProviderConfig(ProviderConfig::fromArray($provider));
 			}
 		}
 	}
@@ -132,67 +178,53 @@ class MediaEmbed {
 			return null;
 		}
 
-		// local files?
-		if ($host === 'local') {
-			$res = $this->embedLocal($id);
-			if (!$res) {
-				$stub = [];
-				$Object = $this->object($stub, $config);
-
-				return $Object;
-			}
-
-			//TODO
+		if (empty($this->providers[$host])) {
 			return null;
 		}
-
-		// all other hosts
-		$hostArray = $this->getHost($host);
-		if (!$hostArray) {
-			return null;
-		}
-		$stub = $hostArray;
+		$stub = $this->providers[$host];
 		$config += $this->config;
 
+		$stub['id-template'] = $stub['id'] ?? null;
 		$stub['id'] = $id;
 		$stub['reverse'] = true;
-		$Object = $this->object($stub, $config);
 
-		return $Object;
+		$object = $this->object($stub, $config);
+		if (!$object->isSourceResolved()) {
+			return null;
+		}
+
+		return $object;
 	}
 
 	/**
 	 * Prepare embed video from different video hosts or throw exception on failure.
 	 *
-     * @param string $id
-     * @param string $host
-     * @param array<string, mixed> $config
-     *
-     * @throws \MediaEmbed\Exception\InvalidUrlException When ID or host is empty.
-     * @throws \MediaEmbed\Exception\ProviderNotFoundException When host is not found.
-     * @return \MediaEmbed\Object\MediaObject
+	 * @param string $id
+	 * @param string $host
+	 * @param array<string, mixed> $config
+	 *
+	 * @throws \MediaEmbed\Exception\InvalidUrlException When ID or host is empty.
+	 * @throws \MediaEmbed\Exception\ProviderNotFoundException When host is not found.
+	 * @return \MediaEmbed\Object\MediaObject
 	 */
 	public function parseIdOrFail(string $id, string $host, array $config = []): MediaObject {
 		if (!$id || !$host) {
 			throw new InvalidUrlException('', 'ID and host are required.');
 		}
 
-		// local files not supported in OrFail variant
-		if ($host === 'local') {
+		if (empty($this->providers[$host])) {
 			throw new ProviderNotFoundException($host);
 		}
-
-		// all other hosts
-		$hostArray = $this->getHostOrFail($host);
-		$stub = $hostArray;
+		$stub = $this->providers[$host];
 		$config += $this->config;
 
+		$stub['id-template'] = $stub['id'] ?? null;
 		$stub['id'] = $id;
 		$stub['reverse'] = true;
 
 		$object = $this->object($stub, $config);
-		if ($object === null) {
-			throw new ProviderNotFoundException($host);
+		if (!$object->isSourceResolved()) {
+			throw new InvalidUrlException($id, 'Could not resolve embed source for the given ID.');
 		}
 
 		return $object;
@@ -214,15 +246,15 @@ class MediaEmbed {
 		}
 
 		$stub = $result->providerStub;
-		$this->_match = $result->matches;
+		$this->lastMatch = $result->matches;
 
 		if (!empty($stub['fetch-match'])) {
-			if (!$this->_parseLink($url, $stub['fetch-match'])) {
+			if (!$this->parseLink($url, $stub['fetch-match'])) {
 				return null;
 			}
 		}
 
-		$stub['match'] = $this->_match;
+		$stub['match'] = $this->lastMatch;
 
 		return $this->object($stub, $config + $this->config);
 	}
@@ -230,11 +262,11 @@ class MediaEmbed {
 	/**
 	 * Parse given URL or throw exception on failure.
 	 *
-     * @param string $url Href to check for embedded video
-     * @param array<string, mixed> $config
-     * @throws \MediaEmbed\Exception\InvalidUrlException When URL is not supported.
-     * @throws \MediaEmbed\Exception\FetchException When fetch-match fails.
-     * @return \MediaEmbed\Object\MediaObject
+	 * @param string $url Href to check for embedded video
+	 * @param array<string, mixed> $config
+	 * @throws \MediaEmbed\Exception\InvalidUrlException When URL is not supported.
+	 * @throws \MediaEmbed\Exception\FetchException When fetch-match fails.
+	 * @return \MediaEmbed\Object\MediaObject
 	 */
 	public function parseUrlOrFail(string $url, array $config = []): MediaObject {
 		$result = $this->getUrlMatcher()->match($url);
@@ -243,22 +275,52 @@ class MediaEmbed {
 		}
 
 		$stub = $result->providerStub;
-		$this->_match = $result->matches;
+		$this->lastMatch = $result->matches;
 
 		if (!empty($stub['fetch-match'])) {
-			if (!$this->_parseLink($url, $stub['fetch-match'])) {
+			if (!$this->parseLink($url, $stub['fetch-match'])) {
 				throw new FetchException($url, sprintf('Failed to fetch and match content from URL: %s', $url));
 			}
 		}
 
-		$stub['match'] = $this->_match;
+		$stub['match'] = $this->lastMatch;
 
-		$object = $this->object($stub, $config + $this->config);
-		if ($object === null) {
-			throw new InvalidUrlException($url);
+		return $this->object($stub, $config + $this->config);
+	}
+
+	/**
+	 * Match a URL against the registered providers without creating a media object.
+	 *
+	 * @param string $url Href to check for embedded video
+	 * @return \MediaEmbed\Matcher\MatchResult|null
+	 */
+	public function matchUrl(string $url): ?MatchResult {
+		return $this->getUrlMatcher()->match($url);
+	}
+
+	/**
+	 * Check whether a URL is supported by any registered provider.
+	 *
+	 * @param string $url Href to check for embedded video
+	 * @return bool
+	 */
+	public function supportsUrl(string $url): bool {
+		return $this->matchUrl($url) !== null;
+	}
+
+	/**
+	 * Get the provider configuration that matches a URL.
+	 *
+	 * @param string $url Href to check for embedded video
+	 * @return \MediaEmbed\Provider\ProviderConfig|null
+	 */
+	public function getProviderForUrl(string $url): ?ProviderConfig {
+		$result = $this->matchUrl($url);
+		if ($result === null) {
+			return null;
 		}
 
-		return $object;
+		return ProviderConfig::fromArray($result->providerStub);
 	}
 
 	/**
@@ -268,28 +330,25 @@ class MediaEmbed {
 	 */
 	public function getUrlMatcher(): UrlMatcher {
 		if ($this->urlMatcher === null) {
-			$this->urlMatcher = new UrlMatcher($this->_hosts);
+			$this->urlMatcher = new UrlMatcher($this->providers, $this->cache, $this->cacheTtl);
 		}
 
 		return $this->urlMatcher;
 	}
 
 	/**
-	 * MediaEmbed::_match()
+	 * Set the cache used by the URL matcher.
 	 *
-	 * @param string $url
-	 * @param array<string> $regexRules
-	 * @return array<string>
+	 * @param \Psr\SimpleCache\CacheInterface|null $cache Cache implementation.
+	 * @param int $ttl Cache TTL in seconds.
+	 * @return $this
 	 */
-	protected function _matchUrl(string $url, array $regexRules): array {
-		foreach ($regexRules as $regexRule) {
+	public function setCache(?CacheInterface $cache, int $ttl = 3600) {
+		$this->cache = $cache;
+		$this->cacheTtl = $ttl;
+		$this->urlMatcher = null;
 
-			if (preg_match('~' . $regexRule . '~imu', $url, $match)) {
-				return $match;
-			}
-		}
-
-		return [];
+		return $this;
 	}
 
 	/**
@@ -299,7 +358,7 @@ class MediaEmbed {
 	 * @param string $regex
 	 * @return bool
 	 */
-	protected function _parseLink(string $url, string $regex): bool {
+	protected function parseLink(string $url, string $regex): bool {
 		$content = $this->httpClient->get($url);
 		if (!$content) {
 			return false;
@@ -311,7 +370,7 @@ class MediaEmbed {
 		}
 
 		if (preg_match('~' . $regex . '~imu', $source, $match)) {
-			$this->_match = $match;
+			$this->lastMatch = $match;
 
 			return true;
 		}
@@ -320,54 +379,27 @@ class MediaEmbed {
 	}
 
 	/**
-	 * Set custom stubs overwriting the default ones.
+	 * Register multiple provider configurations.
 	 *
-	 * @param array<string, array<string, mixed>> $stubs Same format as in the stubs.php file.
-	 * @param bool $reset If default ones should be resetted/removed.
-	 * @return $this
+	 * @param array<array<string, mixed>> $stubs Provider configuration arrays.
+	 * @param bool $reset Whether to reset existing providers.
+	 * @return void
 	 */
-	public function setHosts(array $stubs, bool $reset = false) {
+	protected function registerProviders(array $stubs, bool $reset = false): void {
 		if ($reset) {
-			$this->_hosts = [];
+			$this->providers = [];
 		}
 		foreach ($stubs as $stub) {
-			$slug = $this->_slug($stub['name']);
-			$this->_hosts[$slug] = $stub;
+			$config = ProviderConfig::fromArray($stub);
+			$slug = $config->slug ?? $this->slug($config->name);
+			$array = $config->toArray();
+			if (!isset($array['slug'])) {
+				$array['slug'] = $slug;
+			}
+			$this->providers[$slug] = $array;
 		}
 
 		$this->urlMatcher = null; // Reset matcher when hosts change
-
-		return $this;
-	}
-
-	/**
-	 * Add a single provider dynamically.
-	 *
-	 * @deprecated Use addProviderConfig() with ProviderConfig DTO for type-safe provider configuration.
-	 *
-	 * @param array<string, mixed> $provider Provider configuration array.
-	 * @param bool $override Whether to override existing provider with same name.
-	 * @return $this
-	 */
-	public function addProvider(array $provider, bool $override = false) {
-		if (empty($provider['name'])) {
-			return $this;
-		}
-
-		$slug = !empty($provider['slug']) ? $provider['slug'] : $this->_slug($provider['name']);
-
-		if (!$override && isset($this->_hosts[$slug])) {
-			return $this;
-		}
-
-		if (empty($provider['slug'])) {
-			$provider['slug'] = $slug;
-		}
-
-		$this->_hosts[$slug] = $provider;
-		$this->urlMatcher = null; // Reset matcher when providers change
-
-		return $this;
 	}
 
 	/**
@@ -398,7 +430,7 @@ class MediaEmbed {
 		if (is_array($providers)) {
 			foreach ($providers as $provider) {
 				if (is_array($provider)) {
-					$this->addProvider($provider);
+					$this->addProviderConfig(ProviderConfig::fromArray($provider));
 				}
 			}
 		}
@@ -419,9 +451,55 @@ class MediaEmbed {
 		}
 
 		$providers = $loader->load();
-		$this->setHosts($providers, $reset);
+		$this->registerProviders($providers, $reset);
 
 		return $this;
+	}
+
+	/**
+	 * Fetch oEmbed data for a parsed media object using the provider's registered endpoint.
+	 *
+	 * Returns null when the provider has no `oembed` endpoint, the object has no source URL
+	 * (e.g. created via parseId()), or the request/parse fails.
+	 *
+	 * @param \MediaEmbed\Object\MediaObject $object Parsed media object.
+	 * @param int|null $maxWidth Maximum embed width.
+	 * @param int|null $maxHeight Maximum embed height.
+	 * @return \MediaEmbed\OEmbed\OEmbedResponse|null
+	 */
+	public function oEmbed(MediaObject $object, ?int $maxWidth = null, ?int $maxHeight = null): ?OEmbedResponse {
+		$endpoint = $object->oEmbedEndpoint();
+		if ($endpoint === null) {
+			return null;
+		}
+
+		return $this->oEmbedDiscovery()->fetch($endpoint, $maxWidth, $maxHeight);
+	}
+
+	/**
+	 * Resolve a thumbnail URL for a parsed media object.
+	 *
+	 * Prefers the provider's static thumbnail (image-src) and falls back to the oEmbed
+	 * `thumbnail_url` when the provider exposes an oEmbed endpoint.
+	 *
+	 * @param \MediaEmbed\Object\MediaObject $object Parsed media object.
+	 * @return string|null
+	 */
+	public function thumbnail(MediaObject $object): ?string {
+		// getImageSrc() resolves image-src for both URL- and ID-parsed objects.
+		$static = $object->getImageSrc();
+		if ($static !== null && $static !== '') {
+			return $static;
+		}
+
+		return $this->oEmbed($object)?->thumbnailUrl;
+	}
+
+	/**
+	 * @return \MediaEmbed\OEmbed\OEmbedDiscovery
+	 */
+	protected function oEmbedDiscovery(): OEmbedDiscovery {
+		return new OEmbedDiscovery($this->httpClient, $this->cache, $this->cacheTtl);
 	}
 
 	/**
@@ -431,7 +509,7 @@ class MediaEmbed {
 	public function getHosts(array $whitelist = []): array {
 		if ($whitelist) {
 			$res = [];
-			foreach ($this->_hosts as $slug => $host) {
+			foreach ($this->providers as $slug => $host) {
 				if (!in_array($slug, $whitelist, true)) {
 					continue;
 				}
@@ -441,44 +519,7 @@ class MediaEmbed {
 			return $res;
 		}
 
-		return $this->_hosts;
-	}
-
-	/**
-	 * @deprecated Use getProvider() which returns a ProviderConfig DTO.
-	 *
-	 * @param string $alias
-	 * @return array<string, mixed>|null Host info or null on failure
-	 */
-	public function getHost(string $alias): ?array {
-		if (!$this->_hosts) {
-			$this->_hosts = $this->getHosts();
-		}
-		if (empty($this->_hosts[$alias])) {
-			return null;
-		}
-
-		return $this->_hosts[$alias];
-	}
-
-	/**
-	 * Get a provider by alias or throw exception if not found.
-	 *
-	 * @deprecated Use getProviderOrFail() which returns a ProviderConfig DTO.
-	 *
-	 * @param string $alias
-	 * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
-	 * @return array<string, mixed> Host info
-	 */
-	public function getHostOrFail(string $alias): array {
-		if (!$this->_hosts) {
-			$this->_hosts = $this->getHosts();
-		}
-		if (empty($this->_hosts[$alias])) {
-			throw new ProviderNotFoundException($alias);
-		}
-
-		return $this->_hosts[$alias];
+		return $this->providers;
 	}
 
 	/**
@@ -488,25 +529,26 @@ class MediaEmbed {
 	 * @return \MediaEmbed\Provider\ProviderConfig|null Provider config or null if not found.
 	 */
 	public function getProvider(string $alias): ?ProviderConfig {
-		$host = $this->getHost($alias);
-		if ($host === null) {
+		if (empty($this->providers[$alias])) {
 			return null;
 		}
 
-		return ProviderConfig::fromArray($host);
+		return ProviderConfig::fromArray($this->providers[$alias]);
 	}
 
 	/**
 	 * Get a provider configuration by alias or throw exception.
 	 *
-     * @param string $alias Provider slug/alias.
-     * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
-     * @return \MediaEmbed\Provider\ProviderConfig Provider config.
+	 * @param string $alias Provider slug/alias.
+	 * @throws \MediaEmbed\Exception\ProviderNotFoundException When provider is not found.
+	 * @return \MediaEmbed\Provider\ProviderConfig Provider config.
 	 */
 	public function getProviderOrFail(string $alias): ProviderConfig {
-		$host = $this->getHostOrFail($alias);
+		if (empty($this->providers[$alias])) {
+			throw new ProviderNotFoundException($alias);
+		}
 
-		return ProviderConfig::fromArray($host);
+		return ProviderConfig::fromArray($this->providers[$alias]);
 	}
 
 	/**
@@ -529,9 +571,12 @@ class MediaEmbed {
 	 * @return $this
 	 */
 	public function addProviderConfig(ProviderConfig $config, bool $override = false) {
-		$slug = $config->slug ?? $this->_slug($config->name);
+		$slug = $config->slug ?? $this->slug($config->name);
+		if ($config->iframePlayer === null || $config->iframePlayer === '') {
+			throw ProviderConfigException::missingField('iframe-player', $config->toArray());
+		}
 
-		if (!$override && isset($this->_hosts[$slug])) {
+		if (!$override && isset($this->providers[$slug])) {
 			return $this;
 		}
 
@@ -540,38 +585,22 @@ class MediaEmbed {
 			$array['slug'] = $slug;
 		}
 
-		$this->_hosts[$slug] = $array;
+		$this->providers[$slug] = $array;
 		$this->urlMatcher = null; // Reset matcher when providers change
 
 		return $this;
 	}
 
 	/**
-	 * Create the embed code for a local file
+	 * Create a MediaObject from provider stub data.
 	 *
-	 * @param string $file The file we are wanting to embed
-	 * @return bool Whether the URL contains valid/supported video
+	 * @param array<string, mixed> $stub Provider configuration array.
+	 * @param array<string, mixed> $config Additional configuration.
+	 * @return \MediaEmbed\Object\MediaObject
 	 */
-	public function embedLocal(string $file): bool {
-		return false;
-	}
-
-	/**
-	 * @param array<string, mixed>|string $stub
-	 * @param array<string, mixed> $config
-	 *
-	 * @return \MediaEmbed\Object\MediaObject|null
-	 */
-	public function object($stub, array $config = []): ?MediaObject {
-		if (!is_array($stub)) {
-			$host = $this->getHost($stub);
-			if (!$host) {
-				return null;
-			}
-			$stub = $host;
-		}
+	protected function object(array $stub, array $config = []): MediaObject {
 		if (!isset($stub['slug']) && !empty($stub['name'])) {
-			$stub['slug'] = $this->_slug($stub['name']);
+			$stub['slug'] = $this->slug($stub['name']);
 		}
 
 		return new MediaObject($stub, $config);
@@ -583,8 +612,8 @@ class MediaEmbed {
 	 * @param string $text
 	 * @return string
 	 */
-	protected function _slug(string $text): string {
-		return URLify::filter($text);
+	protected function slug(string $text): string {
+		return $this->slugger->slug($text);
 	}
 
 }
