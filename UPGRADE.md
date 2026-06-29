@@ -69,7 +69,7 @@ Existing stored embeds for those providers should be treated as unsupported by 1
 
 The `fromArray()` method preserves legacy array dimension values as either `int` or `string`, including percentage dimensions such as `100%`.
 
-- `ProviderConfig::$status` is now a `MediaEmbed\Provider\ProviderStatus` enum (was a `string` with `STATUS_*` class constants). `ProviderConfig::$category` is now a `MediaEmbed\Provider\ProviderCategory` enum (was a `string` with `CATEGORY_*` constants). Read the string with `->value`; the old `ProviderConfig::STATUS_*` / `CATEGORY_*` constants were removed. `ProviderCollection::withStatus()` / `withCategory()` accept either the enum or its string value. Array input/output (`fromArray()` / `toArray()` / `data/stubs.php`) still uses the plain strings.
+- `ProviderConfig::$status` is now a `MediaEmbed\Enum\ProviderStatus` enum (was a `string` with `STATUS_*` class constants). `ProviderConfig::$category` is now a `MediaEmbed\Enum\ProviderCategory` enum (was a `string` with `CATEGORY_*` constants). Read the string with `->value`; the old `ProviderConfig::STATUS_*` / `CATEGORY_*` constants were removed. `ProviderCollection::withStatus()` / `withCategory()` accept either the enum or its string value. Array input/output (`fromArray()` / `toArray()` / `data/stubs.php`) still uses the plain strings.
 - `MediaEmbed\Object\ObjectInterface` now declares the full public `MediaObject` surface (the `with*()` customizers, `getResponsiveEmbedCode()`, `getImageSrc()`, `image()`, `getParams()`, `getAttributes()`, `sourceUrl()`, `oEmbedEndpoint()`, `isSourceResolved()`, `website()`, `__toString()`). Custom implementations of the interface must provide these.
 
 #### Dependencies

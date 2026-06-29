@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Provider;
 
+use MediaEmbed\Enum\ProviderCategory;
+use MediaEmbed\Enum\ProviderStatus;
 use MediaEmbed\Exception\ProviderConfigException;
 
 /**
@@ -29,8 +31,8 @@ final class ProviderConfig {
 	 * @param string|null $timestampParam Embed query parameter for timestamp values.
 	 * @param array<string, mixed> $iframeParams Default iframe query parameters.
 	 * @param array<string, mixed> $extra Extra provider metadata.
-	 * @param \MediaEmbed\Provider\ProviderStatus $status Provider lifecycle status.
-	 * @param \MediaEmbed\Provider\ProviderCategory $category Provider content category.
+	 * @param \MediaEmbed\Enum\ProviderStatus $status Provider lifecycle status.
+	 * @param \MediaEmbed\Enum\ProviderCategory $category Provider content category.
 	 * @param string|null $exampleUrl Example URL covered by provider tests.
 	 * @param string|null $notes Provider notes for generated docs.
 	 */

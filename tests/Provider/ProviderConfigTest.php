@@ -2,10 +2,10 @@
 
 namespace MediaEmbed\Test\Provider;
 
+use MediaEmbed\Enum\ProviderCategory;
+use MediaEmbed\Enum\ProviderStatus;
 use MediaEmbed\Exception\ProviderConfigException;
-use MediaEmbed\Provider\ProviderCategory;
 use MediaEmbed\Provider\ProviderConfig;
-use MediaEmbed\Provider\ProviderStatus;
 use PHPUnit\Framework\TestCase;
 
 class ProviderConfigTest extends TestCase {

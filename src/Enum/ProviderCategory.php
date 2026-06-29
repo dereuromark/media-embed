@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MediaEmbed\Provider;
+namespace MediaEmbed\Enum;
 
 /**
  * Content category of a provider.

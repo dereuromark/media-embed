@@ -7,6 +7,8 @@ namespace MediaEmbed\Provider;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use MediaEmbed\Enum\ProviderCategory;
+use MediaEmbed\Enum\ProviderStatus;
 use MediaEmbed\Exception\ProviderNotFoundException;
 use MediaEmbed\Slugger\UrlifySlugger;
 use Traversable;
@@ -145,7 +147,7 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	/**
 	 * Filter providers by lifecycle status.
 	 *
-	 * @param \MediaEmbed\Provider\ProviderStatus|string $status Provider status (enum or its string value).
+	 * @param \MediaEmbed\Enum\ProviderStatus|string $status Provider status (enum or its string value).
 	 */
 	public function withStatus(ProviderStatus|string $status): self {
 		$status = $status instanceof ProviderStatus ? $status : ProviderStatus::tryFrom($status);
@@ -156,7 +158,7 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	/**
 	 * Filter providers by content category.
 	 *
-	 * @param \MediaEmbed\Provider\ProviderCategory|string $category Provider category (enum or its string value).
+	 * @param \MediaEmbed\Enum\ProviderCategory|string $category Provider category (enum or its string value).
 	 */
 	public function withCategory(ProviderCategory|string $category): self {
 		$category = $category instanceof ProviderCategory ? $category : ProviderCategory::tryFrom($category);

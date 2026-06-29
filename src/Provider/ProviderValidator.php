@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Provider;
 
+use MediaEmbed\Enum\ProviderCategory;
+use MediaEmbed\Enum\ProviderStatus;
 use MediaEmbed\Slugger\SluggerInterface;
 use MediaEmbed\Slugger\UrlifySlugger;
 
