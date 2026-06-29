@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Provider;
 
-use MediaEmbed\Enum\ProviderCategory;
-use MediaEmbed\Enum\ProviderStatus;
+use MediaEmbed\Provider\Enum\Category;
+use MediaEmbed\Provider\Enum\Status;
 use MediaEmbed\Slugger\SluggerInterface;
 use MediaEmbed\Slugger\UrlifySlugger;
 
@@ -156,8 +156,8 @@ final class ProviderValidator {
 	 * @return void
 	 */
 	private function validateMetadata(array $provider, string $label, array &$errors): void {
-		$statuses = array_map(static fn (ProviderStatus $status): string => $status->value, ProviderStatus::cases());
-		$categories = array_map(static fn (ProviderCategory $category): string => $category->value, ProviderCategory::cases());
+		$statuses = array_map(static fn (Status $status): string => $status->value, Status::cases());
+		$categories = array_map(static fn (Category $category): string => $category->value, Category::cases());
 		$this->validateStringEnum($provider, $label, 'status', $statuses, $errors);
 		$this->validateStringEnum($provider, $label, 'category', $categories, $errors);
 

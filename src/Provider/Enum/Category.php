@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MediaEmbed\Enum;
+namespace MediaEmbed\Provider\Enum;
 
 /**
  * Content category of a provider.
  */
-enum ProviderCategory: string {
+enum Category: string {
 
 	case ThreeD = '3d';
 

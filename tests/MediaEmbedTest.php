@@ -130,6 +130,14 @@ class MediaEmbedTest extends TestCase {
 		// Deezer
 		'https://www.deezer.com/en/playlist/1479458365' => 'playlist/1479458365',
 		'https://www.deezer.com/track/3135556' => 'track/3135556',
+		// Apple Music (album + song; id() omits the ?i= track id)
+		'https://music.apple.com/us/album/magical-mystery-tour/1441163490' => 'us/album/magical-mystery-tour/1441163490',
+		'https://music.apple.com/us/album/abbey-road/1441164426?i=1441164655' => 'us/album/abbey-road/1441164426',
+		// Mastodon (also with a tracking query string)
+		'https://mastodon.social/@trwnh/99664077509711321' => 'mastodon.social/trwnh/99664077509711321',
+		'https://mastodon.social/@trwnh/99664077509711321?utm_source=share' => 'mastodon.social/trwnh/99664077509711321',
+		// Pinterest
+		'https://www.pinterest.com/pin/99360735500167749/' => '99360735500167749',
 	];
 
 	/**
@@ -481,6 +489,40 @@ class MediaEmbedTest extends TestCase {
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$this->assertSame('https://widget.deezer.com/widget/auto/playlist/1479458365?wmode=transparent', $Object->getEmbedSrc());
+	}
+
+	public function testAppleMusicAlbumEmbed(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://music.apple.com/us/album/magical-mystery-tour/1441163490');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame('https://embed.music.apple.com/us/album/magical-mystery-tour/1441163490?wmode=transparent', $Object->getEmbedSrc());
+	}
+
+	public function testAppleMusicSongAppendsTrackId(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://music.apple.com/us/album/abbey-road/1441164426?i=1441164655');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$src = $Object->getEmbedSrc();
+		$this->assertStringContainsString('https://embed.music.apple.com/us/album/abbey-road/1441164426?', $src);
+		$this->assertStringContainsString('i=1441164655', $src);
+	}
+
+	public function testMastodonEmbed(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://mastodon.social/@trwnh/99664077509711321');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame('https://mastodon.social/@trwnh/99664077509711321/embed?wmode=transparent', $Object->getEmbedSrc());
+	}
+
+	public function testPinterestEmbed(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://www.pinterest.com/pin/99360735500167749/');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertSame('https://assets.pinterest.com/ext/embed.html?id=99360735500167749&wmode=transparent', $Object->getEmbedSrc());
 	}
 
 	public function testThumbnailUsesStaticImageSrc(): void {
@@ -947,7 +989,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$hosts = $MediaEmbed->getHosts();
-		$this->assertCount(39, $hosts);
+		$this->assertCount(42, $hosts);
 
 		$hosts = $MediaEmbed->getHosts(['vimeo', 'youtube']);
 		$this->assertTrue(count($hosts) === 2);
@@ -1172,7 +1214,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$providers = $MediaEmbed->getProviders();
-		$this->assertCount(39, $providers);
+		$this->assertCount(42, $providers);
 		$this->assertTrue($providers->has('youtube'));
 		$this->assertTrue($providers->has('vimeo'));
 

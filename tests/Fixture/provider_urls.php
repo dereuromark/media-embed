@@ -238,4 +238,22 @@ return [
 		'id' => 'playlist/1479458365',
 		'embedSrc' => 'https://widget.deezer.com/widget/auto/playlist/1479458365?wmode=transparent',
 	],
+	[
+		'slug' => 'apple-music',
+		'url' => 'https://music.apple.com/us/album/magical-mystery-tour/1441163490',
+		'id' => 'us/album/magical-mystery-tour/1441163490',
+		'embedSrc' => 'https://embed.music.apple.com/us/album/magical-mystery-tour/1441163490?wmode=transparent',
+	],
+	[
+		'slug' => 'mastodon',
+		'url' => 'https://mastodon.social/@trwnh/99664077509711321',
+		'id' => 'mastodon.social/trwnh/99664077509711321',
+		'embedSrc' => 'https://mastodon.social/@trwnh/99664077509711321/embed?wmode=transparent',
+	],
+	[
+		'slug' => 'pinterest',
+		'url' => 'https://www.pinterest.com/pin/99360735500167749/',
+		'id' => '99360735500167749',
+		'embedSrc' => 'https://assets.pinterest.com/ext/embed.html?id=99360735500167749&wmode=transparent',
+	],
 ];

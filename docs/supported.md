@@ -1,12 +1,13 @@
 # Supported Media Services
 
-39 services (38 active, 1 legacy)
+42 services (41 active, 1 legacy)
 
 Provider example URLs are covered by the release fixture matrix in `tests/Fixture/provider_urls.php`.
 
 | Service | Status | Category | Capabilities | Notes |
 |---------|--------|----------|--------------|-------|
 | [Aparat](https://www.aparat.com) | active | video | iframe |  |
+| [Apple Music](https://music.apple.com) | active | audio | iframe |  |
 | [Apple Podcasts](https://podcasts.apple.com) | active | audio | iframe |  |
 | [Audiomack](https://audiomack.com) | active | audio | iframe |  |
 | [Bandcamp](https://bandcamp.com) | active | audio | iframe |  |
@@ -21,12 +22,14 @@ Provider example URLs are covered by the release fixture matrix in `tests/Fixtur
 | [Instagram](https://www.instagram.com) | active | social | iframe |  |
 | [Kick](https://kick.com) | active | streaming | iframe |  |
 | [Loom](https://loom.com) | active | video | iframe |  |
+| [Mastodon](https://joinmastodon.org) | active | social | iframe | Federated: matches any instance host serving the /@user/id status format. |
 | [Matterport](https://matterport.com) | active | 3d | iframe |  |
 | [Metatube](https://www.metatube.com) | active | video | iframe |  |
 | [Mixcloud](https://www.mixcloud.com) | active | audio | iframe |  |
 | [Niconico](https://www.nicovideo.jp) | active | video | iframe |  |
 | [Odysee](https://odysee.com) | active | video | iframe |  |
 | [PeerTube](https://joinpeertube.org) | active | video | iframe |  |
+| [Pinterest](https://www.pinterest.com) | active | social | iframe |  |
 | [Reddit](https://www.reddit.com) | active | social | iframe |  |
 | [Rumble](https://rumble.com) | active | video | iframe |  |
 | [RuTube](https://www.rutube.ru) | active | video | iframe |  |

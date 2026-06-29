@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MediaEmbed\Enum;
+namespace MediaEmbed\Provider\Enum;
 
 /**
  * Lifecycle status of a provider.
  */
-enum ProviderStatus: string {
+enum Status: string {
 
 	case Active = 'active';
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace MediaEmbed\Provider;
 
-use MediaEmbed\Enum\ProviderCategory;
-use MediaEmbed\Enum\ProviderStatus;
 use MediaEmbed\Exception\ProviderConfigException;
+use MediaEmbed\Provider\Enum\Category;
+use MediaEmbed\Provider\Enum\Status;
 
 /**
  * Data Transfer Object for provider configuration.
@@ -31,8 +31,8 @@ final class ProviderConfig {
 	 * @param string|null $timestampParam Embed query parameter for timestamp values.
 	 * @param array<string, mixed> $iframeParams Default iframe query parameters.
 	 * @param array<string, mixed> $extra Extra provider metadata.
-	 * @param \MediaEmbed\Enum\ProviderStatus $status Provider lifecycle status.
-	 * @param \MediaEmbed\Enum\ProviderCategory $category Provider content category.
+	 * @param \MediaEmbed\Provider\Enum\Status $status Provider lifecycle status.
+	 * @param \MediaEmbed\Provider\Enum\Category $category Provider content category.
 	 * @param string|null $exampleUrl Example URL covered by provider tests.
 	 * @param string|null $notes Provider notes for generated docs.
 	 */
@@ -51,8 +51,8 @@ final class ProviderConfig {
 		public readonly ?string $timestampParam = null,
 		public readonly array $iframeParams = [],
 		public readonly array $extra = [],
-		public readonly ProviderStatus $status = ProviderStatus::Active,
-		public readonly ProviderCategory $category = ProviderCategory::Video,
+		public readonly Status $status = Status::Active,
+		public readonly Category $category = Category::Video,
 		public readonly ?string $exampleUrl = null,
 		public readonly ?string $notes = null,
 	) {
@@ -121,8 +121,8 @@ final class ProviderConfig {
 			urlMatch: $data['url-match'],
 			embedWidth: $embedWidth,
 			embedHeight: $embedHeight,
-			status: isset($data['status']) && is_string($data['status']) ? (ProviderStatus::tryFrom($data['status']) ?? ProviderStatus::Active) : ProviderStatus::Active,
-			category: isset($data['category']) && is_string($data['category']) ? (ProviderCategory::tryFrom($data['category']) ?? ProviderCategory::Video) : ProviderCategory::Video,
+			status: isset($data['status']) && is_string($data['status']) ? (Status::tryFrom($data['status']) ?? Status::Active) : Status::Active,
+			category: isset($data['category']) && is_string($data['category']) ? (Category::tryFrom($data['category']) ?? Category::Video) : Category::Video,
 			exampleUrl: isset($data['example-url']) && is_string($data['example-url']) ? $data['example-url'] : null,
 			notes: isset($data['notes']) && is_string($data['notes']) ? $data['notes'] : null,
 			slug: $data['slug'] ?? null,
