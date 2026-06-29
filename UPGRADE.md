@@ -69,6 +69,9 @@ Existing stored embeds for those providers should be treated as unsupported by 1
 
 The `fromArray()` method preserves legacy array dimension values as either `int` or `string`, including percentage dimensions such as `100%`.
 
+- `ProviderConfig::$status` is now a `MediaEmbed\Provider\ProviderStatus` enum (was a `string` with `STATUS_*` class constants). `ProviderConfig::$category` is now a `MediaEmbed\Provider\ProviderCategory` enum (was a `string` with `CATEGORY_*` constants). Read the string with `->value`; the old `ProviderConfig::STATUS_*` / `CATEGORY_*` constants were removed. `ProviderCollection::withStatus()` / `withCategory()` accept either the enum or its string value. Array input/output (`fromArray()` / `toArray()` / `data/stubs.php`) still uses the plain strings.
+- `MediaEmbed\Object\ObjectInterface` now declares the full public `MediaObject` surface (the `with*()` customizers, `getResponsiveEmbedCode()`, `getImageSrc()`, `image()`, `getParams()`, `getAttributes()`, `sourceUrl()`, `oEmbedEndpoint()`, `isSourceResolved()`, `website()`, `__toString()`). Custom implementations of the interface must provide these.
+
 #### Dependencies
 
 - `jbroadway/urlify` is no longer a hard dependency (moved to `suggest`). A built-in ASCII slugger is used when it is absent; inject a custom `MediaEmbed\Slugger\SluggerInterface` to override.
@@ -205,8 +208,8 @@ $provider = $mediaEmbed->getProvider('youtube');
 
 echo $provider->name;           // "YouTube"
 echo $provider->website;        // "https://www.youtube.com"
-echo $provider->status;         // "active"
-echo $provider->category;       // "video"
+echo $provider->status->value;  // "active" (ProviderStatus enum)
+echo $provider->category->value; // "video" (ProviderCategory enum)
 echo $provider->exampleUrl;     // Example URL used by release fixtures
 echo $provider->embedWidth;     // 480
 echo $provider->embedHeight;    // 295

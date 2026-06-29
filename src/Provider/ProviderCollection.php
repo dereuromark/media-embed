@@ -145,18 +145,22 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	/**
 	 * Filter providers by lifecycle status.
 	 *
-	 * @param string $status Provider status.
+	 * @param \MediaEmbed\Provider\ProviderStatus|string $status Provider status (enum or its string value).
 	 */
-	public function withStatus(string $status): self {
+	public function withStatus(ProviderStatus|string $status): self {
+		$status = $status instanceof ProviderStatus ? $status : ProviderStatus::tryFrom($status);
+
 		return $this->filter(fn (ProviderConfig $config) => $config->status === $status);
 	}
 
 	/**
 	 * Filter providers by content category.
 	 *
-	 * @param string $category Provider category.
+	 * @param \MediaEmbed\Provider\ProviderCategory|string $category Provider category (enum or its string value).
 	 */
-	public function withCategory(string $category): self {
+	public function withCategory(ProviderCategory|string $category): self {
+		$category = $category instanceof ProviderCategory ? $category : ProviderCategory::tryFrom($category);
+
 		return $this->filter(fn (ProviderConfig $config) => $config->category === $category);
 	}
 

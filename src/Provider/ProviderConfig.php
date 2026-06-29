@@ -15,46 +15,6 @@ use MediaEmbed\Exception\ProviderConfigException;
 final class ProviderConfig {
 
 	/**
-     * @var string
-     */
-	public const STATUS_ACTIVE = 'active';
-
-	/**
-     * @var string
-     */
-	public const STATUS_LEGACY = 'legacy';
-
-	/**
-     * @var string
-     */
-	public const STATUS_DEPRECATED = 'deprecated';
-
-	/**
-     * @var string
-     */
-	public const CATEGORY_3D = '3d';
-
-	/**
-     * @var string
-     */
-	public const CATEGORY_AUDIO = 'audio';
-
-	/**
-     * @var string
-     */
-	public const CATEGORY_SOCIAL = 'social';
-
-	/**
-     * @var string
-     */
-	public const CATEGORY_STREAMING = 'streaming';
-
-	/**
-     * @var string
-     */
-	public const CATEGORY_VIDEO = 'video';
-
-	/**
 	 * @param string $name Display name of the provider.
 	 * @param string $website Provider's website URL.
 	 * @param array<string>|string $urlMatch URL matching regex pattern(s).
@@ -69,8 +29,8 @@ final class ProviderConfig {
 	 * @param string|null $timestampParam Embed query parameter for timestamp values.
 	 * @param array<string, mixed> $iframeParams Default iframe query parameters.
 	 * @param array<string, mixed> $extra Extra provider metadata.
-	 * @param string $status Provider lifecycle status.
-	 * @param string $category Provider content category.
+	 * @param \MediaEmbed\Provider\ProviderStatus $status Provider lifecycle status.
+	 * @param \MediaEmbed\Provider\ProviderCategory $category Provider content category.
 	 * @param string|null $exampleUrl Example URL covered by provider tests.
 	 * @param string|null $notes Provider notes for generated docs.
 	 */
@@ -89,8 +49,8 @@ final class ProviderConfig {
 		public readonly ?string $timestampParam = null,
 		public readonly array $iframeParams = [],
 		public readonly array $extra = [],
-		public readonly string $status = self::STATUS_ACTIVE,
-		public readonly string $category = self::CATEGORY_VIDEO,
+		public readonly ProviderStatus $status = ProviderStatus::Active,
+		public readonly ProviderCategory $category = ProviderCategory::Video,
 		public readonly ?string $exampleUrl = null,
 		public readonly ?string $notes = null,
 	) {
@@ -159,8 +119,8 @@ final class ProviderConfig {
 			urlMatch: $data['url-match'],
 			embedWidth: $embedWidth,
 			embedHeight: $embedHeight,
-			status: isset($data['status']) && is_string($data['status']) ? $data['status'] : self::STATUS_ACTIVE,
-			category: isset($data['category']) && is_string($data['category']) ? $data['category'] : self::CATEGORY_VIDEO,
+			status: isset($data['status']) && is_string($data['status']) ? (ProviderStatus::tryFrom($data['status']) ?? ProviderStatus::Active) : ProviderStatus::Active,
+			category: isset($data['category']) && is_string($data['category']) ? (ProviderCategory::tryFrom($data['category']) ?? ProviderCategory::Video) : ProviderCategory::Video,
 			exampleUrl: isset($data['example-url']) && is_string($data['example-url']) ? $data['example-url'] : null,
 			notes: isset($data['notes']) && is_string($data['notes']) ? $data['notes'] : null,
 			slug: $data['slug'] ?? null,
@@ -202,8 +162,8 @@ final class ProviderConfig {
 			'url-match' => $this->urlMatch,
 			'embed-width' => $this->embedWidth,
 			'embed-height' => $this->embedHeight,
-			'status' => $this->status,
-			'category' => $this->category,
+			'status' => $this->status->value,
+			'category' => $this->category->value,
 		];
 		$array += $this->extra;
 

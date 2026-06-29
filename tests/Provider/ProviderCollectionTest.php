@@ -2,8 +2,10 @@
 
 namespace MediaEmbed\Test\Provider;
 
+use MediaEmbed\Provider\ProviderCategory;
 use MediaEmbed\Provider\ProviderCollection;
 use MediaEmbed\Provider\ProviderConfig;
+use MediaEmbed\Provider\ProviderStatus;
 use PHPUnit\Framework\TestCase;
 
 class ProviderCollectionTest extends TestCase {
@@ -88,8 +90,8 @@ class ProviderCollectionTest extends TestCase {
 			embedHeight: '360',
 			slug: 'legacy-audio',
 			iframePlayer: '//legacy-audio.example.com/embed/$2',
-			status: ProviderConfig::STATUS_LEGACY,
-			category: ProviderConfig::CATEGORY_AUDIO,
+			status: ProviderStatus::Legacy,
+			category: ProviderCategory::Audio,
 		));
 		$collection->add(new ProviderConfig(
 			name: 'ActiveVideo',
@@ -99,12 +101,12 @@ class ProviderCollectionTest extends TestCase {
 			embedHeight: '360',
 			slug: 'active-video',
 			iframePlayer: '//active-video.example.com/embed/$2',
-			status: ProviderConfig::STATUS_ACTIVE,
-			category: ProviderConfig::CATEGORY_VIDEO,
+			status: ProviderStatus::Active,
+			category: ProviderCategory::Video,
 		));
 
-		$legacy = $collection->withStatus(ProviderConfig::STATUS_LEGACY);
-		$audio = $collection->withCategory(ProviderConfig::CATEGORY_AUDIO);
+		$legacy = $collection->withStatus(ProviderStatus::Legacy);
+		$audio = $collection->withCategory(ProviderCategory::Audio);
 
 		$this->assertCount(1, $legacy);
 		$this->assertTrue($legacy->has('legacy-audio'));

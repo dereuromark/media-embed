@@ -3,7 +3,9 @@
 namespace MediaEmbed\Test\Provider;
 
 use MediaEmbed\Exception\ProviderConfigException;
+use MediaEmbed\Provider\ProviderCategory;
 use MediaEmbed\Provider\ProviderConfig;
+use MediaEmbed\Provider\ProviderStatus;
 use PHPUnit\Framework\TestCase;
 
 class ProviderConfigTest extends TestCase {
@@ -25,8 +27,8 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('640', $config->embedWidth);
 		$this->assertSame('360', $config->embedHeight);
 		$this->assertSame('//test.example.com/embed/$2', $config->iframePlayer);
-		$this->assertSame(ProviderConfig::STATUS_ACTIVE, $config->status);
-		$this->assertSame(ProviderConfig::CATEGORY_VIDEO, $config->category);
+		$this->assertSame(ProviderStatus::Active, $config->status);
+		$this->assertSame(ProviderCategory::Video, $config->category);
 	}
 
 	public function testFromArrayWithAllFields(): void {
@@ -43,8 +45,8 @@ class ProviderConfigTest extends TestCase {
 			'fetch-match' => 'data-id="([a-z0-9]+)"',
 			'supports-timestamp' => true,
 			'timestamp-param' => 'start',
-			'status' => ProviderConfig::STATUS_LEGACY,
-			'category' => ProviderConfig::CATEGORY_AUDIO,
+			'status' => ProviderStatus::Legacy->value,
+			'category' => ProviderCategory::Audio->value,
 			'example-url' => 'https://full.example.com/watch/abc123',
 			'notes' => 'Legacy audio provider.',
 			'iframe-params' => [
@@ -61,8 +63,8 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('data-id="([a-z0-9]+)"', $config->fetchMatch);
 		$this->assertTrue($config->supportsTimestamp);
 		$this->assertSame('start', $config->timestampParam);
-		$this->assertSame(ProviderConfig::STATUS_LEGACY, $config->status);
-		$this->assertSame(ProviderConfig::CATEGORY_AUDIO, $config->category);
+		$this->assertSame(ProviderStatus::Legacy, $config->status);
+		$this->assertSame(ProviderCategory::Audio, $config->category);
 		$this->assertSame('https://full.example.com/watch/abc123', $config->exampleUrl);
 		$this->assertSame('Legacy audio provider.', $config->notes);
 		$this->assertSame([
@@ -204,8 +206,8 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('pattern', $array['url-match']);
 		$this->assertSame(640, $array['embed-width']);
 		$this->assertSame(360, $array['embed-height']);
-		$this->assertSame(ProviderConfig::STATUS_ACTIVE, $array['status']);
-		$this->assertSame(ProviderConfig::CATEGORY_VIDEO, $array['category']);
+		$this->assertSame(ProviderStatus::Active->value, $array['status']);
+		$this->assertSame(ProviderCategory::Video->value, $array['category']);
 		$this->assertSame('//test.com/embed/$2', $array['iframe-player']);
 		$this->assertArrayNotHasKey('slug', $array);
 		$this->assertArrayNotHasKey('supports-timestamp', $array);
@@ -230,8 +232,8 @@ class ProviderConfigTest extends TestCase {
 		$array = $config->toArray();
 
 		$this->assertSame('Test', $array['name']);
-		$this->assertSame(ProviderConfig::STATUS_ACTIVE, $array['status']);
-		$this->assertSame(ProviderConfig::CATEGORY_VIDEO, $array['category']);
+		$this->assertSame(ProviderStatus::Active->value, $array['status']);
+		$this->assertSame(ProviderCategory::Video->value, $array['category']);
 	}
 
 	public function testToArrayWithMetadata(): void {
@@ -241,8 +243,8 @@ class ProviderConfigTest extends TestCase {
 			urlMatch: 'pattern',
 			embedWidth: 640,
 			embedHeight: 360,
-			status: ProviderConfig::STATUS_LEGACY,
-			category: ProviderConfig::CATEGORY_AUDIO,
+			status: ProviderStatus::Legacy,
+			category: ProviderCategory::Audio,
 			exampleUrl: 'https://test.com/watch/abc',
 			notes: 'Legacy provider.',
 			iframePlayer: '//test.com/embed/$2',
@@ -250,8 +252,8 @@ class ProviderConfigTest extends TestCase {
 
 		$array = $config->toArray();
 
-		$this->assertSame(ProviderConfig::STATUS_LEGACY, $array['status']);
-		$this->assertSame(ProviderConfig::CATEGORY_AUDIO, $array['category']);
+		$this->assertSame(ProviderStatus::Legacy->value, $array['status']);
+		$this->assertSame(ProviderCategory::Audio->value, $array['category']);
 		$this->assertSame('https://test.com/watch/abc', $array['example-url']);
 		$this->assertSame('Legacy provider.', $array['notes']);
 	}

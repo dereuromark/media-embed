@@ -27,26 +27,6 @@ final class ProviderValidator {
 	/**
 	 * @var array<string>
 	 */
-	private const ALLOWED_STATUSES = [
-		ProviderConfig::STATUS_ACTIVE,
-		ProviderConfig::STATUS_LEGACY,
-		ProviderConfig::STATUS_DEPRECATED,
-	];
-
-	/**
-	 * @var array<string>
-	 */
-	private const ALLOWED_CATEGORIES = [
-		ProviderConfig::CATEGORY_3D,
-		ProviderConfig::CATEGORY_AUDIO,
-		ProviderConfig::CATEGORY_SOCIAL,
-		ProviderConfig::CATEGORY_STREAMING,
-		ProviderConfig::CATEGORY_VIDEO,
-	];
-
-	/**
-	 * @var array<string>
-	 */
 	private const REQUIRED_FIELDS = [
 		'name',
 		'website',
@@ -174,8 +154,10 @@ final class ProviderValidator {
 	 * @return void
 	 */
 	private function validateMetadata(array $provider, string $label, array &$errors): void {
-		$this->validateStringEnum($provider, $label, 'status', self::ALLOWED_STATUSES, $errors);
-		$this->validateStringEnum($provider, $label, 'category', self::ALLOWED_CATEGORIES, $errors);
+		$statuses = array_map(static fn (ProviderStatus $status): string => $status->value, ProviderStatus::cases());
+		$categories = array_map(static fn (ProviderCategory $category): string => $category->value, ProviderCategory::cases());
+		$this->validateStringEnum($provider, $label, 'status', $statuses, $errors);
+		$this->validateStringEnum($provider, $label, 'category', $categories, $errors);
 
 		if (array_key_exists('example-url', $provider)) {
 			if (!is_string($provider['example-url']) || $provider['example-url'] === '') {

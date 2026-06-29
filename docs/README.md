@@ -371,8 +371,8 @@ $config = $MediaEmbed->getProvider('youtube');
 if ($config !== null) {
     echo $config->name;           // "YouTube"
     echo $config->website;        // "https://www.youtube.com"
-    echo $config->status;         // "active"
-    echo $config->category;       // "video"
+    echo $config->status->value;  // "active" (ProviderStatus enum)
+    echo $config->category->value; // "video" (ProviderCategory enum)
     echo $config->embedWidth;     // "480"
 
     if ($config->hasIframeSupport()) {
