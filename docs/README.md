@@ -328,6 +328,14 @@ For array-based configs (legacy format):
 - **timestamp-param**: Optional embed query parameter for timestamp values
 - **iframe-params**: Optional default iframe query parameters
 
+Status values:
+
+| Status | Meaning |
+|--------|---------|
+| `active` | Fully supported, current URL formats. Default. |
+| `legacy` | Older URL format kept working for existing links; not promoted for new use. |
+| `deprecated` | Slated for removal; still embeds but may stop working in a future release. |
+
 **Note:** In regex patterns and templates, `$1` is the full matched URL, `$2` is the first capture group, `$3` is the second, etc.
 
 Provider templates must use valid `$1`, `$2`, ... placeholders and absolute HTTP(S) URLs. Protocol-relative URLs such as `//www.youtube.com/embed/$2` are supported for iframe and image templates. Run `composer validate-providers` after changing provider data to catch invalid regex patterns, unsafe URL schemes, relative template URLs, duplicate slugs, and malformed placeholders.
