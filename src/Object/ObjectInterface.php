@@ -6,6 +6,13 @@ namespace MediaEmbed\Object;
 
 /**
  * ObjectInterface must be implemented by classes that are a specific type of media.
+ *
+ * @method string getPlaceholderEmbedCode(array<string, mixed> $options = []) Returns a GDPR-friendly
+ *   "click-to-load" consent placeholder. The real iframe is held in a `<template>` and only loaded on
+ *   user click via the shared snippet from `MediaObject::placeholderScript()`. Implemented on
+ *   {@see \MediaEmbed\Object\MediaObject}; declared here as `@method` (not abstract) to avoid a BC
+ *   break for external implementers on the current minor line. Promote to an abstract method in the
+ *   next major. All `MediaEmbed::parse*()` calls return `MediaObject`, so callers can use it directly.
  */
 interface ObjectInterface {
 

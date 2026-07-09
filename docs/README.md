@@ -152,6 +152,45 @@ $MediaEmbed = new MediaEmbed(['privacy' => true]);
 
 Providers declare their privacy variant via the optional `privacy-player` (alternate URL template) and `privacy-params` (extra query params) stub keys, so custom providers can opt in too.
 
+### Click-to-load (GDPR two-click) placeholder
+
+For consent-driven (GDPR) pages, `getPlaceholderEmbedCode()` renders a lightweight placeholder instead of loading the third-party iframe immediately. No provider cookies or requests fire until the user clicks. The real iframe is held in a `<template>` and swapped in on click; a `<noscript>` fallback embeds it for users without JavaScript:
+
+```php
+$MediaObject = $this->MediaEmbed->parseUrl('https://www.youtube.com/watch?v=111111');
+echo $MediaObject->getPlaceholderEmbedCode();
+```
+
+Activation is handled by a small, CSP-friendly snippet you print **once per page** (it is idempotent and uses event delegation, so it covers any number of placeholders):
+
+```php
+echo '<script>' . \MediaEmbed\Object\MediaObject::placeholderScript() . '</script>';
+```
+
+The snippet contains no inline handlers or `eval`, so it works under a strict CSP - add a `nonce`/hash to the `<script>` tag as your policy requires.
+
+Options let you set the preview thumbnail, button label, extra CSS class, and aspect ratio:
+
+```php
+echo $MediaObject->getPlaceholderEmbedCode([
+    'thumbnail' => '/img/local-preview.jpg', // optional preview, see note below
+    'label' => 'Load video',
+    'class' => 'consent-box',
+    'ratio' => '4:3',
+]);
+```
+
+> [!IMPORTANT]
+> No thumbnail is loaded by default. A remote (provider-hosted) thumbnail would contact the third party before the user consents, which defeats the two-click purpose. Pass a local or proxied image URL, or `$this->MediaEmbed->thumbnail($MediaObject)` only if loading the provider thumbnail pre-consent is acceptable for your case. `MediaObject` itself never performs network requests.
+
+The `class` option is additive: the stable hook classes `media-embed-placeholder` / `media-embed-placeholder__button` are always present (so the activation script keeps working) and your class is appended to both.
+
+This pairs with privacy mode: create the object with `['privacy' => true]` and the templated iframe already uses the provider's privacy variant (e.g. `youtube-nocookie.com`).
+
+```html
+<div class="media-embed-placeholder" style="position:relative;width:100%;height:0;padding-bottom:56.25%;overflow:hidden;"><button type="button" class="media-embed-placeholder__button" style="..." aria-label="Load embedded content from YouTube">YouTube</button><template><iframe src="..." ...></iframe></template><noscript><iframe src="..." ...></iframe></noscript></div>
+```
+
 ### Responsive embeds
 
 `getResponsiveEmbedCode()` wraps the iframe in a fluid aspect-ratio container so it scales with its parent width. The default ratio is `16:9`; pass any `width:height` ratio:
