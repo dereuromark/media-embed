@@ -262,4 +262,22 @@ return [
 		'id' => '822057428507049984',
 		'oembedEndpoint' => 'https://www.tumblr.com/oembed/1.0?url=https%3A%2F%2Fstaff.tumblr.com%2Fpost%2F822057428507049984%2Fin-case-youre-looking-for-a-blog-thats-gone',
 	],
+	[
+		'slug' => 'bluesky',
+		'url' => 'https://bsky.app/profile/bsky.app/post/3mbhel6ij7s2y',
+		'id' => 'bsky.app/3mbhel6ij7s2y',
+		'oembedEndpoint' => 'https://embed.bsky.app/oembed?url=https%3A%2F%2Fbsky.app%2Fprofile%2Fbsky.app%2Fpost%2F3mbhel6ij7s2y',
+	],
+	[
+		'slug' => 'flickr',
+		'url' => 'https://www.flickr.com/photos/bees/2341623661/',
+		'id' => 'bees/2341623661',
+		'oembedEndpoint' => 'https://www.flickr.com/services/oembed/?url=https%3A%2F%2Fwww.flickr.com%2Fphotos%2Fbees%2F2341623661%2F',
+	],
+	[
+		'slug' => 'speaker-deck',
+		'url' => 'https://speakerdeck.com/speakerdeck/introduction-to-speakerdeck',
+		'id' => 'speakerdeck/introduction-to-speakerdeck',
+		'oembedEndpoint' => 'https://speakerdeck.com/oembed.json?url=https%3A%2F%2Fspeakerdeck.com%2Fspeakerdeck%2Fintroduction-to-speakerdeck',
+	],
 ];

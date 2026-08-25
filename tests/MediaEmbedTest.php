@@ -35,6 +35,9 @@ class MediaEmbedTest extends TestCase {
 		'https://www.facebook.com/demotivateurFood/videos/vl.184872862011827/1034411179983244/?type=1' => '1034411179983244',
 		'https://staff.tumblr.com/post/822057428507049984/in-case-youre-looking-for-a-blog-thats-gone' => '822057428507049984',
 		'https://www.tumblr.com/staff/822057428507049984/in-case-youre-looking-for-a-blog-thats-gone' => '822057428507049984',
+		'https://bsky.app/profile/bsky.app/post/3mbhel6ij7s2y' => 'bsky.app/3mbhel6ij7s2y',
+		'https://www.flickr.com/photos/bees/2341623661/' => 'bees/2341623661',
+		'https://speakerdeck.com/speakerdeck/introduction-to-speakerdeck' => 'speakerdeck/introduction-to-speakerdeck',
 		'http://vimeo.com/19570639' => '19570639',
 		'http://vimeo.com/245928033/572c32a20d' => '245928033/572c32a20d',
 		'http://vimeo.com/channels/staffpicks/99585787' => '99585787',
@@ -1152,7 +1155,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$hosts = $MediaEmbed->getHosts();
-		$this->assertCount(43, $hosts);
+		$this->assertCount(46, $hosts);
 
 		$hosts = $MediaEmbed->getHosts(['vimeo', 'youtube']);
 		$this->assertTrue(count($hosts) === 2);
@@ -1377,7 +1380,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$providers = $MediaEmbed->getProviders();
-		$this->assertCount(43, $providers);
+		$this->assertCount(46, $providers);
 		$this->assertTrue($providers->has('youtube'));
 		$this->assertTrue($providers->has('vimeo'));
 

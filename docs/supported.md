@@ -1,6 +1,6 @@
 # Supported Media Services
 
-43 services (42 active, 1 legacy)
+46 services (45 active, 1 legacy)
 
 Provider example URLs are covered by the release fixture matrix in `tests/Fixture/provider_urls.php`.
 
@@ -14,10 +14,12 @@ Provider example URLs are covered by the release fixture matrix in `tests/Fixtur
 | [Bilibili](https://www.bilibili.com) | active | video | iframe |  |
 | [Bilibili (Legacy)](https://www.bilibili.com) | legacy | video | iframe | Legacy URL format kept for existing links. |
 | [BitChute](https://www.bitchute.com) | active | video | iframe |  |
+| [Bluesky](https://bsky.app) | active | social | oEmbed | Uses provider-generated oEmbed HTML for social posts. |
 | [Coub](https://coub.com) | active | video | iframe |  |
 | [Dailymotion](https://www.dailymotion.com) | active | video | iframe, thumbnail |  |
 | [Deezer](https://www.deezer.com) | active | audio | iframe | Music content only (track, album, playlist, artist); podcasts are not supported. |
 | [Facebook](https://www.facebook.com) | active | social | iframe |  |
+| [Flickr](https://www.flickr.com) | active | social | oEmbed | Supports provider-generated oEmbed markup for photos and videos. |
 | [Giphy](https://giphy.com) | active | video | iframe, thumbnail |  |
 | [Instagram](https://www.instagram.com) | active | social | iframe |  |
 | [Kick](https://kick.com) | active | streaming | iframe |  |
@@ -36,6 +38,7 @@ Provider example URLs are covered by the release fixture matrix in `tests/Fixtur
 | [Screencast](https://www.screencast.com) | active | video | iframe, fetch |  |
 | [Sketchfab](https://sketchfab.com) | active | 3d | iframe, oEmbed |  |
 | [SoundCloud](https://soundcloud.com) | active | audio | iframe, oEmbed |  |
+| [Speaker Deck](https://speakerdeck.com) | active | social | oEmbed | Uses provider-generated oEmbed HTML for presentations. |
 | [Spotify](https://open.spotify.com) | active | audio | iframe, oEmbed |  |
 | [Spreaker](https://www.spreaker.com) | active | audio | iframe, oEmbed | Episode URLs only; show pages expose no numeric ID in the URL. |
 | [Streamable](https://streamable.com) | active | video | iframe |  |
