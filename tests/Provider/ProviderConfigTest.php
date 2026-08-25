@@ -118,9 +118,9 @@ class ProviderConfigTest extends TestCase {
 		]);
 	}
 
-	public function testFromArrayRequiresIframePlayer(): void {
+	public function testFromArrayRequiresIframePlayerOrOEmbed(): void {
 		$this->expectException(ProviderConfigException::class);
-		$this->expectExceptionMessage('Provider configuration is missing required field: iframe-player');
+		$this->expectExceptionMessage('Provider configuration is missing required field: iframe-player or oembed');
 
 		ProviderConfig::fromArray([
 			'name' => 'NoIframeProvider',
@@ -128,6 +128,50 @@ class ProviderConfigTest extends TestCase {
 			'url-match' => 'no-iframe\\.example\\.com/([a-z0-9]+)',
 			'embed-width' => 640,
 			'embed-height' => 360,
+		]);
+	}
+
+	public function testFromArrayAllowsOEmbedOnlyProvider(): void {
+		$config = ProviderConfig::fromArray([
+			'name' => 'RichProvider',
+			'website' => 'https://rich.example.com',
+			'url-match' => 'rich\\.example\\.com/posts/([0-9]+)',
+			'embed-width' => 540,
+			'embed-height' => 600,
+			'oembed' => 'https://rich.example.com/oembed',
+		]);
+
+		$this->assertFalse($config->hasIframeSupport());
+		$this->assertTrue($config->hasOEmbedSupport());
+		$this->assertSame('https://rich.example.com/oembed', $config->toArray()['oembed']);
+	}
+
+	public function testFromArrayNormalizesUnusedEmptyRendererToNull(): void {
+		$config = ProviderConfig::fromArray([
+			'name' => 'IframeProvider',
+			'website' => 'https://iframe.example.com',
+			'url-match' => 'iframe\\.example\\.com/([0-9]+)',
+			'embed-width' => 640,
+			'embed-height' => 360,
+			'iframe-player' => 'https://iframe.example.com/embed/$2',
+			'oembed' => '',
+		]);
+
+		$this->assertNull($config->oEmbed);
+		$this->assertArrayNotHasKey('oembed', $config->toArray());
+	}
+
+	public function testFromArrayRejectsNonStringOEmbedEndpoint(): void {
+		$this->expectException(ProviderConfigException::class);
+		$this->expectExceptionMessage('Provider configuration field "oembed" has invalid value. Expected string.');
+
+		ProviderConfig::fromArray([
+			'name' => 'InvalidProvider',
+			'website' => 'https://invalid.example.com',
+			'url-match' => 'invalid\\.example\\.com/([0-9]+)',
+			'embed-width' => 640,
+			'embed-height' => 360,
+			'oembed' => [],
 		]);
 	}
 
@@ -319,6 +363,33 @@ class ProviderConfigTest extends TestCase {
 
 		$this->assertTrue($withIframe->hasIframeSupport());
 		$this->assertFalse($withoutIframe->hasIframeSupport());
+	}
+
+	public function testHasOEmbedSupport(): void {
+		$config = new ProviderConfig(
+			name: 'Test',
+			website: 'https://test.com',
+			urlMatch: 'pattern',
+			embedWidth: 640,
+			embedHeight: 360,
+			oEmbed: 'https://test.com/oembed',
+		);
+
+		$this->assertTrue($config->hasOEmbedSupport());
+
+		$empty = new ProviderConfig(
+			name: 'Empty',
+			website: 'https://empty.example.com',
+			urlMatch: 'pattern',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '',
+			oEmbed: '',
+		);
+		$this->assertFalse($empty->hasIframeSupport());
+		$this->assertFalse($empty->hasOEmbedSupport());
+		$this->assertArrayNotHasKey('iframe-player', $empty->toArray());
+		$this->assertArrayNotHasKey('oembed', $empty->toArray());
 	}
 
 	public function testHasThumbnailSupport(): void {

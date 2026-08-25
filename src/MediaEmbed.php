@@ -477,6 +477,26 @@ class MediaEmbed {
 	}
 
 	/**
+	 * Fetch raw embed HTML from a provider's oEmbed response.
+	 *
+	 * The returned HTML is controlled by the remote provider. Consumers must only
+	 * render it for trusted providers, or sanitize it according to their policy.
+	 *
+	 * @param \MediaEmbed\Object\MediaObject $object Parsed media object.
+	 * @param int|null $maxWidth Maximum embed width.
+	 * @param int|null $maxHeight Maximum embed height.
+	 * @return string|null
+	 */
+	public function oEmbedHtml(MediaObject $object, ?int $maxWidth = null, ?int $maxHeight = null): ?string {
+		$response = $this->oEmbed($object, $maxWidth, $maxHeight);
+		if ($response === null || !$response->hasHtml()) {
+			return null;
+		}
+
+		return $response->html;
+	}
+
+	/**
 	 * Resolve a thumbnail URL for a parsed media object.
 	 *
 	 * Prefers the provider's static thumbnail (image-src) and falls back to the oEmbed
@@ -572,8 +592,8 @@ class MediaEmbed {
 	 */
 	public function addProviderConfig(ProviderConfig $config, bool $override = false) {
 		$slug = $config->slug ?? $this->slug($config->name);
-		if ($config->iframePlayer === null || $config->iframePlayer === '') {
-			throw ProviderConfigException::missingField('iframe-player', $config->toArray());
+		if (!$config->hasIframeSupport() && !$config->hasOEmbedSupport()) {
+			throw ProviderConfigException::missingField('iframe-player or oembed', $config->toArray());
 		}
 
 		if (!$override && isset($this->providers[$slug])) {

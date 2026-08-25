@@ -35,7 +35,6 @@ final class ProviderValidator {
 		'url-match',
 		'embed-width',
 		'embed-height',
-		'iframe-player',
 	];
 
 	/**
@@ -87,6 +86,10 @@ final class ProviderValidator {
 			if (!array_key_exists($field, $provider) || $provider[$field] === null || $provider[$field] === '' || $provider[$field] === []) {
 				$errors[] = $label . ': missing required field "' . $field . '"';
 			}
+		}
+
+		if (empty($provider['iframe-player']) && empty($provider['oembed'])) {
+			$errors[] = $label . ': missing required field "iframe-player" or "oembed"';
 		}
 	}
 

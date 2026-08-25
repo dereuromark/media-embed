@@ -35,6 +35,7 @@ final class ProviderConfig {
 	 * @param \MediaEmbed\Provider\Enum\Category $category Provider content category.
 	 * @param string|null $exampleUrl Example URL covered by provider tests.
 	 * @param string|null $notes Provider notes for generated docs.
+	 * @param string|null $oEmbed oEmbed endpoint URL.
 	 */
 	public function __construct(
 		public readonly string $name,
@@ -55,6 +56,7 @@ final class ProviderConfig {
 		public readonly Category $category = Category::Video,
 		public readonly ?string $exampleUrl = null,
 		public readonly ?string $notes = null,
+		public readonly ?string $oEmbed = null,
 	) {
 	}
 
@@ -82,11 +84,18 @@ final class ProviderConfig {
 		if (!isset($data['embed-height'])) {
 			throw ProviderConfigException::missingField('embed-height', $data);
 		}
-		if (!array_key_exists('iframe-player', $data) || $data['iframe-player'] === null || $data['iframe-player'] === '') {
-			throw ProviderConfigException::missingField('iframe-player', $data);
+		$iframePlayer = $data['iframe-player'] ?? null;
+		$oEmbed = $data['oembed'] ?? null;
+		if (($iframePlayer === null || $iframePlayer === '') && ($oEmbed === null || $oEmbed === '')) {
+			throw ProviderConfigException::missingField('iframe-player or oembed', $data);
 		}
-		if (!is_string($data['iframe-player'])) {
+		$iframePlayer = $iframePlayer === '' ? null : $iframePlayer;
+		$oEmbed = $oEmbed === '' ? null : $oEmbed;
+		if ($iframePlayer !== null && !is_string($iframePlayer)) {
 			throw ProviderConfigException::invalidField('iframe-player', $data['iframe-player'], 'string', $data);
+		}
+		if ($oEmbed !== null && !is_string($oEmbed)) {
+			throw ProviderConfigException::invalidField('oembed', $data['oembed'], 'string', $data);
 		}
 
 		$embedWidth = self::dimensionFromArray($data, 'embed-width');
@@ -104,6 +113,7 @@ final class ProviderConfig {
 			'notes',
 			'slug',
 			'iframe-player',
+			'oembed',
 			'image-src',
 			'id',
 			'fetch-match',
@@ -126,7 +136,8 @@ final class ProviderConfig {
 			exampleUrl: isset($data['example-url']) && is_string($data['example-url']) ? $data['example-url'] : null,
 			notes: isset($data['notes']) && is_string($data['notes']) ? $data['notes'] : null,
 			slug: $data['slug'] ?? null,
-			iframePlayer: $data['iframe-player'],
+			iframePlayer: $iframePlayer,
+			oEmbed: $oEmbed,
 			imageSrc: $data['image-src'] ?? null,
 			id: $data['id'] ?? null,
 			fetchMatch: $data['fetch-match'] ?? null,
@@ -178,8 +189,11 @@ final class ProviderConfig {
 		if ($this->slug !== null) {
 			$array['slug'] = $this->slug;
 		}
-		if ($this->iframePlayer !== null) {
+		if ($this->hasIframeSupport()) {
 			$array['iframe-player'] = $this->iframePlayer;
+		}
+		if ($this->hasOEmbedSupport()) {
+			$array['oembed'] = $this->oEmbed;
 		}
 		if ($this->imageSrc !== null) {
 			$array['image-src'] = $this->imageSrc;
@@ -222,7 +236,16 @@ final class ProviderConfig {
 	 * @return bool
 	 */
 	public function hasIframeSupport(): bool {
-		return $this->iframePlayer !== null;
+		return $this->iframePlayer !== null && $this->iframePlayer !== '';
+	}
+
+	/**
+	 * Check if this provider has oEmbed support.
+	 *
+	 * @return bool
+	 */
+	public function hasOEmbedSupport(): bool {
+		return $this->oEmbed !== null && $this->oEmbed !== '';
 	}
 
 	/**

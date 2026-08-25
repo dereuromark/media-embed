@@ -44,7 +44,16 @@ class ProviderFixtureTest extends TestCase {
 		$this->assertInstanceOf(MediaObject::class, $object);
 		$this->assertSame($fixture['slug'], $object->slug());
 		$this->assertSame($fixture['id'], $object->id());
-		$this->assertSame($fixture['embedSrc'], $object->getEmbedSrc());
+		$this->assertTrue(
+			isset($fixture['embedSrc']) || isset($fixture['oembedEndpoint']),
+			'Provider fixtures must verify an iframe source or oEmbed endpoint.',
+		);
+		if (isset($fixture['embedSrc'])) {
+			$this->assertSame($fixture['embedSrc'], $object->getEmbedSrc());
+		}
+		if (isset($fixture['oembedEndpoint'])) {
+			$this->assertSame($fixture['oembedEndpoint'], $object->oEmbedEndpoint());
+		}
 	}
 
 	public function testEveryBundledProviderHasReleaseFixture(): void {

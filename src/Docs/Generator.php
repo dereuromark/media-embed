@@ -120,7 +120,13 @@ TEXT;
 	 * @return string
 	 */
 	protected function capabilities(array $array): string {
-		$capabilities = ['iframe'];
+		$capabilities = [];
+		if (!empty($array['iframe-player'])) {
+			$capabilities[] = 'iframe';
+		}
+		if (!empty($array['oembed'])) {
+			$capabilities[] = 'oEmbed';
+		}
 
 		if (!empty($array['image-src'])) {
 			$capabilities[] = 'thumbnail';

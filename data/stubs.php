@@ -20,7 +20,8 @@ return [
 	 * - "embed-width" (string) Width of the embed (in pixels)
 	 * - "embed-height" (string) Height of the embed (in pixels)
 	 * - "image-src" (string) For preview thumbnail image
-	 * - "iframe-player" (string) If an <iframe> player is available
+	 * - "iframe-player" (string) If an <iframe> player is available (or use "oembed")
+	 * - "oembed" (string) oEmbed endpoint for provider-generated HTML (or use "iframe-player")
 	 * - "id" (string) The ID of the video, returned as $id
 	 */
 	[
@@ -60,6 +61,60 @@ return [
 		'embed-width' => '480',
 		'embed-height' => '295',
 		'iframe-player' => '//www.facebook.com/plugins/video.php?href=$1&show_text=0',
+	],
+	[
+		'name' => 'Tumblr',
+		'website' => 'https://www.tumblr.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://staff.tumblr.com/post/822057428507049984/in-case-youre-looking-for-a-blog-thats-gone',
+		'url-match' => [
+			'https?://[a-z0-9-]+\\.tumblr\\.com/post/([0-9]+)(?:/[^?#]+)?',
+			'https?://www\\.tumblr\\.com/[a-z0-9-]+/([0-9]+)(?:/[^?#]+)?',
+		],
+		'embed-width' => 540,
+		'embed-height' => 600,
+		'oembed' => 'https://www.tumblr.com/oembed/1.0',
+		'notes' => 'Uses oEmbed HTML because Tumblr post embeds require provider-generated markup.',
+	],
+	[
+		'name' => 'Bluesky',
+		'website' => 'https://bsky.app',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://bsky.app/profile/bsky.app/post/3mbhel6ij7s2y',
+		'url-match' => 'https://bsky\\.app/profile/([^/?#]+)/post/([^/?#]+)',
+		'embed-width' => 600,
+		'embed-height' => 600,
+		'oembed' => 'https://embed.bsky.app/oembed',
+		'id' => '$2/$3',
+		'notes' => 'Uses provider-generated oEmbed HTML for social posts.',
+	],
+	[
+		'name' => 'Flickr',
+		'website' => 'https://www.flickr.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://www.flickr.com/photos/bees/2341623661/',
+		'url-match' => 'https?://(?:www\\.)?flickr\\.com/photos/([^/?#]+)/([0-9]+)(?:/[^?#]*)?',
+		'embed-width' => 1024,
+		'embed-height' => 768,
+		'oembed' => 'https://www.flickr.com/services/oembed/',
+		'id' => '$2/$3',
+		'notes' => 'Supports provider-generated oEmbed markup for photos and videos.',
+	],
+	[
+		'name' => 'Speaker Deck',
+		'website' => 'https://speakerdeck.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://speakerdeck.com/speakerdeck/introduction-to-speakerdeck',
+		'url-match' => 'https?://speakerdeck\\.com/([^/?#]+)/([^/?#]+)',
+		'embed-width' => 710,
+		'embed-height' => 399,
+		'oembed' => 'https://speakerdeck.com/oembed.json',
+		'id' => '$2/$3',
+		'notes' => 'Uses provider-generated oEmbed HTML for presentations.',
 	],
 	[
 		'name' => 'Dailymotion',

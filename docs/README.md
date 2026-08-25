@@ -335,7 +335,8 @@ $config = new ProviderConfig(
     urlMatch: ['regex...'],       // Required: URL patterns (array or string)
     embedWidth: 640,              // Required: Default width
     embedHeight: 360,             // Required: Default height
-    iframePlayer: '//.../$2',     // Required: Iframe URL template
+    iframePlayer: '//.../$2',     // Iframe URL template (or use oEmbed)
+    oEmbed: 'https://.../oembed', // oEmbed endpoint (or use iframePlayer)
     status: 'active',             // Optional: active, legacy, deprecated
     category: 'video',            // Optional: video, audio, social, streaming, 3d
     exampleUrl: 'https://...',    // Optional: fixture/example URL
@@ -357,7 +358,8 @@ For array-based configs (legacy format):
 - **url-match** (required): Array of regex patterns to match URLs
 - **embed-width** (required): Default width in pixels or as percentage
 - **embed-height** (required): Default height in pixels or as percentage
-- **iframe-player** (required): URL template for iframe embedding
+- **iframe-player**: URL template for iframe embedding; either this or `oembed` is required
+- **oembed**: Provider oEmbed endpoint; either this or `iframe-player` is required
 - **status**: Optional provider lifecycle status (`active`, `legacy`, `deprecated`)
 - **category**: Optional content category (`video`, `audio`, `social`, `streaming`, `3d`)
 - **example-url**: Optional example URL covered by release fixture tests
@@ -536,6 +538,7 @@ $subset = $MediaEmbed->getProviders(['youtube', 'vimeo', 'dailymotion']);
 
 // Filter by capabilities
 $withIframe = $providers->withIframeSupport();
+$withOEmbed = $providers->withOEmbedSupport();
 $withThumbnails = $providers->withThumbnailSupport();
 $active = $providers->withStatus('active');
 $video = $providers->withCategory('video');
@@ -595,6 +598,36 @@ $thumb = $mediaEmbed->thumbnail($mediaObject); // string|null
 ```
 
 `oEmbed()` returns null when the provider has no registered endpoint or the object was created via `parseId()` (no source URL). These calls perform an HTTP request, so a PSR-16 cache (and the injected HTTP client) apply.
+
+For providers whose embed can only be generated dynamically, `iframe-player` may be omitted when an `oembed` endpoint is configured. Use `oEmbedHtml()` to fetch the provider-generated markup:
+
+```php
+$mediaObject = $mediaEmbed->parseUrl('https://social.example.com/posts/123');
+$html = $mediaEmbed->oEmbedHtml($mediaObject);
+
+// The HTML comes from the remote provider. Only render trusted provider output,
+// or sanitize it according to your application's policy.
+echo $html;
+```
+
+Calling the iframe-specific `MediaObject::getEmbedCode()` or `getEmbedSrc()` methods for an oEmbed-only provider throws `EmbedCodeUnavailableException` with this alternative. This avoids silently returning unusable markup.
+
+Custom oEmbed-only providers can be registered inline without modifying the bundled provider file:
+
+```php
+$mediaEmbed = new MediaEmbed([
+	'custom_providers' => [[
+		'name' => 'Example Social',
+		'website' => 'https://social.example.com',
+		'url-match' => 'https://social\\.example\\.com/posts/([0-9]+)',
+		'embed-width' => 540,
+		'embed-height' => 600,
+		'oembed' => 'https://social.example.com/oembed',
+	]],
+]);
+```
+
+The same provider array can be loaded from PHP or JSON through `providers_config`, `ArrayLoader`, `PhpFileLoader`, or `JsonFileLoader`. This keeps application-specific providers outside the package so they can be updated independently.
 
 ### oEmbed Discovery
 
