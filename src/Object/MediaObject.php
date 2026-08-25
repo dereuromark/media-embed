@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MediaEmbed\Object;
 
 use InvalidArgumentException;
+use MediaEmbed\Exception\EmbedCodeUnavailableException;
 use MediaEmbed\Template\TemplateResolver;
 
 /**
@@ -549,6 +550,9 @@ class MediaObject implements ObjectInterface {
 	 * @return string The unescaped src URL
 	 */
 	public function getEmbedSrc(): string {
+		if (empty($this->stub['iframe-player'])) {
+			throw new EmbedCodeUnavailableException($this->slug());
+		}
 		$source = $this->templateResolver->resolve($this->stub['iframe-player'], $this->match);
 
 		return $this->appendQueryParams($source);

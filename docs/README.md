@@ -610,6 +610,8 @@ $html = $mediaEmbed->oEmbedHtml($mediaObject);
 echo $html;
 ```
 
+Calling the iframe-specific `MediaObject::getEmbedCode()` or `getEmbedSrc()` methods for an oEmbed-only provider throws `EmbedCodeUnavailableException` with this alternative. This avoids silently returning unusable markup.
+
 Custom oEmbed-only providers can be registered inline without modifying the bundled provider file:
 
 ```php

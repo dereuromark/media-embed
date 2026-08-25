@@ -3,6 +3,7 @@
 namespace MediaEmbed\Test;
 
 use InvalidArgumentException;
+use MediaEmbed\Exception\EmbedCodeUnavailableException;
 use MediaEmbed\Exception\InvalidUrlException;
 use MediaEmbed\Exception\ProviderConfigException;
 use MediaEmbed\Http\HttpClientInterface;
@@ -615,6 +616,16 @@ class MediaEmbedTest extends TestCase {
 		$this->assertInstanceOf(MediaObject::class, $Object);
 
 		$this->assertNull($MediaEmbed->oEmbedHtml($Object));
+	}
+
+	public function testOEmbedOnlyProviderRejectsIframeRenderingWithActionableException(): void {
+		$MediaEmbed = new MediaEmbed();
+		$Object = $MediaEmbed->parseUrl('https://bsky.app/profile/bsky.app/post/3mbhel6ij7s2y');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->expectException(EmbedCodeUnavailableException::class);
+		$this->expectExceptionMessage('Use MediaEmbed::oEmbedHtml()');
+		$Object->getEmbedCode();
 	}
 
 	public function testOEmbedReturnsNullWithoutRegisteredEndpoint(): void {
