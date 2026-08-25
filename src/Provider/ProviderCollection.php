@@ -188,6 +188,13 @@ final class ProviderCollection implements IteratorAggregate, Countable {
 	}
 
 	/**
+	 * Get providers with oEmbed support.
+	 */
+	public function withOEmbedSupport(): self {
+		return $this->filter(fn (ProviderConfig $config) => $config->hasOEmbedSupport());
+	}
+
+	/**
 	 * Get providers with thumbnail support.
 	 */
 	public function withThumbnailSupport(): self {

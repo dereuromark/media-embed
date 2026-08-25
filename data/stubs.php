@@ -20,7 +20,8 @@ return [
 	 * - "embed-width" (string) Width of the embed (in pixels)
 	 * - "embed-height" (string) Height of the embed (in pixels)
 	 * - "image-src" (string) For preview thumbnail image
-	 * - "iframe-player" (string) If an <iframe> player is available
+	 * - "iframe-player" (string) If an <iframe> player is available (or use "oembed")
+	 * - "oembed" (string) oEmbed endpoint for provider-generated HTML (or use "iframe-player")
 	 * - "id" (string) The ID of the video, returned as $id
 	 */
 	[
@@ -60,6 +61,21 @@ return [
 		'embed-width' => '480',
 		'embed-height' => '295',
 		'iframe-player' => '//www.facebook.com/plugins/video.php?href=$1&show_text=0',
+	],
+	[
+		'name' => 'Tumblr',
+		'website' => 'https://www.tumblr.com',
+		'status' => 'active',
+		'category' => 'social',
+		'example-url' => 'https://staff.tumblr.com/post/822057428507049984/in-case-youre-looking-for-a-blog-thats-gone',
+		'url-match' => [
+			'https?://[a-z0-9-]+\\.tumblr\\.com/post/([0-9]+)(?:/[^?#]+)?',
+			'https?://www\\.tumblr\\.com/[a-z0-9-]+/([0-9]+)(?:/[^?#]+)?',
+		],
+		'embed-width' => 540,
+		'embed-height' => 600,
+		'oembed' => 'https://www.tumblr.com/oembed/1.0',
+		'notes' => 'Uses oEmbed HTML because Tumblr post embeds require provider-generated markup.',
 	],
 	[
 		'name' => 'Dailymotion',

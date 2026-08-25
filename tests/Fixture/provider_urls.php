@@ -256,4 +256,10 @@ return [
 		'id' => '99360735500167749',
 		'embedSrc' => 'https://assets.pinterest.com/ext/embed.html?id=99360735500167749&wmode=transparent',
 	],
+	[
+		'slug' => 'tumblr',
+		'url' => 'https://staff.tumblr.com/post/822057428507049984/in-case-youre-looking-for-a-blog-thats-gone',
+		'id' => '822057428507049984',
+		'oembedEndpoint' => 'https://www.tumblr.com/oembed/1.0?url=https%3A%2F%2Fstaff.tumblr.com%2Fpost%2F822057428507049984%2Fin-case-youre-looking-for-a-blog-thats-gone',
+	],
 ];

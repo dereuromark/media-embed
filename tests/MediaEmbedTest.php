@@ -33,6 +33,8 @@ class MediaEmbedTest extends TestCase {
 		'https://www.facebook.com/diginights.HN/videos/1231155290281511/' => '1231155290281511',
 		'https://www.facebook.com/SkySports/videos/vb.10911153761/10153310275743762/?type=2&theater' => '10153310275743762',
 		'https://www.facebook.com/demotivateurFood/videos/vl.184872862011827/1034411179983244/?type=1' => '1034411179983244',
+		'https://staff.tumblr.com/post/822057428507049984/in-case-youre-looking-for-a-blog-thats-gone' => '822057428507049984',
+		'https://www.tumblr.com/staff/822057428507049984/in-case-youre-looking-for-a-blog-thats-gone' => '822057428507049984',
 		'http://vimeo.com/19570639' => '19570639',
 		'http://vimeo.com/245928033/572c32a20d' => '245928033/572c32a20d',
 		'http://vimeo.com/channels/staffpicks/99585787' => '99585787',
@@ -576,6 +578,32 @@ class MediaEmbedTest extends TestCase {
 		$this->assertSame('https://i.vimeocdn.com/video/thumb.jpg', $MediaEmbed->thumbnail($Object));
 	}
 
+	public function testOEmbedHtmlSupportsCustomOEmbedOnlyProvider(): void {
+		$html = '<div class="provider-post">Embedded post</div><script src="https://rich.example.com/embed.js"></script>';
+		$httpClient = $this->createStub(HttpClientInterface::class);
+		$httpClient->method('get')->willReturn(json_encode([
+			'type' => 'rich',
+			'version' => '1.0',
+			'html' => $html,
+		]));
+		$MediaEmbed = new MediaEmbed([
+			'custom_providers' => [
+				[
+					'name' => 'RichProvider',
+					'website' => 'https://rich.example.com',
+					'url-match' => 'https://rich\\.example\\.com/posts/([0-9]+)',
+					'embed-width' => 540,
+					'embed-height' => 600,
+					'oembed' => 'https://rich.example.com/oembed',
+				],
+			],
+		], httpClient: $httpClient);
+
+		$Object = $MediaEmbed->parseUrl('https://rich.example.com/posts/123');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+		$this->assertSame($html, $MediaEmbed->oEmbedHtml($Object));
+	}
+
 	public function testOEmbedReturnsNullWithoutRegisteredEndpoint(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('https://my.matterport.com/show/?m=Zh14WDtkjdC');
@@ -1114,7 +1142,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$hosts = $MediaEmbed->getHosts();
-		$this->assertCount(42, $hosts);
+		$this->assertCount(43, $hosts);
 
 		$hosts = $MediaEmbed->getHosts(['vimeo', 'youtube']);
 		$this->assertTrue(count($hosts) === 2);
@@ -1339,7 +1367,7 @@ class MediaEmbedTest extends TestCase {
 		$MediaEmbed = new MediaEmbed();
 
 		$providers = $MediaEmbed->getProviders();
-		$this->assertCount(42, $providers);
+		$this->assertCount(43, $providers);
 		$this->assertTrue($providers->has('youtube'));
 		$this->assertTrue($providers->has('vimeo'));
 
@@ -1353,6 +1381,8 @@ class MediaEmbedTest extends TestCase {
 		// Test collection methods
 		$withIframe = $providers->withIframeSupport();
 		$this->assertGreaterThan(0, count($withIframe));
+		$withOEmbed = $providers->withOEmbedSupport();
+		$this->assertTrue($withOEmbed->has('tumblr'));
 
 		$withThumbnail = $providers->withThumbnailSupport();
 		$this->assertGreaterThan(0, count($withThumbnail));

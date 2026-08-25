@@ -91,7 +91,22 @@ class ProviderValidatorTest extends TestCase {
 		$validator = new ProviderValidator();
 		$errors = $validator->validate($providers);
 
-		$this->assertContains('Broken: missing required field "iframe-player"', $errors);
+		$this->assertContains('Broken: missing required field "iframe-player" or "oembed"', $errors);
+	}
+
+	public function testValidateAcceptsOEmbedOnlyProvider(): void {
+		$providers = [
+			[
+				'name' => 'Rich',
+				'website' => 'https://rich.example.com',
+				'url-match' => 'rich\\.example\\.com/posts/([0-9]+)',
+				'embed-width' => 540,
+				'embed-height' => 600,
+				'oembed' => 'https://rich.example.com/oembed',
+			],
+		];
+
+		$this->assertSame([], (new ProviderValidator())->validate($providers));
 	}
 
 }
