@@ -146,6 +146,35 @@ class ProviderConfigTest extends TestCase {
 		$this->assertSame('https://rich.example.com/oembed', $config->toArray()['oembed']);
 	}
 
+	public function testFromArrayNormalizesUnusedEmptyRendererToNull(): void {
+		$config = ProviderConfig::fromArray([
+			'name' => 'IframeProvider',
+			'website' => 'https://iframe.example.com',
+			'url-match' => 'iframe\\.example\\.com/([0-9]+)',
+			'embed-width' => 640,
+			'embed-height' => 360,
+			'iframe-player' => 'https://iframe.example.com/embed/$2',
+			'oembed' => '',
+		]);
+
+		$this->assertNull($config->oEmbed);
+		$this->assertArrayNotHasKey('oembed', $config->toArray());
+	}
+
+	public function testFromArrayRejectsNonStringOEmbedEndpoint(): void {
+		$this->expectException(ProviderConfigException::class);
+		$this->expectExceptionMessage('Provider configuration field "oembed" has invalid value. Expected string.');
+
+		ProviderConfig::fromArray([
+			'name' => 'InvalidProvider',
+			'website' => 'https://invalid.example.com',
+			'url-match' => 'invalid\\.example\\.com/([0-9]+)',
+			'embed-width' => 640,
+			'embed-height' => 360,
+			'oembed' => [],
+		]);
+	}
+
 	public function testFromArrayPreservesExtraProviderMetadata(): void {
 		$data = [
 			'name' => 'ExtraProvider',
@@ -347,6 +376,20 @@ class ProviderConfigTest extends TestCase {
 		);
 
 		$this->assertTrue($config->hasOEmbedSupport());
+
+		$empty = new ProviderConfig(
+			name: 'Empty',
+			website: 'https://empty.example.com',
+			urlMatch: 'pattern',
+			embedWidth: 640,
+			embedHeight: 360,
+			iframePlayer: '',
+			oEmbed: '',
+		);
+		$this->assertFalse($empty->hasIframeSupport());
+		$this->assertFalse($empty->hasOEmbedSupport());
+		$this->assertArrayNotHasKey('iframe-player', $empty->toArray());
+		$this->assertArrayNotHasKey('oembed', $empty->toArray());
 	}
 
 	public function testHasThumbnailSupport(): void {

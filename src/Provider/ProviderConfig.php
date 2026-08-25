@@ -89,6 +89,8 @@ final class ProviderConfig {
 		if (($iframePlayer === null || $iframePlayer === '') && ($oEmbed === null || $oEmbed === '')) {
 			throw ProviderConfigException::missingField('iframe-player or oembed', $data);
 		}
+		$iframePlayer = $iframePlayer === '' ? null : $iframePlayer;
+		$oEmbed = $oEmbed === '' ? null : $oEmbed;
 		if ($iframePlayer !== null && !is_string($iframePlayer)) {
 			throw ProviderConfigException::invalidField('iframe-player', $data['iframe-player'], 'string', $data);
 		}
@@ -187,10 +189,10 @@ final class ProviderConfig {
 		if ($this->slug !== null) {
 			$array['slug'] = $this->slug;
 		}
-		if ($this->iframePlayer !== null) {
+		if ($this->hasIframeSupport()) {
 			$array['iframe-player'] = $this->iframePlayer;
 		}
-		if ($this->oEmbed !== null) {
+		if ($this->hasOEmbedSupport()) {
 			$array['oembed'] = $this->oEmbed;
 		}
 		if ($this->imageSrc !== null) {
@@ -234,7 +236,7 @@ final class ProviderConfig {
 	 * @return bool
 	 */
 	public function hasIframeSupport(): bool {
-		return $this->iframePlayer !== null;
+		return $this->iframePlayer !== null && $this->iframePlayer !== '';
 	}
 
 	/**
@@ -243,7 +245,7 @@ final class ProviderConfig {
 	 * @return bool
 	 */
 	public function hasOEmbedSupport(): bool {
-		return $this->oEmbed !== null;
+		return $this->oEmbed !== null && $this->oEmbed !== '';
 	}
 
 	/**

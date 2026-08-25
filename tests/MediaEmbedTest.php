@@ -604,6 +604,16 @@ class MediaEmbedTest extends TestCase {
 		$this->assertSame($html, $MediaEmbed->oEmbedHtml($Object));
 	}
 
+	public function testOEmbedHtmlReturnsNullWithoutHtml(): void {
+		$httpClient = $this->createStub(HttpClientInterface::class);
+		$httpClient->method('get')->willReturn('{"type":"link","version":"1.0"}');
+		$MediaEmbed = new MediaEmbed(httpClient: $httpClient);
+		$Object = $MediaEmbed->parseUrl('https://vimeo.com/99585787');
+		$this->assertInstanceOf(MediaObject::class, $Object);
+
+		$this->assertNull($MediaEmbed->oEmbedHtml($Object));
+	}
+
 	public function testOEmbedReturnsNullWithoutRegisteredEndpoint(): void {
 		$MediaEmbed = new MediaEmbed();
 		$Object = $MediaEmbed->parseUrl('https://my.matterport.com/show/?m=Zh14WDtkjdC');
