@@ -20,7 +20,7 @@ It currently works with [40+ services](docs/supported.md), including the most im
 
 etc. With community driven updates this aims to be a complete and up-to-date service wrapper lib.
 
-All providers use modern iframe embeds (Flash support was removed as Flash was discontinued in 2020).
+Providers use modern iframe embeds or provider-generated oEmbed HTML (Flash support was removed as Flash was discontinued in 2020).
 
 ## Demo
 https://sandbox.dereuromark.de/sandbox/media-embed
